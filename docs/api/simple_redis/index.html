@@ -48,21 +48,29 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-108' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-163' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
 <p>Simple <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with internal
-connection handling.</p>
+connection and subscription handling.</p>
 
 <p>This library provides a very basic, simple API for the most common redis operations.<br>
 While not as comprehensive or flexiable as <a href="https://crates.io/crates/redis">redis-rs</a>,
 it does provide a simpler api for most common use cases and operations as well as automatic internal connection
-handling.<br>
-Connection validation is done before every operation invocation, so there is no need to create/release or validate
-connections before running any Redis operation.<br>
-However, this comes at a small performance cost of PING operation to the redis server.</p>
+and subscription (pubsub) handling.<br>
+In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub
+instances in parallel.<br>
+<br>
+Connection resiliency is managed by verifying the connection before every operation against the redis server.<br>
+In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
+connection only.<br>
+However, this comes at a small performance cost of PING operation to the redis server.<br>
+<br>
+Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
+automatically in case of any error while fetching a message from the subscribed channels.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h2 id='initialization-and-simple-operations' class='section-header'><a href='#initialization-and-simple-operations'>Initialization and Simple Operations</a></h2>
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
 
@@ -74,17 +82,50 @@ However, this comes at a small performance cost of PING operation to the redis s
             <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;my_key&quot;</span>, <span class="string">&quot;my_value&quot;</span>) {
                 <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to set value in Redis: {}&quot;</span>, <span class="ident">error</span>),
                 _ <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Value set in Redis&quot;</span>)
-            }
+            };
 
             <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;my_key&quot;</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Read value from Redis: {}&quot;</span>, <span class="ident">value</span>),
                 <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to get value from Redis: {}&quot;</span>, <span class="ident">error</span>)
-            }
+            };
 
             <span class="doccomment">/// run some command that is not built in the library</span>
             <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]) {
                 <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
                 _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+            };
+
+            <span class="doccomment">/// publish messages</span>
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">publish</span>(<span class="string">&quot;news_channel&quot;</span>, <span class="string">&quot;test message&quot;</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        },
+        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
+    }
+}</pre>
+
+<h2 id='subscription-flow' class='section-header'><a href='#subscription-flow'>Subscription Flow</a></h2>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">match</span> <span class="ident">simple_redis</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+        <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span>  {
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Created Redis Client&quot;</span>);
+
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">subscribe</span>(<span class="string">&quot;important_notifications&quot;</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+            <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;*_notifications&quot;</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+            <span class="kw">loop</span> {
+                <span class="doccomment">/// fetch next message</span>
+                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get_message</span>() {
+                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;my important message&quot;</span>)
+                    }
+                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+                }
             }
         },
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
@@ -110,6 +151,20 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
+                           <td><a class="type" href="type.Message.html"
+                                  title='type simple_redis::Message'>Message</a></td>
+                           <td class='docblock-short'>
+                                <p>PubSub message</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisBoolResult.html"
+                                  title='type simple_redis::RedisBoolResult'>RedisBoolResult</a></td>
+                           <td class='docblock-short'>
+                                <p>Holds bool result or error</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="type" href="type.RedisEmptyResult.html"
                                   title='type simple_redis::RedisEmptyResult'>RedisEmptyResult</a></td>
                            <td class='docblock-short'>
@@ -120,7 +175,14 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                            <td><a class="type" href="type.RedisError.html"
                                   title='type simple_redis::RedisError'>RedisError</a></td>
                            <td class='docblock-short'>
-                                <p>Redis Error struct</p>
+                                <p>Error Type</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisMessageResult.html"
+                                  title='type simple_redis::RedisMessageResult'>RedisMessageResult</a></td>
+                           <td class='docblock-short'>
+                                <p>Holds pubsub message result or error</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `create` fn in crate `simple_redis`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, create">
+    <meta name="description" content="API documentation for the Rust `RedisMessageResult` type in crate `simple_redis`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RedisMessageResult">
 
-    <title>simple_redis::create - Rust</title>
+    <title>simple_redis::RedisMessageResult - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc fn">
+<body class="rustdoc type">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>simple_redis</a></p><script>window.sidebarCurrent = {name: 'create', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>simple_redis</a></p><script>window.sidebarCurrent = {name: 'RedisMessageResult', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -44,24 +44,12 @@
     </nav>
 
     <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>simple_redis</a>::<wbr><a class="fn" href=''>create</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Type Definition <a href='index.html'>simple_redis</a>::<wbr><a class="type" href=''>RedisMessageResult</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#139-141' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn create(connection_string: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, <a class="type" href="../simple_redis/type.RedisError.html" title="type simple_redis::RedisError">RedisError</a>&gt;</pre><div class='docblock'><p>Constructs a new redis client.<br>
-The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<pre class="rust rust-example-rendered">
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
-
-<span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">match</span> <span class="ident">simple_redis</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">client</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Created Redis Client&quot;</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
-    }
-}</pre>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#116' title='goto source code'>[src]</a></span></h1>
+<pre class='rust typedef'>type RedisMessageResult = <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Msg, RedisError&gt;;</pre><div class='docblock'><p>Holds pubsub message result or error</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 

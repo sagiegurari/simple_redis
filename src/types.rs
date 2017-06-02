@@ -54,11 +54,17 @@ impl fmt::Display for RedisError {
     }
 }
 
+/// PubSub message
+pub type Message = redis::Msg;
+
 /// Redis result which either holds a value or a Redis error
 pub type RedisResult<T> = Result<T, RedisError>;
 
 /// Holds empty result or error
 pub type RedisEmptyResult = RedisResult<()>;
+
+/// Holds pubsub message result or error
+pub type RedisMessageResult = RedisResult<Message>;
 
 /// Holds string result or error
 pub type RedisStringResult = RedisResult<String>;

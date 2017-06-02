@@ -16,9 +16,18 @@
 ## Overview
 This library provides a very basic, simple API for the most common redis operations.<br>
 While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
-it does provide a simpler api for most common use cases and operations as well as automatic internal connection handling.<br>
-Connection validation is done before every operation invocation, so there is no need to create/release or validate connections before running any Redis operation.<br>
+it does provide a simpler api for most common use cases and operations as well as automatic internal connection
+and subscription (pubsub) handling.<br>
+In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub instances in parallel.<br>
+<br>
+Connection resiliency is managed by verifying the connection before every operation against the redis server.<br>
+In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
+connection only.<br>
 However, this comes at a small performance cost of PING operation to the redis server.<br>
+<br>
+Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
+automatically in case of any error while fetching a message from the subscribed channels.
+<br>
 <br>
 **This library is still in initial development stage and many more features will come soon.**
 
@@ -45,17 +54,38 @@ Once you have a redis client, you can invoke any of the available commands direc
 match client.set("my_key", "my_value") {
     Err(error) => println!("Unable to set value in Redis: {}", error),
     _ => println!("Value set in Redis")
-}
+};
 
 match client.get("my_key") {
     Ok(value) => println!("Read value from Redis: {}", value),
     Err(error) => println!("Unable to get value from Redis: {}", error)
-}
+};
 
 /// run some command that is not built in the library
 match client.run_command::<String>("ECHO", vec!["testing"]) {
     Ok(value) => assert_eq!(value, "testing"),
     _ => panic!("test error"),
+};
+
+/// publish messages
+let mut result = client.publish("news_channel", "test message");
+assert!(result.is_ok());
+
+/// subscribe to channels
+result = client.subscribe("important_notifications");
+assert!(result.is_ok());
+result = client.psubscribe("*_notifications");
+assert!(result.is_ok());
+
+loop {
+    /// fetch next message
+    match client.get_message() {
+        Ok(message) => {
+            let payload: String = message.get_payload().unwrap();
+            assert_eq!(payload, "my important message")
+        }
+        _ => panic!("test error"),
+    }
 }
 ````
 
@@ -79,6 +109,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2017-06-03  | v0.1.7  | pubsub support added |
 | 2017-06-02  | v0.1.6  | Initial release. |
 
 <a name="license"></a>

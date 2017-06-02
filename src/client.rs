@@ -5,12 +5,17 @@
 
 extern crate redis;
 use connection;
-use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult, RedisStringResult};
+use subscriber;
+use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult, RedisStringResult};
 
 /// The redis client which enables to invoke redis operations.
 pub struct Client {
+    /// Internal redis client
+    client: redis::Client,
     /// Holds the current redis connection
-    connection: connection::Connection
+    connection: connection::Connection,
+    /// Internal subscriber
+    subscriber: subscriber::Subscriber
 }
 
 fn run_command_on_connection<T: redis::FromRedisValue>(
@@ -64,7 +69,7 @@ impl Client {
         command: &str,
         args: Vec<&str>,
     ) -> RedisResult<T> {
-        match self.connection.get_redis_connection() {
+        match self.connection.get_redis_connection(&self.client) {
             Ok(ref connection) => run_command_on_connection::<T>(connection, command, args),
             Err(error) => Err(error),
         }
@@ -96,6 +101,92 @@ impl Client {
     ) -> RedisBoolResult {
         self.run_command(command, args)
     }
+
+    /// Subscribes to the provided channel.<br>
+    /// Actual subscription only occurs at the first call to get_message.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
+    /// #     Ok(mut client) =>  {
+    ///           client.subscribe("important_notifications");
+    /// #
+    /// #         println!("Subscribed to channel.");
+    /// #     },
+    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
+    /// # }
+    /// ```
+    pub fn subscribe(
+        self: &mut Client,
+        channel: &str,
+    ) -> RedisEmptyResult {
+        self.subscriber.subscribe(channel)
+    }
+
+    /// Subscribes to the provided channel pattern.<br>
+    /// Actual subscription only occurs at the first call to get_message.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
+    /// #     Ok(mut client) =>  {
+    ///           client.psubscribe("important_notifications*");
+    /// #
+    /// #         println!("Subscribed to channel.");
+    /// #     },
+    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
+    /// # }
+    /// ```
+    pub fn psubscribe(
+        self: &mut Client,
+        channel: &str,
+    ) -> RedisEmptyResult {
+        self.subscriber.psubscribe(channel)
+    }
+
+    /// Unsubscribes to the provided channel.
+    pub fn unsubscribe(
+        self: &mut Client,
+        channel: &str,
+    ) -> RedisEmptyResult {
+        self.subscriber.unsubscribe(channel)
+    }
+
+    /// Unsubscribes to the provided channel pattern.
+    pub fn punsubscribe(
+        self: &mut Client,
+        channel: &str,
+    ) -> RedisEmptyResult {
+        self.subscriber.punsubscribe(channel)
+    }
+
+    /// Fetches the next message from any of the subscribed channels.
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run
+    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
+    /// #     Ok(mut client) =>  {
+    ///           client.subscribe("important_notifications");
+    ///
+    ///           match client.get_message() {
+    ///               Ok(message) => {
+    ///                   let payload : String = message.get_payload().unwrap();
+    ///                   println!("Got message: {}", payload);
+    ///               },
+    ///               Err(error) => println!("Error while fetching message, should retry again.")
+    ///           }
+    /// #
+    /// #         println!("Subscribed to channel.");
+    /// #     },
+    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
+    /// # }
+    /// ```
+    pub fn get_message(self: &mut Client) -> RedisMessageResult {
+        self.subscriber.get_message(&self.client)
+    }
 }
 
 /// Constructs a new redis client.<br>
@@ -115,8 +206,10 @@ impl Client {
 pub fn create(connection_string: &str) -> Result<Client, RedisError> {
     match redis::Client::open(connection_string) {
         Ok(redis_client) => {
-            let redis_connection = connection::create(redis_client);
-            let client = Client { connection: redis_connection };
+            let redis_connection = connection::create();
+            let redis_pubsub = subscriber::create();
+
+            let client = Client { client: redis_client, connection: redis_connection, subscriber: redis_pubsub };
 
             Ok(client)
 

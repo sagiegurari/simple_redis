@@ -9,19 +9,20 @@ use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisResult};
 
 /// The redis client which enables to invoke redis operations.
 pub struct Connection {
-    /// Internal redis client
-    client: redis::Client,
     /// Holds the current redis connection
     connection: Option<redis::Connection>
 }
 
 /// If the client connection is not open or not valid, this function will create
 /// a new redis connection and modify the client to store this new connection.
-fn open_connection(connection: &mut Connection) -> RedisEmptyResult {
+fn open_connection(
+    connection: &mut Connection,
+    client: &redis::Client,
+) -> RedisEmptyResult {
     let output: RedisEmptyResult;
 
     if !connection.is_connection_open() {
-        output = match connection.client.get_connection() {
+        output = match client.get_connection() {
             Ok(redis_connection) => {
                 connection.connection = Some(redis_connection);
                 Ok(())
@@ -54,8 +55,11 @@ impl Connection {
         open
     }
 
-    pub fn get_redis_connection(self: &mut Connection) -> RedisResult<&redis::Connection> {
-        match open_connection(self) {
+    pub fn get_redis_connection(
+        self: &mut Connection,
+        client: &redis::Client,
+    ) -> RedisResult<&redis::Connection> {
+        match open_connection(self, client) {
             Err(error) => Err(error),
             _ => {
                 match self.connection {
@@ -68,6 +72,6 @@ impl Connection {
 }
 
 /// Creates and returns a new connection
-pub fn create(client: redis::Client) -> Connection {
-    Connection { client, connection: Option::None }
+pub fn create() -> Connection {
+    Connection { connection: Option::None }
 }

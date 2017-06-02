@@ -146,7 +146,7 @@ impl Client {
         self.subscriber.psubscribe(channel)
     }
 
-    /// Unsubscribes to the provided channel.
+    /// Unsubscribes from the provided channel.
     pub fn unsubscribe(
         self: &mut Client,
         channel: &str,
@@ -154,7 +154,7 @@ impl Client {
         self.subscriber.unsubscribe(channel)
     }
 
-    /// Unsubscribes to the provided channel pattern.
+    /// Unsubscribes from the provided channel pattern.
     pub fn punsubscribe(
         self: &mut Client,
         channel: &str,

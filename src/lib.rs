@@ -51,7 +51,7 @@ extern crate redis;
 
 mod types;
 mod connection;
-pub mod commands;
+mod commands;
 pub mod client;
 
 /// Redis Error struct

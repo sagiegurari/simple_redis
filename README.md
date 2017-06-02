@@ -1,5 +1,7 @@
 # simple_redis
 
+[![Build Status](https://travis-ci.org/sagiegurari/multiple-redis.svg)](http://travis-ci.org/sagiegurari/multiple-redis)
+
 > Simple [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
 
 * [Overview](#overview)

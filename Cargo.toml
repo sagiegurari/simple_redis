@@ -1,6 +1,6 @@
 [package]
 name = "simple_redis"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["sagie gur ari <sagiegurari@gmail.com>"]
 keywords = ["redis", "cache", "pubsub", "database"]
 description = "Simple redis client."

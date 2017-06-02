@@ -9,7 +9,7 @@ rm -Rf ./target/doc
 
 cargo fmt
 cargo doc --no-deps
-cargo build --features "clippy"
+cargo build
 cargo test
 
 #move docs

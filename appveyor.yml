@@ -24,9 +24,6 @@ install:
   - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
   - rustc -vV
   - cargo -vV
-  - choco install redis-64
-  - redis-server --service-install
-  - redis-server --service-start
 
 build: false
 

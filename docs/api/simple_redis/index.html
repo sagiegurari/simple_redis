@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `simple_redis` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, simple_redis">
+
+    <title>simple_redis - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Crate simple_redis</p><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'simple_redis', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>simple_redis</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-108' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'>
+<h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
+<p>Simple <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with internal
+connection handling.</p>
+
+<p>This library provides a very basic, simple API for the most common redis operations.<br>
+While not as comprehensive or flexiable as <a href="https://crates.io/crates/redis">redis-rs</a>,
+it does provide a simpler api for most common use cases and operations as well as automatic internal connection
+handling.<br>
+Connection validation is done before every operation invocation, so there is no need to create/release or validate
+connections before running any Redis operation.<br>
+However, this comes at a small performance cost of PING operation to the redis server.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">match</span> <span class="ident">simple_redis</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+        <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span>  {
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Created Redis Client&quot;</span>);
+
+            <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;my_key&quot;</span>, <span class="string">&quot;my_value&quot;</span>) {
+                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to set value in Redis: {}&quot;</span>, <span class="ident">error</span>),
+                _ <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Value set in Redis&quot;</span>)
+            }
+
+            <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;my_key&quot;</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Read value from Redis: {}&quot;</span>, <span class="ident">value</span>),
+                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to get value from Redis: {}&quot;</span>, <span class="ident">error</span>)
+            }
+
+            <span class="doccomment">/// run some command that is not built in the library</span>
+            <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]) {
+                <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
+                _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+            }
+        },
+        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
+    }
+}</pre>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="client/index.html"
+                                  title='mod simple_redis::client'>client</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="commands/index.html"
+                                  title='mod simple_redis::commands'>commands</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.create.html"
+                                  title='fn simple_redis::create'>create</a></td>
+                           <td class='docblock-short'>
+                                <p>Constructs a new redis client.<br>
+The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisEmptyResult.html"
+                                  title='type simple_redis::RedisEmptyResult'>RedisEmptyResult</a></td>
+                           <td class='docblock-short'>
+                                <p>Holds empty result or error</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisError.html"
+                                  title='type simple_redis::RedisError'>RedisError</a></td>
+                           <td class='docblock-short'>
+                                <p>Redis Error struct</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisResult.html"
+                                  title='type simple_redis::RedisResult'>RedisResult</a></td>
+                           <td class='docblock-short'>
+                                <p>Redis result which either holds a value or a Redis error</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.RedisStringResult.html"
+                                  title='type simple_redis::RedisStringResult'>RedisStringResult</a></td>
+                           <td class='docblock-short'>
+                                <p>Holds string result or error</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "simple_redis";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

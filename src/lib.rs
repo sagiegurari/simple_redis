@@ -4,7 +4,8 @@
 
 //! # simple_redis
 //!
-//! Simple [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with internal connection handling.
+//! Simple [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with internal
+//! connection handling.
 //!
 //! This library provides a very basic, simple API for the most common redis operations.<br>
 //! While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),

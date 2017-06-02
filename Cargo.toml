@@ -1,13 +1,15 @@
 [package]
 name = "simple_redis"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["sagie gur ari <sagiegurari@gmail.com>"]
-keywords = ["redis", "cache", "pubsub", "database"]
 description = "Simple redis client."
-homepage = "http://github.com/sagiegurari/simple_redis"
-documentation = "https://sagiegurari.github.io/simple_redis/api/simple_redis/index.html"
 license = "Apache-2.0"
+documentation = "https://sagiegurari.github.io/simple_redis/api/simple_redis/index.html"
+homepage = "http://github.com/sagiegurari/simple_redis"
+repository = "git@github.com:sagiegurari/simple_redis.git"
 readme = "README.md"
+keywords = ["redis", "cache", "pubsub", "database"]
+categories = ["caching", "database"]
 include = [
     "**/*.rs",
     "docs/*",

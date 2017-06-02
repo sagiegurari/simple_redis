@@ -1,6 +1,6 @@
 # simple_redis
 
-[![Build Status](https://travis-ci.org/sagiegurari/simple_redis.svg)](http://travis-ci.org/sagiegurari/simple_redis) [![Build Status](https://ci.appveyor.com/api/projects/status/github/sagiegurari/simple_redis?svg=true)
+[![Build Status](https://travis-ci.org/sagiegurari/simple_redis.svg)](http://travis-ci.org/sagiegurari/simple_redis) [![Build status](https://ci.appveyor.com/api/projects/status/knyrs33tyjqgt06u?svg=true)](https://ci.appveyor.com/project/sagiegurari/simple-redis)
 
 > Simple [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
 

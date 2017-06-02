@@ -5,8 +5,7 @@ export RUST_BACKTRACE=1
 
 #cleanups
 rm -Rf ./docs/api
-rm -Rf ./target/doc
-rm -Rf ./target/package
+cargo clean
 
 cargo fmt
 cargo doc --no-deps

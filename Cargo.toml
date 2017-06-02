@@ -20,7 +20,6 @@ include = [
 
 [dependencies]
 redis = "^0.8.0"
-clippy = {version = "^0.0.136", optional = true}
 
 [features]
 default = []
@@ -28,4 +27,3 @@ default = []
 [badges]
 travis-ci = { repository = "sagiegurari/simple_redis", branch = "master" }
 appveyor = { repository = "sagiegurari/simple-redis", branch = "master", service = "github" }
-coveralls = { repository = "sagiegurari/simple_redis", branch = "master", service = "github" }

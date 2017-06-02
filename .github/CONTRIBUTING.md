@@ -18,13 +18,7 @@ Your pull request build must pass (the build will run automatically).<br>
 You can run the following command locally to ensure the build will pass:
 
 ````sh
-cargo build --features "clippy" && cargo test
-````
-
-* This library is using code inspection tools to validate certain level of standards.<br>The configuration is part of the repository and you can set your favorite IDE using that configuration.<br>You can run the following command locally to ensure the code inspection passes:
-
-````sh
-cargo build --features "clippy"
+cargo build && cargo test
 ````
 
 * There are many automatic unit tests as part of the library which provide full coverage of the functionality.<br>Any fix/enhancement must come with a set of tests to ensure its working well.

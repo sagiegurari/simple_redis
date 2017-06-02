@@ -8,15 +8,6 @@ homepage = "http://github.com/sagiegurari/simple_redis"
 documentation = "http://github.com/sagiegurari/simple_redis/blob/master/docs/api.md"
 license = "Apache-2.0"
 readme = "README.md"
-
-[dependencies]
-redis = "^0.8.0"
-clippy = {version = "^0.0.136", optional = true}
-
-[features]
-default = []
-
-[package]
 include = [
     "**/*.rs",
     "docs/*",
@@ -24,6 +15,13 @@ include = [
     "LICENSE",
     "README.md",
 ]
+
+[dependencies]
+redis = "^0.8.0"
+clippy = {version = "^0.0.136", optional = true}
+
+[features]
+default = []
 
 [badges]
 travis-ci = { repository = "sagiegurari/simple_redis", branch = "master" }

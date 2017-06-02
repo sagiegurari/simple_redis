@@ -1,6 +1,7 @@
 # simple_redis
 
 [![crates.io](http://meritbadge.herokuapp.com/simple_redis)](https://crates.io/crates/simple_redis) [![Build Status](https://travis-ci.org/sagiegurari/simple_redis.svg)](http://travis-ci.org/sagiegurari/simple_redis) [![Build status](https://ci.appveyor.com/api/projects/status/knyrs33tyjqgt06u?svg=true)](https://ci.appveyor.com/project/sagiegurari/simple-redis)
+[![Crates.io](https://img.shields.io/crates/l/simple_redis.svg)](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) [![Crates.io](https://img.shields.io/crates/d/simple_redis.svg)](https://crates.io/crates/simple_redis)
 
 > Simple [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
 

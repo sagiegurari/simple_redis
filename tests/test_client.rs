@@ -1,5 +1,4 @@
 extern crate simple_redis;
-use std::{thread, time};
 
 #[test]
 fn create_invalid_url() {

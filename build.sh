@@ -20,6 +20,7 @@ cargo fmt
 cargo doc --no-deps
 cargo build
 cargo test
+cargo bench
 
 #move docs
 mkdir -p ./docs/api

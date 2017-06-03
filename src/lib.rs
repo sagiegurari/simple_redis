@@ -60,6 +60,7 @@
         unused_variables,
         warnings,
         while_true)]
+#![warn(unknown_lints)]
 #![allow(box_pointers,
         missing_debug_implementations,
         trivial_casts,

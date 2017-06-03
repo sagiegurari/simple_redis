@@ -223,5 +223,5 @@ impl Subscriber {
 
 /// Creates and returns a new connection
 pub fn create() -> Subscriber {
-    Subscriber { subscribed: false, subscriptions: vec![], psubscriptions: vec![], pubsub: Option::None }
+    Subscriber { subscribed: false, subscriptions: vec![], psubscriptions: vec![], pubsub: None }
 }

@@ -73,5 +73,5 @@ impl Connection {
 
 /// Creates and returns a new connection
 pub fn create() -> Connection {
-    Connection { connection: Option::None }
+    Connection { connection: None }
 }

@@ -1,6 +1,70 @@
-#![deny(missing_docs)]
-#![deny(unused_must_use)]
-#![deny(non_camel_case_types)]
+#![deny(anonymous_parameters,
+        const_err,
+        dead_code,
+        deprecated,
+        deprecated_attr,
+        exceeding_bitshifts,
+        extra_requirement_in_impl,
+        fat_ptr_transmutes,
+        illegal_floating_point_literal_pattern,
+        improper_ctypes,
+        invalid_type_param_default,
+        legacy_constructor_visibility,
+        legacy_directory_ownership,
+        legacy_imports,
+        missing_copy_implementations,
+        missing_docs,
+        missing_fragment_specifier,
+        mutable_transmutes,
+        no_mangle_const_items,
+        no_mangle_generic_items,
+        non_camel_case_types,
+        non_shorthand_field_patterns,
+        non_snake_case,
+        non_upper_case_globals,
+        overflowing_literals,
+        parenthesized_params_in_types_and_modules,
+        path_statements,
+        patterns_in_fns_without_body,
+        plugin_as_library,
+        private_in_public,
+        private_no_mangle_fns,
+        private_no_mangle_statics,
+        renamed_and_removed_lints,
+        resolve_trait_on_defaulted_unit,
+        safe_extern_statics,
+        stable_features,
+        trivial_numeric_casts,
+        unconditional_recursion,
+        unions_with_drop_fields,
+        unknown_crate_types,
+        unknown_lints,
+        unreachable_code,
+        unreachable_patterns,
+        unsafe_code,
+        unstable_features,
+        unused_allocation,
+        unused_assignments,
+        unused_attributes,
+        unused_comparisons,
+        unused_extern_crates,
+        unused_features,
+        unused_import_braces,
+        unused_imports,
+        unused_macros,
+        unused_must_use,
+        unused_mut,
+        unused_parens,
+        unused_qualifications,
+        unused_unsafe,
+        unused_variables,
+        warnings,
+        while_true)]
+#![allow(box_pointers,
+        missing_debug_implementations,
+        trivial_casts,
+        unused_results,
+        variant_size_differences)]
 #![cfg_attr(feature="clippy", feature(plugin))]
 
 //! # simple_redis
@@ -91,8 +155,6 @@
 //! }
 //! ```
 //!
-
-extern crate redis;
 
 mod types;
 mod connection;

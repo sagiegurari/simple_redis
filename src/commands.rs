@@ -3,7 +3,6 @@
 //! Defines the redis commands exposed by the redis client.
 //!
 
-extern crate redis;
 use client::Client;
 use types::{RedisBoolResult, RedisEmptyResult, RedisStringResult};
 

@@ -4,7 +4,7 @@
 //!
 
 use client::Client;
-use types::{RedisBoolResult, RedisEmptyResult, RedisStringResult};
+use types::{RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 
 /// Defines the redis commands exposed by the redis client.
 impl Client {
@@ -194,6 +194,58 @@ impl Client {
     ) -> RedisEmptyResult {
         self.run_command_empty_response("RENAME", vec![key, new_key])
     }
+
+    /// See redis [RENAMENX](https://redis.io/commands/renamenx) command.
+    pub fn renamenx(
+        &mut self,
+        key: &str,
+        new_key: &str,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("RENAMENX", vec![key, new_key])
+    }
+
+    /// See redis [APPEND](https://redis.io/commands/append) command.
+    pub fn append(
+        &mut self,
+        key: &str,
+        value: &str,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("APPEND", vec![key, value])
+    }
+
+    /// See redis [INCR](https://redis.io/commands/incr) command.
+    pub fn incr(
+        &mut self,
+        key: &str,
+    ) -> RedisResult<i64> {
+        self.run_command::<i64>("INCR", vec![key])
+    }
+
+    /// See redis [INCRBY](https://redis.io/commands/incrby) command.
+    pub fn incrby(
+        &mut self,
+        key: &str,
+        value: i64,
+    ) -> RedisResult<i64> {
+        self.run_command::<i64>("INCRBY", vec![key, &*value.to_string()])
+    }
+
+    /// See redis [INCRBYFLOAT](https://redis.io/commands/incrbyfloat) command.
+    pub fn incrbyfloat(
+        &mut self,
+        key: &str,
+        value: f64,
+    ) -> RedisResult<f64> {
+        self.run_command::<f64>("INCRBYFLOAT", vec![key, &*value.to_string()])
+    }
+
+    /// See redis [STRLEN](https://redis.io/commands/strlen) command.
+    pub fn strlen(
+        &mut self,
+        key: &str,
+    ) -> RedisResult<i32> {
+        self.run_command::<i32>("STRLEN", vec![key])
+    }
 }
 
 #[cfg(test)]
@@ -220,547 +272,584 @@ mod tests {
 
     #[test]
     fn run_command() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                match client.run_command::<String>("ECHO", vec!["testing"]) {
-                    Ok(value) => assert_eq!(value, "testing"),
-                    _ => panic!("test error"),
-                }
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
-            }
+        match client.run_command::<String>("ECHO", vec!["testing"]) {
+            Ok(value) => assert_eq!(value, "testing"),
             _ => panic!("test error"),
-        };
+        }
+
+        assert!(client.is_connection_open());
     }
 
     #[test]
     fn auth() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                match client.echo("testing") {
-                    Ok(value) => assert_eq!(value, "testing"),
-                    _ => panic!("test error"),
-                }
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
-
-                let result = client.auth("my_password");
-                /// we are running with redis without auth, so we should be getting an error
-                assert!(result.is_err());
-
-                assert!(!client.is_connection_open());
-
-                match client.echo("testing") {
-                    Ok(value) => assert_eq!(value, "testing"),
-                    _ => panic!("test error"),
-                }
-
-                assert!(client.is_connection_open());
-            }
+        match client.echo("testing") {
+            Ok(value) => assert_eq!(value, "testing"),
             _ => panic!("test error"),
-        };
+        }
+
+        assert!(client.is_connection_open());
+
+        let result = client.auth("my_password");
+        /// we are running with redis without auth, so we should be getting an error
+        assert!(result.is_err());
+
+        assert!(!client.is_connection_open());
+
+        match client.echo("testing") {
+            Ok(value) => assert_eq!(value, "testing"),
+            _ => panic!("test error"),
+        }
+
+        assert!(client.is_connection_open());
     }
 
     #[test]
     fn echo() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                match client.echo("testing") {
-                    Ok(value) => assert_eq!(value, "testing"),
-                    _ => panic!("test error"),
-                }
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
-            }
+        match client.echo("testing") {
+            Ok(value) => assert_eq!(value, "testing"),
             _ => panic!("test error"),
-        };
+        }
+
+        assert!(client.is_connection_open());
     }
 
     #[test]
     fn publish() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = client.publish("publish_channel", "test message");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
-            }
-            _ => panic!("test error"),
-        };
+        let result = client.publish("publish_channel", "test message");
+        assert!(result.is_ok());
+
+        assert!(client.is_connection_open());
     }
 
     #[test]
     fn pub_sub() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut subscriber) => {
-                assert!(!subscriber.is_connection_open());
+        let mut subscriber = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = subscriber.subscribe("pub_sub");
-                assert!(result.is_ok());
+        assert!(!subscriber.is_connection_open());
 
-                thread::spawn(
-                    || {
-                        thread::sleep(time::Duration::from_secs(2));
+        let mut result = subscriber.subscribe("pub_sub");
+        assert!(result.is_ok());
 
-                        match client::create("redis://127.0.0.1:6379/") {
-                            Ok(mut publisher) => {
-                                assert!(!publisher.is_connection_open());
+        thread::spawn(
+            || {
+                thread::sleep(time::Duration::from_secs(2));
 
-                                let result = publisher.publish("pub_sub", "test pub_sub message");
-                                assert!(result.is_ok());
+                match client::create("redis://127.0.0.1:6379/") {
+                    Ok(mut publisher) => {
+                        assert!(!publisher.is_connection_open());
 
-                                assert!(publisher.is_connection_open());
-                            }
-                            _ => panic!("test error"),
-                        };
-                    }
-                );
+                        let result = publisher.publish("pub_sub", "test pub_sub message");
+                        assert!(result.is_ok());
 
-                match subscriber.get_message() {
-                    Ok(message) => {
-                        let payload: String = message.get_payload().unwrap();
-                        assert_eq!(payload, "test pub_sub message")
+                        assert!(publisher.is_connection_open());
                     }
                     _ => panic!("test error"),
-                }
+                };
+            }
+        );
 
-                result = subscriber.subscribe("pub_sub2");
-                assert!(result.is_ok());
-
-                result = subscriber.unsubscribe("pub_sub");
-                assert!(result.is_ok());
-
-                thread::spawn(
-                    || {
-                        thread::sleep(time::Duration::from_secs(2));
-
-                        match client::create("redis://127.0.0.1:6379/") {
-                            Ok(mut publisher) => {
-                                assert!(!publisher.is_connection_open());
-
-                                let mut result = publisher.publish("pub_sub", "bad");
-                                assert!(result.is_ok());
-
-                                assert!(publisher.is_connection_open());
-
-                                thread::sleep(time::Duration::from_secs(1));
-
-                                result = publisher.publish("pub_sub2", "good");
-                                assert!(result.is_ok());
-                            }
-                            _ => panic!("test error"),
-                        };
-                    }
-                );
-
-                match subscriber.get_message() {
-                    Ok(message) => {
-                        let payload: String = message.get_payload().unwrap();
-                        assert_eq!(payload, "good")
-                    }
-                    _ => panic!("test error"),
-                }
+        match subscriber.get_message() {
+            Ok(message) => {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message")
             }
             _ => panic!("test error"),
-        };
+        }
+
+        result = subscriber.subscribe("pub_sub2");
+        assert!(result.is_ok());
+
+        result = subscriber.unsubscribe("pub_sub");
+        assert!(result.is_ok());
+
+        thread::spawn(
+            || {
+                thread::sleep(time::Duration::from_secs(2));
+
+                match client::create("redis://127.0.0.1:6379/") {
+                    Ok(mut publisher) => {
+                        assert!(!publisher.is_connection_open());
+
+                        let mut result = publisher.publish("pub_sub", "bad");
+                        assert!(result.is_ok());
+
+                        assert!(publisher.is_connection_open());
+
+                        thread::sleep(time::Duration::from_secs(1));
+
+                        result = publisher.publish("pub_sub2", "good");
+                        assert!(result.is_ok());
+                    }
+                    _ => panic!("test error"),
+                };
+            }
+        );
+
+        match subscriber.get_message() {
+            Ok(message) => {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "good")
+            }
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn pub_psub_simple() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut subscriber) => {
-                assert!(!subscriber.is_connection_open());
+        let mut subscriber = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = subscriber.psubscribe("pub_psub_simple::123");
-                assert!(result.is_ok());
+        assert!(!subscriber.is_connection_open());
 
-                thread::spawn(
-                    || {
-                        thread::sleep(time::Duration::from_secs(2));
+        let result = subscriber.psubscribe("pub_psub_simple::123");
+        assert!(result.is_ok());
 
-                        match client::create("redis://127.0.0.1:6379/") {
-                            Ok(mut publisher) => {
-                                assert!(!publisher.is_connection_open());
+        thread::spawn(
+            || {
+                thread::sleep(time::Duration::from_secs(2));
 
-                                let result = publisher.publish("pub_psub_simple::123", "test pub_sub message");
-                                assert!(result.is_ok());
+                match client::create("redis://127.0.0.1:6379/") {
+                    Ok(mut publisher) => {
+                        assert!(!publisher.is_connection_open());
 
-                                assert!(publisher.is_connection_open());
-                            }
-                            _ => panic!("test error"),
-                        };
-                    }
-                );
+                        let result = publisher.publish("pub_psub_simple::123", "test pub_sub message");
+                        assert!(result.is_ok());
 
-                match subscriber.get_message() {
-                    Ok(message) => {
-                        let payload: String = message.get_payload().unwrap();
-                        assert_eq!(payload, "test pub_sub message")
+                        assert!(publisher.is_connection_open());
                     }
                     _ => panic!("test error"),
-                }
+                };
+            }
+        );
+
+        match subscriber.get_message() {
+            Ok(message) => {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message")
             }
             _ => panic!("test error"),
-        };
+        }
     }
 
     #[test]
     fn pub_psub_pattern() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut subscriber) => {
-                assert!(!subscriber.is_connection_open());
+        let mut subscriber = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = subscriber.psubscribe("pub_psub_pattern::*");
-                assert!(result.is_ok());
+        assert!(!subscriber.is_connection_open());
 
-                thread::spawn(
-                    || {
-                        thread::sleep(time::Duration::from_secs(2));
+        let mut result = subscriber.psubscribe("pub_psub_pattern::*");
+        assert!(result.is_ok());
 
-                        match client::create("redis://127.0.0.1:6379/") {
-                            Ok(mut publisher) => {
-                                assert!(!publisher.is_connection_open());
+        thread::spawn(
+            || {
+                thread::sleep(time::Duration::from_secs(2));
 
-                                let result = publisher.publish("pub_psub_pattern::123", "test pub_sub message");
-                                assert!(result.is_ok());
+                match client::create("redis://127.0.0.1:6379/") {
+                    Ok(mut publisher) => {
+                        assert!(!publisher.is_connection_open());
 
-                                assert!(publisher.is_connection_open());
-                            }
-                            _ => panic!("test error"),
-                        };
-                    }
-                );
+                        let result = publisher.publish("pub_psub_pattern::123", "test pub_sub message");
+                        assert!(result.is_ok());
 
-                match subscriber.get_message() {
-                    Ok(message) => {
-                        let payload: String = message.get_payload().unwrap();
-                        assert_eq!(payload, "test pub_sub message")
+                        assert!(publisher.is_connection_open());
                     }
                     _ => panic!("test error"),
-                }
+                };
+            }
+        );
 
-                result = subscriber.psubscribe("pub_psub_pattern2::*");
-                assert!(result.is_ok());
-
-                result = subscriber.punsubscribe("pub_psub_pattern::*");
-                assert!(result.is_ok());
-
-                thread::spawn(
-                    || {
-                        thread::sleep(time::Duration::from_secs(2));
-
-                        match client::create("redis://127.0.0.1:6379/") {
-                            Ok(mut publisher) => {
-                                assert!(!publisher.is_connection_open());
-
-                                let mut result = publisher.publish("pub_psub_pattern::123", "bad");
-                                assert!(result.is_ok());
-
-                                assert!(publisher.is_connection_open());
-
-                                thread::sleep(time::Duration::from_secs(1));
-
-                                result = publisher.publish("pub_psub_pattern2::123", "good");
-                                assert!(result.is_ok());
-                            }
-                            _ => panic!("test error"),
-                        };
-                    }
-                );
-
-                match subscriber.get_message() {
-                    Ok(message) => {
-                        let payload: String = message.get_payload().unwrap();
-                        assert_eq!(payload, "good")
-                    }
-                    _ => panic!("test error"),
-                }
+        match subscriber.get_message() {
+            Ok(message) => {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message")
             }
             _ => panic!("test error"),
-        };
+        }
+
+        result = subscriber.psubscribe("pub_psub_pattern2::*");
+        assert!(result.is_ok());
+
+        result = subscriber.punsubscribe("pub_psub_pattern::*");
+        assert!(result.is_ok());
+
+        thread::spawn(
+            || {
+                thread::sleep(time::Duration::from_secs(2));
+
+                match client::create("redis://127.0.0.1:6379/") {
+                    Ok(mut publisher) => {
+                        assert!(!publisher.is_connection_open());
+
+                        let mut result = publisher.publish("pub_psub_pattern::123", "bad");
+                        assert!(result.is_ok());
+
+                        assert!(publisher.is_connection_open());
+
+                        thread::sleep(time::Duration::from_secs(1));
+
+                        result = publisher.publish("pub_psub_pattern2::123", "good");
+                        assert!(result.is_ok());
+                    }
+                    _ => panic!("test error"),
+                };
+            }
+        );
+
+        match subscriber.get_message() {
+            Ok(message) => {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "good")
+            }
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn set_get() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = client.set("set_get", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let result = client.set("set_get", "my_value");
+        assert!(result.is_ok());
 
-                match client.get("set_get") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
-            }
+        assert!(client.is_connection_open());
+
+        match client.get("set_get") {
+            Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
-        };
+        }
     }
 
     #[test]
     fn setex() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = client.setex("setex", "my_value", 1);
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let result = client.setex("setex", "my_value", 1);
+        assert!(result.is_ok());
 
-                match client.get("setex") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                match client.exists("setex") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-
-                thread::sleep(time::Duration::from_secs(1));
-                thread::sleep(time::Duration::from_millis(250));
-
-                match client.exists("setex") {
-                    Ok(value) => assert!(!value),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.get("setex") {
+            Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
-        };
+        }
+
+        match client.exists("setex") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
+
+        thread::sleep(time::Duration::from_secs(1));
+        thread::sleep(time::Duration::from_millis(250));
+
+        match client.exists("setex") {
+            Ok(value) => assert!(!value),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn del_setnx() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = client.set("del_setnx", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let mut result = client.set("del_setnx", "my_value");
+        assert!(result.is_ok());
 
-                match client.get("del_setnx") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                result = client.setnx("del_setnx", "my_value2");
-                assert!(result.is_ok());
-
-                match client.get("del_setnx") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
-
-                result = client.del("del_setnx");
-                assert!(result.is_ok());
-
-                let string_result = client.get("del_setnx");
-                assert!(string_result.is_err());
-
-                result = client.setnx("del_setnx", "my_value2");
-                assert!(result.is_ok());
-
-                match client.get("del_setnx") {
-                    Ok(value) => assert_eq!(value, "my_value2"),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.get("del_setnx") {
+            Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
-        };
+        }
+
+        result = client.setnx("del_setnx", "my_value2");
+        assert!(result.is_ok());
+
+        match client.get("del_setnx") {
+            Ok(value) => assert_eq!(value, "my_value"),
+            _ => panic!("test error"),
+        }
+
+        result = client.del("del_setnx");
+        assert!(result.is_ok());
+
+        let string_result = client.get("del_setnx");
+        assert!(string_result.is_err());
+
+        result = client.setnx("del_setnx", "my_value2");
+        assert!(result.is_ok());
+
+        match client.get("del_setnx") {
+            Ok(value) => assert_eq!(value, "my_value2"),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn getset() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = client.set("getset", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let result = client.set("getset", "my_value");
+        assert!(result.is_ok());
 
-                match client.get("getset") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                match client.getset("getset", "my_value2") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
-
-                match client.get("getset") {
-                    Ok(value) => assert_eq!(value, "my_value2"),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.get("getset") {
+            Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
-        };
+        }
+
+        match client.getset("getset", "my_value2") {
+            Ok(value) => assert_eq!(value, "my_value"),
+            _ => panic!("test error"),
+        }
+
+        match client.get("getset") {
+            Ok(value) => assert_eq!(value, "my_value2"),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn exists() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let result = client.set("exists_true", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let result = client.set("exists_true", "my_value");
+        assert!(result.is_ok());
 
-                match client.exists("exists_true") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                match client.exists("exists_false") {
-                    Ok(value) => assert!(!value),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.exists("exists_true") {
+            Ok(value) => assert!(value),
             _ => panic!("test error"),
-        };
+        }
+
+        match client.exists("exists_false") {
+            Ok(value) => assert!(!value),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn expire() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = client.set("expire", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let mut result = client.set("expire", "my_value");
+        assert!(result.is_ok());
 
-                match client.exists("expire") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                result = client.expire("expire", 1);
-                assert!(result.is_ok());
-
-                match client.exists("expire") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-
-                thread::sleep(time::Duration::from_secs(1));
-                thread::sleep(time::Duration::from_millis(250));
-
-                match client.exists("expire") {
-                    Ok(value) => assert!(!value),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.exists("expire") {
+            Ok(value) => assert!(value),
             _ => panic!("test error"),
-        };
+        }
+
+        result = client.expire("expire", 1);
+        assert!(result.is_ok());
+
+        match client.exists("expire") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
+
+        thread::sleep(time::Duration::from_secs(1));
+        thread::sleep(time::Duration::from_millis(250));
+
+        match client.exists("expire") {
+            Ok(value) => assert!(!value),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn persist() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = client.set("persist", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let mut result = client.set("persist", "my_value");
+        assert!(result.is_ok());
 
-                match client.exists("persist") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
+        assert!(client.is_connection_open());
 
-                result = client.expire("persist", 1);
-                assert!(result.is_ok());
-
-                match client.exists("persist") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-
-                result = client.persist("persist");
-                assert!(result.is_ok());
-
-                thread::sleep(time::Duration::from_secs(1));
-                thread::sleep(time::Duration::from_millis(250));
-
-                match client.exists("persist") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.exists("persist") {
+            Ok(value) => assert!(value),
             _ => panic!("test error"),
-        };
+        }
+
+        result = client.expire("persist", 1);
+        assert!(result.is_ok());
+
+        match client.exists("persist") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
+
+        result = client.persist("persist");
+        assert!(result.is_ok());
+
+        thread::sleep(time::Duration::from_secs(1));
+        thread::sleep(time::Duration::from_millis(250));
+
+        match client.exists("persist") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
     }
 
     #[test]
     fn rename() {
-        match client::create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
 
-                let mut result = client.set("rename", "my_value");
-                assert!(result.is_ok());
+        assert!(!client.is_connection_open());
 
-                assert!(client.is_connection_open());
+        let mut result = client.set("rename", "my_value");
+        assert!(result.is_ok());
 
-                result = client.del("rename2");
-                assert!(result.is_ok());
+        assert!(client.is_connection_open());
 
-                match client.get("rename") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
+        result = client.del("rename2");
+        assert!(result.is_ok());
 
-                match client.exists("rename") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-
-                match client.exists("rename2") {
-                    Ok(value) => assert!(!value),
-                    _ => panic!("test error"),
-                }
-
-                result = client.rename("rename", "rename2");
-                assert!(result.is_ok());
-
-                match client.exists("rename") {
-                    Ok(value) => assert!(!value),
-                    _ => panic!("test error"),
-                }
-
-                match client.exists("rename2") {
-                    Ok(value) => assert!(value),
-                    _ => panic!("test error"),
-                }
-
-                match client.get("rename2") {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
-            }
+        match client.get("rename") {
+            Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
-        };
+        }
+
+        match client.exists("rename") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
+
+        match client.exists("rename2") {
+            Ok(value) => assert!(!value),
+            _ => panic!("test error"),
+        }
+
+        result = client.rename("rename", "rename2");
+        assert!(result.is_ok());
+
+        match client.exists("rename") {
+            Ok(value) => assert!(!value),
+            _ => panic!("test error"),
+        }
+
+        match client.exists("rename2") {
+            Ok(value) => assert!(value),
+            _ => panic!("test error"),
+        }
+
+        match client.get("rename2") {
+            Ok(value) => assert_eq!(value, "my_value"),
+            _ => panic!("test error"),
+        }
+    }
+
+    #[test]
+    fn renamenx() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("renamenx1", "value1").unwrap();
+        client.set("renamenx2", "value2").unwrap();
+        client.set("renamenx3", "value3").unwrap();
+        client.del("renamenx3").unwrap();
+
+        client.renamenx("renamenx1", "renamenx3").unwrap();
+        let mut string_result = client.get("renamenx3").unwrap();
+        assert_eq!(string_result, "value1");
+        let bool_result = client.exists("renamenx1").unwrap();
+        assert!(!bool_result);
+
+        client.renamenx("renamenx2", "renamenx3").unwrap();
+        string_result = client.get("renamenx3").unwrap();
+        assert_eq!(string_result, "value1");
+        string_result = client.get("renamenx2").unwrap();
+        assert_eq!(string_result, "value2");
+    }
+
+    #[test]
+    fn append() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("append", "value").unwrap();
+        let mut result = client.get("append").unwrap();
+        assert_eq!(result, "value");
+        client.append("append", "12345").unwrap();
+        result = client.get("append").unwrap();
+        assert_eq!(result, "value12345");
+    }
+
+    #[test]
+    fn incr() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("incr", "10").unwrap();
+        let mut result = client.incr("incr").unwrap();
+        assert_eq!(result, 11);
+        result = client.incr("incr").unwrap();
+        assert_eq!(result, 12);
+        let string_result = client.get("incr").unwrap();
+        assert_eq!(string_result, "12");
+    }
+
+    #[test]
+    fn incrby() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("incrby", "10").unwrap();
+        let mut result = client.incrby("incrby", 20).unwrap();
+        assert_eq!(result, 30);
+        result = client.incrby("incrby", 70).unwrap();
+        assert_eq!(result, 100);
+        let string_result = client.get("incrby").unwrap();
+        assert_eq!(string_result, "100");
+    }
+
+    #[test]
+    fn incrbyfloat() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("incrbyfloat", "10").unwrap();
+        let mut result = client.incrbyfloat("incrbyfloat", 1.5).unwrap();
+        assert_eq!(result, 11.5);
+        result = client.incrbyfloat("incrbyfloat", 8.5).unwrap();
+        assert_eq!(result, 20f64);
+        let string_result = client.get("incrbyfloat").unwrap();
+        assert_eq!(string_result, "20");
+    }
+
+    #[test]
+    fn strlen() {
+        let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
+
+        client.set("strlen", "12345").unwrap();
+        let result = client.strlen("strlen").unwrap();
+        assert_eq!(result, 5);
     }
 }

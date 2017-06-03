@@ -809,6 +809,95 @@
 <span id="764">764</span>
 <span id="765">765</span>
 <span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -816,7 +905,7 @@
 <span class="doccomment">//!</span>
 
 <span class="kw">use</span> <span class="ident">client</span>::<span class="ident">Client</span>;
-<span class="kw">use</span> <span class="ident">types</span>::{<span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisStringResult</span>};
+<span class="kw">use</span> <span class="ident">types</span>::{<span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisResult</span>, <span class="ident">RedisStringResult</span>};
 
 <span class="doccomment">/// Defines the redis commands exposed by the redis client.</span>
 <span class="kw">impl</span> <span class="ident">Client</span> {
@@ -1006,6 +1095,58 @@
     ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;RENAME&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="ident">new_key</span>])
     }
+
+    <span class="doccomment">/// See redis [RENAMENX](https://redis.io/commands/renamenx) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">renamenx</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">new_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;RENAMENX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="ident">new_key</span>])
+    }
+
+    <span class="doccomment">/// See redis [APPEND](https://redis.io/commands/append) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;APPEND&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="ident">value</span>])
+    }
+
+    <span class="doccomment">/// See redis [INCR](https://redis.io/commands/incr) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incr</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>(<span class="string">&quot;INCR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
+
+    <span class="doccomment">/// See redis [INCRBY](https://redis.io/commands/incrby) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrby</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">i64</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>(<span class="string">&quot;INCRBY&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [INCRBYFLOAT](https://redis.io/commands/incrbyfloat) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrbyfloat</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">f64</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="string">&quot;INCRBYFLOAT&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [STRLEN](https://redis.io/commands/strlen) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strlen</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="string">&quot;STRLEN&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -1032,548 +1173,585 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">run_command</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">auth</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">auth</span>(<span class="string">&quot;my_password&quot;</span>);
-                <span class="doccomment">/// we are running with redis without auth, so we should be getting an error</span>
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_err</span>());
-
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">auth</span>(<span class="string">&quot;my_password&quot;</span>);
+        <span class="doccomment">/// we are running with redis without auth, so we should be getting an error</span>
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_err</span>());
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">echo</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">echo</span>(<span class="string">&quot;testing&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">publish</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">publish</span>(<span class="string">&quot;publish_channel&quot;</span>, <span class="string">&quot;test message&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-            }
-            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">publish</span>(<span class="string">&quot;publish_channel&quot;</span>, <span class="string">&quot;test message&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">pub_sub</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">subscriber</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">subscribe</span>(<span class="string">&quot;pub_sub&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">thread</span>::<span class="ident">spawn</span>(
-                    <span class="op">||</span> {
-                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">subscribe</span>(<span class="string">&quot;pub_sub&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+        <span class="ident">thread</span>::<span class="ident">spawn</span>(
+            <span class="op">||</span> {
+                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
 
-                                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+                <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
 
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-                            }
-                            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                        };
-                    }
-                );
+                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
                     }
                     _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+                };
+            }
+        );
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">subscribe</span>(<span class="string">&quot;pub_sub2&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">unsubscribe</span>(<span class="string">&quot;pub_sub&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="ident">thread</span>::<span class="ident">spawn</span>(
-                    <span class="op">||</span> {
-                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
-
-                        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub&quot;</span>, <span class="string">&quot;bad&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-
-                                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
-
-                                <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub2&quot;</span>, <span class="string">&quot;good&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-                            }
-                            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                        };
-                    }
-                );
-
-                <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;good&quot;</span>)
-                    }
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
             }
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">subscribe</span>(<span class="string">&quot;pub_sub2&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">unsubscribe</span>(<span class="string">&quot;pub_sub&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="ident">thread</span>::<span class="ident">spawn</span>(
+            <span class="op">||</span> {
+                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
+
+                <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub&quot;</span>, <span class="string">&quot;bad&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+
+                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
+
+                        <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_sub2&quot;</span>, <span class="string">&quot;good&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+                    }
+                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+                };
+            }
+        );
+
+        <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;good&quot;</span>)
+            }
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">pub_psub_simple</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">subscriber</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_simple::123&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">thread</span>::<span class="ident">spawn</span>(
-                    <span class="op">||</span> {
-                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_simple::123&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+        <span class="ident">thread</span>::<span class="ident">spawn</span>(
+            <span class="op">||</span> {
+                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
 
-                                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_simple::123&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+                <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
 
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-                            }
-                            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                        };
-                    }
-                );
+                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_simple::123&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
                     }
                     _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+                };
+            }
+        );
+
+        <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
             }
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">pub_psub_pattern</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">subscriber</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_pattern::*&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">subscriber</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">thread</span>::<span class="ident">spawn</span>(
-                    <span class="op">||</span> {
-                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_pattern::*&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+        <span class="ident">thread</span>::<span class="ident">spawn</span>(
+            <span class="op">||</span> {
+                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
 
-                                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern::123&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+                <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
 
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-                            }
-                            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                        };
-                    }
-                );
+                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern::123&quot;</span>, <span class="string">&quot;test pub_sub message&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
                     }
                     _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+                };
+            }
+        );
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_pattern2::*&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">punsubscribe</span>(<span class="string">&quot;pub_psub_pattern::*&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="ident">thread</span>::<span class="ident">spawn</span>(
-                    <span class="op">||</span> {
-                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
-
-                        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-                            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern::123&quot;</span>, <span class="string">&quot;bad&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
-
-                                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
-
-                                <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern2::123&quot;</span>, <span class="string">&quot;good&quot;</span>);
-                                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-                            }
-                            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                        };
-                    }
-                );
-
-                <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;good&quot;</span>)
-                    }
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;test pub_sub message&quot;</span>)
             }
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;pub_psub_pattern2::*&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">punsubscribe</span>(<span class="string">&quot;pub_psub_pattern::*&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="ident">thread</span>::<span class="ident">spawn</span>(
+            <span class="op">||</span> {
+                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">2</span>));
+
+                <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">publisher</span>) <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern::123&quot;</span>, <span class="string">&quot;bad&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">publisher</span>.<span class="ident">is_connection_open</span>());
+
+                        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
+
+                        <span class="ident">result</span> <span class="op">=</span> <span class="ident">publisher</span>.<span class="ident">publish</span>(<span class="string">&quot;pub_psub_pattern2::123&quot;</span>, <span class="string">&quot;good&quot;</span>);
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+                    }
+                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+                };
+            }
+        );
+
+        <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">get_message</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;good&quot;</span>)
+            }
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_get</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;set_get&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;set_get&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;set_get&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;set_get&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">setex</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setex</span>(<span class="string">&quot;setex&quot;</span>, <span class="string">&quot;my_value&quot;</span>, <span class="number">1</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setex</span>(<span class="string">&quot;setex&quot;</span>, <span class="string">&quot;my_value&quot;</span>, <span class="number">1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;setex&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;setex&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;setex&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;setex&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;setex&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;setex&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">del_setnx</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setnx</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value2&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">del</span>(<span class="string">&quot;del_setnx&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">let</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">string_result</span>.<span class="ident">is_err</span>());
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setnx</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value2&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value2&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setnx</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value2&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">del</span>(<span class="string">&quot;del_setnx&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">let</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">string_result</span>.<span class="ident">is_err</span>());
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">setnx</span>(<span class="string">&quot;del_setnx&quot;</span>, <span class="string">&quot;my_value2&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;del_setnx&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value2&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">getset</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;getset&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;getset&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;getset&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">getset</span>(<span class="string">&quot;getset&quot;</span>, <span class="string">&quot;my_value2&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;getset&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value2&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;getset&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">getset</span>(<span class="string">&quot;getset&quot;</span>, <span class="string">&quot;my_value2&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;getset&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value2&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">exists</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;exists_true&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;exists_true&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;exists_true&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;exists_false&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;exists_true&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;exists_false&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">expire</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;expire&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;expire&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">expire</span>(<span class="string">&quot;expire&quot;</span>, <span class="number">1</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">expire</span>(<span class="string">&quot;expire&quot;</span>, <span class="number">1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;expire&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">persist</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;persist&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;persist&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">expire</span>(<span class="string">&quot;persist&quot;</span>, <span class="number">1</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">persist</span>(<span class="string">&quot;persist&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
-                <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">expire</span>(<span class="string">&quot;persist&quot;</span>, <span class="number">1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">persist</span>(<span class="string">&quot;persist&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>));
+        <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">250</span>));
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;persist&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">rename</span>() {
-        <span class="kw">match</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">client</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;rename&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;rename&quot;</span>, <span class="string">&quot;my_value&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">del</span>(<span class="string">&quot;rename2&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;rename&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">del</span>(<span class="string">&quot;rename2&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename2&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">rename</span>(<span class="string">&quot;rename&quot;</span>, <span class="string">&quot;rename2&quot;</span>);
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename2&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;rename2&quot;</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-                }
-            }
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;rename&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
             _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
-        };
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename2&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">rename</span>(<span class="string">&quot;rename&quot;</span>, <span class="string">&quot;rename2&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;rename2&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+
+        <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;rename2&quot;</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">renamenx</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;renamenx1&quot;</span>, <span class="string">&quot;value1&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;renamenx2&quot;</span>, <span class="string">&quot;value2&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;renamenx3&quot;</span>, <span class="string">&quot;value3&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">client</span>.<span class="ident">del</span>(<span class="string">&quot;renamenx3&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">renamenx</span>(<span class="string">&quot;renamenx1&quot;</span>, <span class="string">&quot;renamenx3&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;renamenx3&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;value1&quot;</span>);
+        <span class="kw">let</span> <span class="ident">bool_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">exists</span>(<span class="string">&quot;renamenx1&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">bool_result</span>);
+
+        <span class="ident">client</span>.<span class="ident">renamenx</span>(<span class="string">&quot;renamenx2&quot;</span>, <span class="string">&quot;renamenx3&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;renamenx3&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;value1&quot;</span>);
+        <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;renamenx2&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;value2&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">append</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;append&quot;</span>, <span class="string">&quot;value&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;append&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="string">&quot;value&quot;</span>);
+        <span class="ident">client</span>.<span class="ident">append</span>(<span class="string">&quot;append&quot;</span>, <span class="string">&quot;12345&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;append&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="string">&quot;value12345&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">incr</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;incr&quot;</span>, <span class="string">&quot;10&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incr</span>(<span class="string">&quot;incr&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">11</span>);
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incr</span>(<span class="string">&quot;incr&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">12</span>);
+        <span class="kw">let</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;incr&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;12&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">incrby</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;incrby&quot;</span>, <span class="string">&quot;10&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incrby</span>(<span class="string">&quot;incrby&quot;</span>, <span class="number">20</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">30</span>);
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incrby</span>(<span class="string">&quot;incrby&quot;</span>, <span class="number">70</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">100</span>);
+        <span class="kw">let</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;incrby&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;100&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">incrbyfloat</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;incrbyfloat&quot;</span>, <span class="string">&quot;10&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incrbyfloat</span>(<span class="string">&quot;incrbyfloat&quot;</span>, <span class="number">1.5</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">11.5</span>);
+        <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">incrbyfloat</span>(<span class="string">&quot;incrbyfloat&quot;</span>, <span class="number">8.5</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">20f64</span>);
+        <span class="kw">let</span> <span class="ident">string_result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="string">&quot;incrbyfloat&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">string_result</span>, <span class="string">&quot;20&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">strlen</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="ident">client</span>.<span class="ident">set</span>(<span class="string">&quot;strlen&quot;</span>, <span class="string">&quot;12345&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">strlen</span>(<span class="string">&quot;strlen&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">5</span>);
     }
 }
 </pre>

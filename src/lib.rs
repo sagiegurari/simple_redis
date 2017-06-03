@@ -58,14 +58,14 @@
         unused_qualifications,
         unused_unsafe,
         unused_variables,
-        warnings,
         while_true)]
 #![warn(unknown_lints)]
 #![allow(box_pointers,
         missing_debug_implementations,
         trivial_casts,
         unused_results,
-        variant_size_differences)]
+        variant_size_differences,
+        warnings)]
 #![cfg_attr(feature="clippy", feature(plugin))]
 
 //! # simple_redis

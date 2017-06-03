@@ -26,4 +26,3 @@ default = []
 
 [badges]
 travis-ci = { repository = "sagiegurari/simple_redis", branch = "master" }
-appveyor = { repository = "sagiegurari/simple-redis", branch = "master", service = "github" }

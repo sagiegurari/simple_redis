@@ -70,17 +70,19 @@
 
 //! # simple_redis
 //!
-//! Simple [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with internal
+//! Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with
+//! internal
 //! connection and subscription handling.
 //!
 //! This library provides a very basic, simple API for the most common redis operations.<br>
 //! While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
-//! it does provide a simpler api for most common use cases and operations as well as automatic internal connection
-//! and subscription (pubsub) handling.<br>
+//! it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal
+//! connection and subscription (pubsub) handling.<br>
 //! In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub
 //! instances in parallel.<br>
 //! <br>
-//! Connection resiliency is managed by verifying the connection before every operation against the redis server.<br>
+//! Connection resiliency is managed by verifying the internally managed connection before every operation against the
+//! redis server.<br>
 //! In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 //! connection only.<br>
 //! However, this comes at a small performance cost of PING operation to the redis server.<br>

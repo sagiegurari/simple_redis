@@ -267,6 +267,8 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -340,17 +342,19 @@
 
 <span class="doccomment">//! # simple_redis</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Simple [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with internal</span>
+<span class="doccomment">//! Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with</span>
+<span class="doccomment">//! internal</span>
 <span class="doccomment">//! connection and subscription handling.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This library provides a very basic, simple API for the most common redis operations.&lt;br&gt;</span>
 <span class="doccomment">//! While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),</span>
-<span class="doccomment">//! it does provide a simpler api for most common use cases and operations as well as automatic internal connection</span>
-<span class="doccomment">//! and subscription (pubsub) handling.&lt;br&gt;</span>
+<span class="doccomment">//! it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal</span>
+<span class="doccomment">//! connection and subscription (pubsub) handling.&lt;br&gt;</span>
 <span class="doccomment">//! In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub</span>
 <span class="doccomment">//! instances in parallel.&lt;br&gt;</span>
 <span class="doccomment">//! &lt;br&gt;</span>
-<span class="doccomment">//! Connection resiliency is managed by verifying the connection before every operation against the redis server.&lt;br&gt;</span>
+<span class="doccomment">//! Connection resiliency is managed by verifying the internally managed connection before every operation against the</span>
+<span class="doccomment">//! redis server.&lt;br&gt;</span>
 <span class="doccomment">//! In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid</span>
 <span class="doccomment">//! connection only.&lt;br&gt;</span>
 <span class="doccomment">//! However, this comes at a small performance cost of PING operation to the redis server.&lt;br&gt;</span>

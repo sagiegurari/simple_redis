@@ -237,17 +237,17 @@ fn pub_psub_pattern() {
 }
 
 #[test]
-fn set_get_str() {
+fn set_get_string() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
     assert!(!client.is_connection_open());
 
-    let result = client.set("set_get_str", "my_value");
+    let result = client.set("set_get_string", "my_value");
     assert!(result.is_ok());
 
     assert!(client.is_connection_open());
 
-    match client.get("set_get_str") {
+    match client.get_string("set_get_string") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -264,8 +264,8 @@ fn set_get_i32() {
 
     assert!(client.is_connection_open());
 
-    match client.get("set_get_i32") {
-        Ok(value) => assert_eq!(value, "32"),
+    match client.get::<i32>("set_get_i32") {
+        Ok(value) => assert_eq!(value, 32i32),
         _ => panic!("test error"),
     }
 }
@@ -281,8 +281,8 @@ fn set_get_f64() {
 
     assert!(client.is_connection_open());
 
-    match client.get("set_get_f64") {
-        Ok(value) => assert_eq!(value, "45.5"),
+    match client.get::<f64>("set_get_f64") {
+        Ok(value) => assert_eq!(value, 45.5f64),
         _ => panic!("test error"),
     }
 }
@@ -298,8 +298,8 @@ fn set_get_bool() {
 
     assert!(client.is_connection_open());
 
-    match client.get("set_get_bool") {
-        Ok(value) => assert_eq!(value, "true"),
+    match client.get::<bool>("set_get_bool") {
+        Ok(value) => assert_eq!(value, true),
         _ => panic!("test error"),
     }
 }
@@ -315,7 +315,7 @@ fn setex() {
 
     assert!(client.is_connection_open());
 
-    match client.get("setex") {
+    match client.get_string("setex") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -345,7 +345,7 @@ fn del_setnx() {
 
     assert!(client.is_connection_open());
 
-    match client.get("del_setnx") {
+    match client.get_string("del_setnx") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -353,7 +353,7 @@ fn del_setnx() {
     result = client.setnx("del_setnx", "my_value2");
     assert!(result.is_ok());
 
-    match client.get("del_setnx") {
+    match client.get_string("del_setnx") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -361,40 +361,67 @@ fn del_setnx() {
     result = client.del("del_setnx");
     assert!(result.is_ok());
 
-    let string_result = client.get("del_setnx");
+    let string_result = client.get_string("del_setnx");
     assert!(string_result.is_err());
 
     result = client.setnx("del_setnx", "my_value2");
     assert!(result.is_ok());
 
-    match client.get("del_setnx") {
+    match client.get_string("del_setnx") {
         Ok(value) => assert_eq!(value, "my_value2"),
         _ => panic!("test error"),
     }
 }
 
 #[test]
-fn getset() {
+fn getset_i32() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
     assert!(!client.is_connection_open());
 
-    let result = client.set("getset", "my_value");
+    let result = client.set("getset_i32", 50);
     assert!(result.is_ok());
 
     assert!(client.is_connection_open());
 
-    match client.get("getset") {
+    match client.get_string("getset_i32") {
+        Ok(value) => assert_eq!(value, "50"),
+        _ => panic!("test error"),
+    }
+
+    match client.getset::<i32, i32>("getset_i32", 100) {
+        Ok(value) => assert_eq!(value, 50),
+        _ => panic!("test error"),
+    }
+
+    match client.get_string("getset_i32") {
+        Ok(value) => assert_eq!(value, "100"),
+        _ => panic!("test error"),
+    }
+}
+
+#[test]
+fn getset_string() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    let result = client.set("getset_string", "my_value");
+    assert!(result.is_ok());
+
+    assert!(client.is_connection_open());
+
+    match client.get_string("getset_string") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
 
-    match client.getset("getset", "my_value2") {
+    match client.getset_string("getset_string", "my_value2") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
 
-    match client.get("getset") {
+    match client.get_string("getset_string") {
         Ok(value) => assert_eq!(value, "my_value2"),
         _ => panic!("test error"),
     }
@@ -505,7 +532,7 @@ fn rename() {
     result = client.del("rename2");
     assert!(result.is_ok());
 
-    match client.get("rename") {
+    match client.get_string("rename") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -533,7 +560,7 @@ fn rename() {
         _ => panic!("test error"),
     }
 
-    match client.get("rename2") {
+    match client.get_string("rename2") {
         Ok(value) => assert_eq!(value, "my_value"),
         _ => panic!("test error"),
     }
@@ -549,15 +576,15 @@ fn renamenx() {
     client.del("renamenx3").unwrap();
 
     client.renamenx("renamenx1", "renamenx3").unwrap();
-    let mut string_result = client.get("renamenx3").unwrap();
+    let mut string_result = client.get_string("renamenx3").unwrap();
     assert_eq!(string_result, "value1");
     let bool_result = client.exists("renamenx1").unwrap();
     assert!(!bool_result);
 
     client.renamenx("renamenx2", "renamenx3").unwrap();
-    string_result = client.get("renamenx3").unwrap();
+    string_result = client.get_string("renamenx3").unwrap();
     assert_eq!(string_result, "value1");
-    string_result = client.get("renamenx2").unwrap();
+    string_result = client.get_string("renamenx2").unwrap();
     assert_eq!(string_result, "value2");
 }
 
@@ -566,10 +593,10 @@ fn append() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
     client.set("append", "value").unwrap();
-    let mut result = client.get("append").unwrap();
+    let mut result = client.get_string("append").unwrap();
     assert_eq!(result, "value");
     client.append("append", "12345").unwrap();
-    result = client.get("append").unwrap();
+    result = client.get_string("append").unwrap();
     assert_eq!(result, "value12345");
 }
 
@@ -582,7 +609,7 @@ fn incr() {
     assert_eq!(result, 11);
     result = client.incr("incr").unwrap();
     assert_eq!(result, 12);
-    let string_result = client.get("incr").unwrap();
+    let string_result = client.get_string("incr").unwrap();
     assert_eq!(string_result, "12");
 }
 
@@ -595,7 +622,7 @@ fn incrby() {
     assert_eq!(result, 30);
     result = client.incrby("incrby", 70).unwrap();
     assert_eq!(result, 100);
-    let string_result = client.get("incrby").unwrap();
+    let string_result = client.get_string("incrby").unwrap();
     assert_eq!(string_result, "100");
 }
 
@@ -608,7 +635,7 @@ fn incrbyfloat() {
     assert_eq!(result, 11.5);
     result = client.incrbyfloat("incrbyfloat", 8.5).unwrap();
     assert_eq!(result, 20f64);
-    let string_result = client.get("incrbyfloat").unwrap();
+    let string_result = client.get_string("incrbyfloat").unwrap();
     assert_eq!(string_result, "20");
 }
 

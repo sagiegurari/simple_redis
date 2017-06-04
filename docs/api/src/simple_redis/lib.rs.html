@@ -257,6 +257,16 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -365,7 +375,17 @@
 <span class="doccomment">//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)</span>
 <span class="doccomment">//!             };</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!             match client.get(&quot;my_key&quot;) {</span>
+<span class="doccomment">//!             match client.get_string(&quot;my_key&quot;) {</span>
+<span class="doccomment">//!                 Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
+<span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
+<span class="doccomment">//!             };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             match client.set(&quot;my_numeric_key&quot;, 255.5) {</span>
+<span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
+<span class="doccomment">//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)</span>
+<span class="doccomment">//!             };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             match client.get::&lt;f32&gt;(&quot;my_numeric_key&quot;) {</span>
 <span class="doccomment">//!                 Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
 <span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
 <span class="doccomment">//!             };</span>

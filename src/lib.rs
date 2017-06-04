@@ -105,7 +105,17 @@
 //!                 _ => println!("Value set in Redis")
 //!             };
 //!
-//!             match client.get("my_key") {
+//!             match client.get_string("my_key") {
+//!                 Ok(value) => println!("Read value from Redis: {}", value),
+//!                 Err(error) => println!("Unable to get value from Redis: {}", error)
+//!             };
+//!
+//!             match client.set("my_numeric_key", 255.5) {
+//!                 Err(error) => println!("Unable to set value in Redis: {}", error),
+//!                 _ => println!("Value set in Redis")
+//!             };
+//!
+//!             match client.get::<f32>("my_numeric_key") {
 //!                 Ok(value) => println!("Read value from Redis: {}", value),
 //!                 Err(error) => println!("Unable to get value from Redis: {}", error)
 //!             };

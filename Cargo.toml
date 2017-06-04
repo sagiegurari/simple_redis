@@ -1,8 +1,8 @@
 [package]
 name = "simple_redis"
-version = "0.1.14"
+version = "0.2.1"
 authors = ["sagie gur ari <sagiegurari@gmail.com>"]
-description = "Simple redis client."
+description = "Simple and resilient redis client."
 license = "Apache-2.0"
 documentation = "https://sagiegurari.github.io/simple_redis/api/simple_redis/index.html"
 homepage = "http://github.com/sagiegurari/simple_redis"

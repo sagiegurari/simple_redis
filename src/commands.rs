@@ -4,6 +4,7 @@
 //!
 
 use client::Client;
+use std::str::FromStr;
 use types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 
 /// Defines the redis commands exposed by the redis client.
@@ -70,7 +71,7 @@ impl Client {
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
     /// #     Ok(mut client) =>  {
-    ///           match client.get("my_key") {
+    ///           match client.get::<i64>("my_key") {
     ///               Ok(value) => println!("Read value from Redis: {}", value),
     ///               Err(error) => println!("Unable to get value from Redis: {}", error)
     ///           }
@@ -79,7 +80,31 @@ impl Client {
     /// # }
     /// ```
     ///
-    pub fn get(
+    pub fn get<T: FromStr>(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<T> {
+        self.run_command_from_string_response("GET", vec![key])
+    }
+
+    /// See redis [GET](https://redis.io/commands/get) command.<br>
+    /// This function will always return a String response.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
+    /// #     Ok(mut client) =>  {
+    ///           match client.get_string("my_key") {
+    ///               Ok(value) => println!("Read value from Redis: {}", value),
+    ///               Err(error) => println!("Unable to get value from Redis: {}", error)
+    ///           }
+    /// #     },
+    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
+    /// # }
+    /// ```
+    ///
+    pub fn get_string(
         self: &mut Client,
         key: &str,
     ) -> RedisStringResult {
@@ -145,7 +170,16 @@ impl Client {
     }
 
     /// See redis [GETSET](https://redis.io/commands/getset) command.
-    pub fn getset<T: RedisArg>(
+    pub fn getset<T: RedisArg, V: FromStr>(
+        &mut self,
+        key: &str,
+        value: T,
+    ) -> RedisResult<V> {
+        self.run_command_from_string_response::<V>("GETSET", vec![key, &value.to_string()])
+    }
+
+    /// See redis [GETSET](https://redis.io/commands/getset) command.
+    pub fn getset_string<T: RedisArg>(
         &mut self,
         key: &str,
         value: T,
@@ -294,7 +328,7 @@ mod tests {
 
         assert!(client.is_connection_open());
 
-        match client.get("set_get") {
+        match client.get_string("set_get") {
             Ok(value) => assert_eq!(value, "my_value"),
             _ => panic!("test error"),
         }

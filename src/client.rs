@@ -5,6 +5,7 @@
 
 extern crate redis;
 use connection;
+use std::str::FromStr;
 use subscriber;
 use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult, RedisStringResult};
 
@@ -71,6 +72,23 @@ impl Client {
     ) -> RedisResult<T> {
         match self.connection.get_redis_connection(&self.client) {
             Ok(ref connection) => run_command_on_connection::<T>(connection, command, args),
+            Err(error) => Err(error),
+        }
+    }
+
+    /// invokes the run_command and returned typed result
+    pub fn run_command_from_string_response<T: FromStr>(
+        self: &mut Client,
+        command: &str,
+        args: Vec<&str>,
+    ) -> RedisResult<T> {
+        match self.run_command::<String>(command, args) {
+            Ok(value) => {
+                match T::from_str(&value) {
+                    Ok(typed_value) => Ok(typed_value),
+                    _ => Err(RedisError { info: ErrorInfo::Description("Unable to parse output value.") }),
+                }
+            }
             Err(error) => Err(error),
         }
     }

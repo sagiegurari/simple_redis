@@ -2,7 +2,7 @@
 
 [![crates.io](http://meritbadge.herokuapp.com/simple_redis)](https://crates.io/crates/simple_redis) [![Build Status](https://travis-ci.org/sagiegurari/simple_redis.svg)](http://travis-ci.org/sagiegurari/simple_redis) [![Build status](https://ci.appveyor.com/api/projects/status/knyrs33tyjqgt06u?svg=true)](https://ci.appveyor.com/project/sagiegurari/simple-redis) [![Crates.io](https://img.shields.io/crates/l/simple_redis.svg)](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) [![Documentation](https://docs.rs/simple_redis/badge.svg)](https://docs.rs/crate/simple_redis/) [![Crates.io](https://img.shields.io/crates/d/simple_redis.svg)](https://crates.io/crates/simple_redis)
 
-> Simple [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
+> Simple and resilient [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
 
 * [Overview](#overview)
 * [Usage](#usage)
@@ -16,17 +16,20 @@
 ## Overview
 This library provides a very basic, simple API for the most common redis operations.<br>
 While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
-it does provide a simpler api for most common use cases and operations as well as automatic internal connection
+it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal connection
 and subscription (pubsub) handling.<br>
 In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub instances in parallel.<br>
 <br>
-Connection resiliency is managed by verifying the connection before every operation against the redis server.<br>
+Connection resiliency is managed by verifying the internally managed connection before every operation against the redis server.<br>
 In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 connection only.<br>
 However, this comes at a small performance cost of PING operation to the redis server.<br>
+In [redis-rs](https://crates.io/crates/redis), connections are no longer usable in case the connection is broken and if operations are invoked
+on the client directly, it will basically open a new connection for every operation which is very costly.<br>
 <br>
 Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
-automatically in case of any error while fetching a message from the subscribed channels.
+automatically in case of any error while fetching a message from the subscribed channels.<br>
+[redis-rs](https://crates.io/crates/redis) doesn't provide any such automatic resiliency and resubscription capabilities.
 <br>
 <br>
 **This library is still in initial development stage and many more features will come soon.**
@@ -56,7 +59,17 @@ match client.set("my_key", "my_value") {
     _ => println!("Value set in Redis")
 };
 
-match client.get("my_key") {
+match client.get_string("my_key") {
+    Ok(value) => println!("Read value from Redis: {}", value),
+    Err(error) => println!("Unable to get value from Redis: {}", error)
+};
+
+match client.set("my_numeric_key", 255.5) {
+    Err(error) => println!("Unable to set value in Redis: {}", error),
+    _ => println!("Value set in Redis")
+};
+
+match client.get::<f32>("my_numeric_key") {
     Ok(value) => println!("Read value from Redis: {}", value),
     Err(error) => println!("Unable to get value from Redis: {}", error)
 };
@@ -109,7 +122,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2017-06-04  | v0.1.14 | Maintenance |
+| 2017-06-04  | v0.2.1  | Added more data type support |
 | 2017-06-04  | v0.1.13 | Support more data types |
 | 2017-06-03  | v0.1.10 | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |

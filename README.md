@@ -109,9 +109,9 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2017-06-04  | v0.1.14 | Maintenance |
 | 2017-06-04  | v0.1.13 | Support more data types |
 | 2017-06-03  | v0.1.10 | More commands added |
-| 2017-06-03  | v0.1.8  | Maintenance |
 | 2017-06-03  | v0.1.7  | pubsub support added |
 | 2017-06-02  | v0.1.6  | Initial release. |
 

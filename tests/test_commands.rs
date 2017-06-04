@@ -237,18 +237,69 @@ fn pub_psub_pattern() {
 }
 
 #[test]
-fn set_get() {
+fn set_get_str() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
     assert!(!client.is_connection_open());
 
-    let result = client.set("set_get", "my_value");
+    let result = client.set("set_get_str", "my_value");
     assert!(result.is_ok());
 
     assert!(client.is_connection_open());
 
-    match client.get("set_get") {
+    match client.get("set_get_str") {
         Ok(value) => assert_eq!(value, "my_value"),
+        _ => panic!("test error"),
+    }
+}
+
+#[test]
+fn set_get_i32() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    let result = client.set("set_get_i32", 32i32);
+    assert!(result.is_ok());
+
+    assert!(client.is_connection_open());
+
+    match client.get("set_get_i32") {
+        Ok(value) => assert_eq!(value, "32"),
+        _ => panic!("test error"),
+    }
+}
+
+#[test]
+fn set_get_f64() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    let result = client.set("set_get_f64", 45.5f64);
+    assert!(result.is_ok());
+
+    assert!(client.is_connection_open());
+
+    match client.get("set_get_f64") {
+        Ok(value) => assert_eq!(value, "45.5"),
+        _ => panic!("test error"),
+    }
+}
+
+#[test]
+fn set_get_bool() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    let result = client.set("set_get_bool", true);
+    assert!(result.is_ok());
+
+    assert!(client.is_connection_open());
+
+    match client.get("set_get_bool") {
+        Ok(value) => assert_eq!(value, "true"),
         _ => panic!("test error"),
     }
 }

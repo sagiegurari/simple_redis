@@ -172,18 +172,6 @@ pub type Message = types::Message;
 /// Redis result which either holds a value or a Redis error
 pub type RedisResult<T> = types::RedisResult<T>;
 
-/// Holds empty result or error
-pub type RedisEmptyResult = types::RedisEmptyResult;
-
-/// Holds pubsub message result or error
-pub type RedisMessageResult = types::RedisMessageResult;
-
-/// Holds string result or error
-pub type RedisStringResult = types::RedisStringResult;
-
-/// Holds bool result or error
-pub type RedisBoolResult = types::RedisBoolResult;
-
 /// Constructs a new redis client.<br>
 /// The redis connection string must be in the following format: `redis://[:<passwd>@]<hostname>[:port][/<db>]`
 ///

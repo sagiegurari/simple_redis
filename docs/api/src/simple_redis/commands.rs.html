@@ -352,7 +352,7 @@
 <span class="doccomment">//!</span>
 
 <span class="kw">use</span> <span class="ident">client</span>::<span class="ident">Client</span>;
-<span class="kw">use</span> <span class="ident">types</span>::{<span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisResult</span>, <span class="ident">RedisStringResult</span>};
+<span class="kw">use</span> <span class="ident">types</span>::{<span class="ident">RedisArg</span>, <span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisResult</span>, <span class="ident">RedisStringResult</span>};
 
 <span class="doccomment">/// Defines the redis commands exposed by the redis client.</span>
 <span class="kw">impl</span> <span class="ident">Client</span> {
@@ -450,12 +450,12 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
-        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="ident">value</span>])
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 
     <span class="doccomment">/// See redis [SETEX](https://redis.io/commands/setex) command.</span>
@@ -474,22 +474,22 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setex</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setex</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
         <span class="ident">seconds</span>: <span class="ident">usize</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
-        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SETEX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">seconds</span>.<span class="ident">to_string</span>(), <span class="ident">value</span>])
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SETEX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">seconds</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 
     <span class="doccomment">/// See redis [SETNX](https://redis.io/commands/setnx) command.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setnx</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setnx</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
-        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SETNX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="ident">value</span>])
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SETNX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 
     <span class="doccomment">/// See redis [GETSET](https://redis.io/commands/getset) command.</span>
@@ -570,19 +570,19 @@
     }
 
     <span class="doccomment">/// See redis [INCRBY](https://redis.io/commands/incrby) command.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrby</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrby</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">value</span>: <span class="ident">i64</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>(<span class="string">&quot;INCRBY&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 
     <span class="doccomment">/// See redis [INCRBYFLOAT](https://redis.io/commands/incrbyfloat) command.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrbyfloat</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incrbyfloat</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">value</span>: <span class="ident">f64</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>(<span class="string">&quot;INCRBYFLOAT&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }

@@ -4,7 +4,7 @@
 //!
 
 use client::Client;
-use types::{RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
+use types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 
 /// Defines the redis commands exposed by the redis client.
 impl Client {
@@ -102,12 +102,12 @@ impl Client {
     /// # }
     /// ```
     ///
-    pub fn set(
+    pub fn set<T: RedisArg>(
         self: &mut Client,
         key: &str,
-        value: &str,
+        value: T,
     ) -> RedisEmptyResult {
-        self.run_command_empty_response("SET", vec![key, value])
+        self.run_command_empty_response("SET", vec![key, &value.to_string()])
     }
 
     /// See redis [SETEX](https://redis.io/commands/setex) command.
@@ -126,22 +126,22 @@ impl Client {
     /// # }
     /// ```
     ///
-    pub fn setex(
+    pub fn setex<T: RedisArg>(
         &mut self,
         key: &str,
-        value: &str,
+        value: T,
         seconds: usize,
     ) -> RedisEmptyResult {
-        self.run_command_empty_response("SETEX", vec![key, &*seconds.to_string(), value])
+        self.run_command_empty_response("SETEX", vec![key, &*seconds.to_string(), &value.to_string()])
     }
 
     /// See redis [SETNX](https://redis.io/commands/setnx) command.
-    pub fn setnx(
+    pub fn setnx<T: RedisArg>(
         &mut self,
         key: &str,
-        value: &str,
+        value: T,
     ) -> RedisEmptyResult {
-        self.run_command_empty_response("SETNX", vec![key, value])
+        self.run_command_empty_response("SETNX", vec![key, &value.to_string()])
     }
 
     /// See redis [GETSET](https://redis.io/commands/getset) command.
@@ -222,19 +222,19 @@ impl Client {
     }
 
     /// See redis [INCRBY](https://redis.io/commands/incrby) command.
-    pub fn incrby(
+    pub fn incrby<T: RedisArg>(
         &mut self,
         key: &str,
-        value: i64,
+        value: T,
     ) -> RedisResult<i64> {
         self.run_command::<i64>("INCRBY", vec![key, &*value.to_string()])
     }
 
     /// See redis [INCRBYFLOAT](https://redis.io/commands/incrbyfloat) command.
-    pub fn incrbyfloat(
+    pub fn incrbyfloat<T: RedisArg>(
         &mut self,
         key: &str,
-        value: f64,
+        value: T,
     ) -> RedisResult<f64> {
         self.run_command::<f64>("INCRBYFLOAT", vec![key, &*value.to_string()])
     }

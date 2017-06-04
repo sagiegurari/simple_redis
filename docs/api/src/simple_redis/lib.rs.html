@@ -257,18 +257,6 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -443,18 +431,6 @@
 
 <span class="doccomment">/// Redis result which either holds a value or a Redis error</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-
-<span class="doccomment">/// Holds empty result or error</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisEmptyResult</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisEmptyResult</span>;
-
-<span class="doccomment">/// Holds pubsub message result or error</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisMessageResult</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisMessageResult</span>;
-
-<span class="doccomment">/// Holds string result or error</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisStringResult</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisStringResult</span>;
-
-<span class="doccomment">/// Holds bool result or error</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisBoolResult</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisBoolResult</span>;
 
 <span class="doccomment">/// Constructs a new redis client.&lt;br&gt;</span>
 <span class="doccomment">/// The redis connection string must be in the following format: `redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]`</span>

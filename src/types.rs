@@ -54,6 +54,29 @@ impl fmt::Display for RedisError {
     }
 }
 
+pub trait RedisArg: Sized + ToString {}
+
+macro_rules! as_redis_arg {
+    ($t:ty) => (
+        impl RedisArg for $t {}
+    )
+}
+
+impl<'a> RedisArg for &'a str {}
+
+as_redis_arg!(i8);
+as_redis_arg!(i16);
+as_redis_arg!(u16);
+as_redis_arg!(i32);
+as_redis_arg!(u32);
+as_redis_arg!(i64);
+as_redis_arg!(u64);
+as_redis_arg!(f32);
+as_redis_arg!(f64);
+as_redis_arg!(isize);
+as_redis_arg!(usize);
+as_redis_arg!(bool);
+
 /// PubSub message
 pub type Message = redis::Msg;
 

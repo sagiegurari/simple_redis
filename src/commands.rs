@@ -212,6 +212,15 @@ impl Client {
         self.run_command_empty_response("EXPIRE", vec![key, &*seconds.to_string()])
     }
 
+    /// See redis [PEXPIRE](https://redis.io/commands/pexpire) command.
+    pub fn pexpire(
+        &mut self,
+        key: &str,
+        millies: usize,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("PEXPIRE", vec![key, &*millies.to_string()])
+    }
+
     /// See redis [PERSIST](https://redis.io/commands/persist) command.
     pub fn persist(
         &mut self,
@@ -279,6 +288,14 @@ impl Client {
         key: &str,
     ) -> RedisResult<i32> {
         self.run_command::<i32>("STRLEN", vec![key])
+    }
+
+    /// See redis [KEYS](https://redis.io/commands/keys) command.
+    pub fn keys(
+        &mut self,
+        pattern: &str,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("KEYS", vec![pattern])
     }
 }
 

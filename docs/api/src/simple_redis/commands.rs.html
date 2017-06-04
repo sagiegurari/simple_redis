@@ -379,6 +379,23 @@
 <span id="334">334</span>
 <span id="335">335</span>
 <span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -594,6 +611,15 @@
         <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;EXPIRE&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">seconds</span>.<span class="ident">to_string</span>()])
     }
 
+    <span class="doccomment">/// See redis [PEXPIRE](https://redis.io/commands/pexpire) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pexpire</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">millies</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;PEXPIRE&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">millies</span>.<span class="ident">to_string</span>()])
+    }
+
     <span class="doccomment">/// See redis [PERSIST](https://redis.io/commands/persist) command.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">persist</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
@@ -661,6 +687,14 @@
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="string">&quot;STRLEN&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
+
+    <span class="doccomment">/// See redis [KEYS](https://redis.io/commands/keys) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keys</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">pattern</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="string">&quot;KEYS&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">pattern</span>])
     }
 }
 

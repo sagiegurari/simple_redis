@@ -20,7 +20,9 @@ cargo fmt
 cargo doc --no-deps
 cargo build
 cargo test
-cargo bench
+if [ "$1" = "bench" ]; then
+   cargo bench
+fi
 
 #move docs
 mkdir -p ./docs/api

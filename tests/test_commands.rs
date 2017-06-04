@@ -483,6 +483,38 @@ fn expire() {
 }
 
 #[test]
+fn pexpire() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    let mut result = client.set("pexpire", "my_value");
+    assert!(result.is_ok());
+
+    assert!(client.is_connection_open());
+
+    match client.exists("pexpire") {
+        Ok(value) => assert!(value),
+        _ => panic!("test error"),
+    }
+
+    result = client.pexpire("pexpire", 50);
+    assert!(result.is_ok());
+
+    match client.exists("pexpire") {
+        Ok(value) => assert!(value),
+        _ => panic!("test error"),
+    }
+
+    thread::sleep(time::Duration::from_millis(75));
+
+    match client.exists("pexpire") {
+        Ok(value) => assert!(!value),
+        _ => panic!("test error"),
+    }
+}
+
+#[test]
 fn persist() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
@@ -646,4 +678,17 @@ fn strlen() {
     client.set("strlen", "12345").unwrap();
     let result = client.strlen("strlen").unwrap();
     assert_eq!(result, 5);
+}
+
+#[test]
+fn keys() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.set("keys1", "12345").unwrap();
+    client.set("keys2", "12345").unwrap();
+    client.set("keys3", "12345").unwrap();
+    client.set("keys4", "12345").unwrap();
+    client.set("keys5", "12345").unwrap();
+    let result = client.keys("keys*").unwrap();
+    assert_eq!(result.len(), 5);
 }

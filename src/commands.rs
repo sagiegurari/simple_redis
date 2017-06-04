@@ -145,12 +145,12 @@ impl Client {
     }
 
     /// See redis [GETSET](https://redis.io/commands/getset) command.
-    pub fn getset(
+    pub fn getset<T: RedisArg>(
         &mut self,
         key: &str,
-        value: &str,
+        value: T,
     ) -> RedisStringResult {
-        self.run_command_string_response("GETSET", vec![key, value])
+        self.run_command_string_response("GETSET", vec![key, &value.to_string()])
     }
 
     /// See redis [DEL](https://redis.io/commands/del) command.

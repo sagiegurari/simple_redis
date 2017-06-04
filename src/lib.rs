@@ -70,9 +70,12 @@
 
 //! # simple_redis
 //!
-//! Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with
-//! internal
-//! connection and subscription handling.
+//! [![crates.io](https://img.shields.io/crates/v/simple_redis.svg)](https://crates.io/crates/simple_redis)
+//! [![license](https://img.shields.io/crates/l/simple_redis.svg)](https://github.
+//! com/sagiegurari/simple_redis/blob/master/LICENSE)
+//!
+//! > Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with
+//! internal connection and subscription handling.
 //!
 //! This library provides a very basic, simple API for the most common redis operations.<br>
 //! While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
@@ -166,6 +169,14 @@
 //!         Err(error) => println!("Unable to create Redis client: {}", error)
 //!     }
 //! }
+//! ```
+//!
+//! # Installation
+//! In order to use this library, just add it as a dependency:
+//!
+//! ```ini
+//! [dependencies]
+//! simple_redis = "*"
 //! ```
 //!
 

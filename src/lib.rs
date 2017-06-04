@@ -70,11 +70,7 @@
 
 //! # simple_redis
 //!
-//! [![crates.io](https://img.shields.io/crates/v/simple_redis.svg)](https://crates.io/crates/simple_redis)
-//! [![license](https://img.shields.io/crates/l/simple_redis.svg)](https://github.
-//! com/sagiegurari/simple_redis/blob/master/LICENSE)
-//!
-//! > Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with
+//! Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with
 //! internal connection and subscription handling.
 //!
 //! This library provides a very basic, simple API for the most common redis operations.<br>

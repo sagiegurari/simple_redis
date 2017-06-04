@@ -76,7 +76,7 @@ impl Client {
         }
     }
 
-    /// invokes the run_command and returned typed result
+    /// invokes the run_command and returns typed result
     pub fn run_command_from_string_response<T: FromStr>(
         self: &mut Client,
         command: &str,

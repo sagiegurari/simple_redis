@@ -26,4 +26,7 @@ cargo bench
 mkdir -p ./docs/api
 mv ./target/doc/* ./docs/api
 
+#cleanups
+cargo clean
+
 kill_redis

@@ -122,7 +122,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2017-06-04  | v0.2.1  | Added more data type support |
+| 2017-06-04  | v0.2.2  | Added more data type support |
 | 2017-06-04  | v0.1.13 | Support more data types |
 | 2017-06-03  | v0.1.10 | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |

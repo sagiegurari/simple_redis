@@ -487,6 +487,31 @@ impl Client {
     ) -> RedisEmptyResult {
         self.run_command_empty_response("RPUSHX", vec![key, &value.to_string()])
     }
+
+    /// See redis [SADD](https://redis.io/commands/sadd) command.
+    pub fn sadd(
+        self: &mut Client,
+        key: &str,
+        member: &str,
+    ) -> RedisResult<i32> {
+        self.run_command::<i32>("SADD", vec![key, member])
+    }
+
+    /// See redis [SCARD](https://redis.io/commands/scard) command.
+    pub fn scard(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<i32> {
+        self.run_command::<i32>("SCARD", vec![key])
+    }
+
+    /// See redis [SDIFF](https://redis.io/commands/sdiff) command.
+    pub fn sdiff(
+        self: &mut Client,
+        keys: Vec<&str>,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("SDIFF", keys)
+    }
 }
 
 #[cfg(test)]

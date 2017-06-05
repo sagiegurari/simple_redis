@@ -863,3 +863,31 @@ fn list_ltrim() {
     assert_eq!(vec_result[0], "2");
     assert_eq!(vec_result[1], "3");
 }
+
+#[test]
+fn set_all() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("set_all_1").unwrap();
+    client.del("set_all_2").unwrap();
+
+    client.sadd("set_all_1", "member1").unwrap();
+    client.sadd("set_all_1", "member2").unwrap();
+    client.sadd("set_all_1", "member3").unwrap();
+    client.sadd("set_all_1", "member4").unwrap();
+
+    let mut int_result = client.scard("set_all_1").unwrap();
+    assert_eq!(int_result, 4);
+
+    client.sadd("set_all_2", "member1").unwrap();
+    client.sadd("set_all_2", "member3").unwrap();
+    client.sadd("set_all_2", "member100").unwrap();
+
+    int_result = client.scard("set_all_2").unwrap();
+    assert_eq!(int_result, 3);
+
+    let vec_result = client.sdiff(vec!["set_all_1", "set_all_2"]).unwrap();
+    assert_eq!(vec_result.len(), 2);
+    assert!(vec_result.contains(&String::from("member2")));
+    assert!(vec_result.contains(&String::from("member4")));
+}

@@ -297,6 +297,113 @@ impl Client {
     ) -> RedisResult<Vec<String>> {
         self.run_command::<Vec<String>>("KEYS", vec![pattern])
     }
+
+    /// See redis [HGET](https://redis.io/commands/hget) command.
+    pub fn hget<T: FromStr>(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+    ) -> RedisResult<T> {
+        self.run_command_from_string_response("HGET", vec![key, field])
+    }
+
+    /// See redis [HGET](https://redis.io/commands/hget) command.
+    pub fn hget_string(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+    ) -> RedisStringResult {
+        self.run_command_string_response("HGET", vec![key, field])
+    }
+
+    /// See redis [HSET](https://redis.io/commands/hset) command.
+    pub fn hset<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("HSET", vec![key, field, &value.to_string()])
+    }
+
+    /// See redis [HSETNX](https://redis.io/commands/hsetnx) command.
+    pub fn hsetnx<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("HSETNX", vec![key, field, &value.to_string()])
+    }
+
+    /// See redis [HDEL](https://redis.io/commands/hdel) command.
+    pub fn hdel(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("HDEL", vec![key, field])
+    }
+
+    /// See redis [HEXISTS](https://redis.io/commands/hexists) command.
+    pub fn hexists(
+        self: &mut Client,
+        key: &str,
+        field: &str,
+    ) -> RedisBoolResult {
+        self.run_command_bool_response("HEXISTS", vec![key, field])
+    }
+
+    /// See redis [HKEYS](https://redis.io/commands/hkeys) command.
+    pub fn hkeys(
+        &mut self,
+        key: &str,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("HKEYS", vec![key])
+    }
+
+    /// See redis [HVALS](https://redis.io/commands/hvals) command.
+    pub fn hvals(
+        &mut self,
+        key: &str,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("HVALS", vec![key])
+    }
+
+    /// See redis [LSET](https://redis.io/commands/lset) command.
+    pub fn lset<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("LSET", vec![key, &value.to_string()])
+    }
+
+    /// See redis [HGET](https://redis.io/commands/lindex) command.
+    pub fn lindex<T: FromStr>(
+        self: &mut Client,
+        key: &str,
+        index: isize,
+    ) -> RedisResult<T> {
+        self.run_command_from_string_response("LINDEX", vec![key, &index.to_string()])
+    }
+
+    /// See redis [HGET](https://redis.io/commands/lindex) command.
+    pub fn lindex_string(
+        self: &mut Client,
+        key: &str,
+        index: isize,
+    ) -> RedisStringResult {
+        self.run_command_string_response("LINDEX", vec![key, &index.to_string()])
+    }
+
+    /// See redis [LLEN](https://redis.io/commands/llen) command.
+    pub fn llen(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<i32> {
+        self.run_command::<i32>("LLEN", vec![key])
+    }
 }
 
 #[cfg(test)]

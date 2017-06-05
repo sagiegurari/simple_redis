@@ -684,11 +684,113 @@ fn strlen() {
 fn keys() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
-    client.set("keys1", "12345").unwrap();
-    client.set("keys2", "12345").unwrap();
-    client.set("keys3", "12345").unwrap();
-    client.set("keys4", "12345").unwrap();
-    client.set("keys5", "12345").unwrap();
-    let result = client.keys("keys*").unwrap();
-    assert_eq!(result.len(), 5);
+    client.set("keys_1", "12345").unwrap();
+    client.set("keys_2", "12345").unwrap();
+    client.set("keys_3", "12345").unwrap();
+    let result = client.keys("keys_*").unwrap();
+    assert_eq!(result.len(), 3);
+    assert!(result.contains(&String::from("keys_1")));
+    assert!(result.contains(&String::from("keys_2")));
+    assert!(result.contains(&String::from("keys_3")));
+}
+
+#[test]
+fn hget_hset_hdel() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("hget_hset_hdel").unwrap();
+
+    let mut bool_result = client.hexists("hget_hset_hdel", "field1").unwrap();
+    assert!(!bool_result);
+    bool_result = client.hexists("hget_hset_hdel", "field2").unwrap();
+    assert!(!bool_result);
+
+    client.hset("hget_hset_hdel", "field1", 12.5f64).unwrap();
+    client.hset("hget_hset_hdel", "field2", "test").unwrap();
+
+    bool_result = client.hexists("hget_hset_hdel", "field1").unwrap();
+    assert!(bool_result);
+    bool_result = client.hexists("hget_hset_hdel", "field2").unwrap();
+    assert!(bool_result);
+
+    let float_result = client.hget::<f64>("hget_hset_hdel", "field1").unwrap();
+    assert_eq!(float_result, 12.5f64);
+
+    let mut string_result = client.hget_string("hget_hset_hdel", "field1").unwrap();
+    assert_eq!(string_result, "12.5");
+    string_result = client.hget_string("hget_hset_hdel", "field2").unwrap();
+    assert_eq!(string_result, "test");
+
+    client.hdel("hget_hset_hdel", "field1").unwrap();
+    client.hdel("hget_hset_hdel", "field2").unwrap();
+
+    let mut bool_result = client.hexists("hget_hset_hdel", "field1").unwrap();
+    assert!(!bool_result);
+    bool_result = client.hexists("hget_hset_hdel", "field2").unwrap();
+    assert!(!bool_result);
+}
+
+#[test]
+fn hsetnx() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("hsetnx").unwrap();
+
+    let bool_result = client.hexists("hsetnx", "field").unwrap();
+    assert!(!bool_result);
+
+    client.hsetnx("hsetnx", "field", "test").unwrap();
+
+    let mut string_result = client.hget_string("hsetnx", "field").unwrap();
+    assert_eq!(string_result, "test");
+
+    client.hsetnx("hsetnx", "field", "test2").unwrap();
+
+    string_result = client.hget_string("hsetnx", "field").unwrap();
+    assert_eq!(string_result, "test");
+}
+
+#[test]
+fn hkeys() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("hkeys").unwrap();
+
+    client.hset("hkeys", "field1", 12.5f64).unwrap();
+    client.hset("hkeys", "field2", "test").unwrap();
+
+    let result = client.hkeys("hkeys").unwrap();
+    assert_eq!(result.len(), 2);
+    assert!(result.contains(&String::from("field1")));
+    assert!(result.contains(&String::from("field2")));
+}
+
+#[test]
+fn hvals() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("hvals").unwrap();
+
+    client.hset("hvals", "field1", 12.5f64).unwrap();
+    client.hset("hvals", "field2", "test").unwrap();
+
+    let result = client.hvals("hvals").unwrap();
+    assert_eq!(result.len(), 2);
+    assert!(result.contains(&String::from("12.5")));
+    assert!(result.contains(&String::from("test")));
+}
+
+#[test]
+fn list() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("list").unwrap();
+
+    client.hset("hvals", "field1", 12.5f64).unwrap();
+    client.hset("hvals", "field2", "test").unwrap();
+
+    let result = client.hvals("hvals").unwrap();
+    assert_eq!(result.len(), 2);
+    assert!(result.contains(&String::from("12.5")));
+    assert!(result.contains(&String::from("test")));
 }

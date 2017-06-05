@@ -781,16 +781,85 @@ fn hvals() {
 }
 
 #[test]
-fn list() {
+fn list_multi() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
-    client.del("list").unwrap();
+    client.del("list_multi").unwrap();
 
-    client.hset("hvals", "field1", 12.5f64).unwrap();
-    client.hset("hvals", "field2", "test").unwrap();
+    client.lpush::<f32>("list_multi", 12.5f32).unwrap();
+    client.lpush("list_multi", "first").unwrap();
+    client.rpush("list_multi", "last").unwrap();
 
-    let result = client.hvals("hvals").unwrap();
-    assert_eq!(result.len(), 2);
-    assert!(result.contains(&String::from("12.5")));
-    assert!(result.contains(&String::from("test")));
+    let mut int_result = client.llen("list_multi").unwrap();
+    assert_eq!(int_result, 3);
+
+    let float_result = client.lindex::<f32>("list_multi", 1).unwrap();
+    assert_eq!(float_result, 12.5f32);
+    let mut string_result = client.lindex_string("list_multi", 1).unwrap();
+    assert_eq!(string_result, "12.5");
+
+    string_result = client.lpop("list_multi").unwrap();
+    assert_eq!(string_result, "first");
+    int_result = client.llen("list_multi").unwrap();
+    assert_eq!(int_result, 2);
+
+    client.lset("list_multi", 0, 1).unwrap();
+    client.lset("list_multi", 1, 2).unwrap();
+    client.rpush("list_multi", 3).unwrap();
+    client.rpush("list_multi", 4).unwrap();
+    client.rpush("list_multi", "last").unwrap();
+
+    let vec_result = client.lrange("list_multi", 1, 3).unwrap();
+    assert_eq!(vec_result[0], "2");
+    assert_eq!(vec_result[1], "3");
+    assert_eq!(vec_result[2], "4");
+
+    client.rpush("list_multi", "last").unwrap();
+    client.rpush("list_multi", "last").unwrap();
+    int_result = client.llen("list_multi").unwrap();
+    assert_eq!(int_result, 7);
+    client.lrem("list_multi", 2, "last").unwrap();
+    int_result = client.llen("list_multi").unwrap();
+    assert_eq!(int_result, 5);
+
+    client.del("list_multi").unwrap();
+
+    client.lpush::<f32>("list_multi", 12.5f32).unwrap();
+    client.lpush("list_multi", "first").unwrap();
+    client.rpush("list_multi", "last").unwrap();
+
+    string_result = client.rpop("list_multi").unwrap();
+    assert_eq!(string_result, "last");
+    int_result = client.llen("list_multi").unwrap();
+    assert_eq!(int_result, 2);
+}
+
+#[test]
+fn list_xpushx() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("list_xpushx").unwrap();
+
+    client.lpushx("list_xpushx", "test").unwrap();
+    client.rpushx("list_xpushx", "test").unwrap();
+
+    let bool_result = client.exists("list_xpushx").unwrap();
+    assert!(!bool_result);
+}
+
+#[test]
+fn list_ltrim() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("list_ltrim").unwrap();
+
+    client.rpush("list_ltrim", "1").unwrap();
+    client.rpush("list_ltrim", "2").unwrap();
+    client.rpush("list_ltrim", "3").unwrap();
+
+    client.ltrim("list_ltrim", 1, -1).unwrap();
+
+    let vec_result = client.lrange("list_ltrim", 0, -1).unwrap();
+    assert_eq!(vec_result[0], "2");
+    assert_eq!(vec_result[1], "3");
 }

@@ -374,9 +374,10 @@ impl Client {
     pub fn lset<T: RedisArg>(
         self: &mut Client,
         key: &str,
+        index: isize,
         value: T,
     ) -> RedisEmptyResult {
-        self.run_command_empty_response("LSET", vec![key, &value.to_string()])
+        self.run_command_empty_response("LSET", vec![key, &index.to_string(), &value.to_string()])
     }
 
     /// See redis [HGET](https://redis.io/commands/lindex) command.
@@ -403,6 +404,88 @@ impl Client {
         key: &str,
     ) -> RedisResult<i32> {
         self.run_command::<i32>("LLEN", vec![key])
+    }
+
+    /// See redis [LPOP](https://redis.io/commands/lpop) command.
+    pub fn lpop<T: FromStr>(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<T> {
+        self.run_command_from_string_response("LPOP", vec![key])
+    }
+
+    /// See redis [LPUSH](https://redis.io/commands/lpush) command.
+    pub fn lpush<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("LPUSH", vec![key, &value.to_string()])
+    }
+
+    /// See redis [LPUSHX](https://redis.io/commands/lpushx) command.
+    pub fn lpushx<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("LPUSHX", vec![key, &value.to_string()])
+    }
+
+    /// See redis [LRANGE](https://redis.io/commands/lrange) command.
+    pub fn lrange(
+        self: &mut Client,
+        key: &str,
+        start: isize,
+        stop: isize,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("LRANGE", vec![key, &start.to_string(), &stop.to_string()])
+    }
+
+    /// See redis [LREM](https://redis.io/commands/lrem) command.
+    pub fn lrem<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        count: isize,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("LREM", vec![key, &count.to_string(), &value.to_string()])
+    }
+
+    /// See redis [LTRIM](https://redis.io/commands/ltrim) command.
+    pub fn ltrim(
+        self: &mut Client,
+        key: &str,
+        start: isize,
+        stop: isize,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("LTRIM", vec![key, &start.to_string(), &stop.to_string()])
+    }
+
+    /// See redis [RPOP](https://redis.io/commands/rpop) command.
+    pub fn rpop<T: FromStr>(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<T> {
+        self.run_command_from_string_response("RPOP", vec![key])
+    }
+
+    /// See redis [RPUSH](https://redis.io/commands/rpush) command.
+    pub fn rpush<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("RPUSH", vec![key, &value.to_string()])
+    }
+
+    /// See redis [RPUSHX](https://redis.io/commands/rpushx) command.
+    pub fn rpushx<T: RedisArg>(
+        self: &mut Client,
+        key: &str,
+        value: T,
+    ) -> RedisEmptyResult {
+        self.run_command_empty_response("RPUSHX", vec![key, &value.to_string()])
     }
 }
 

@@ -503,6 +503,89 @@
 <span id="458">458</span>
 <span id="459">459</span>
 <span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -880,9 +963,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lset</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
         <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">index</span>: <span class="ident">isize</span>,
         <span class="ident">value</span>: <span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
-        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LSET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LSET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">index</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 
     <span class="doccomment">/// See redis [HGET](https://redis.io/commands/lindex) command.</span>
@@ -909,6 +993,88 @@
         <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="string">&quot;LLEN&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
+
+    <span class="doccomment">/// See redis [LPOP](https://redis.io/commands/lpop) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lpop</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FromStr</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command_from_string_response</span>(<span class="string">&quot;LPOP&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
+
+    <span class="doccomment">/// See redis [LPUSH](https://redis.io/commands/lpush) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lpush</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LPUSH&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [LPUSHX](https://redis.io/commands/lpushx) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lpushx</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LPUSHX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [LRANGE](https://redis.io/commands/lrange) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lrange</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">start</span>: <span class="ident">isize</span>,
+        <span class="ident">stop</span>: <span class="ident">isize</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="string">&quot;LRANGE&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">start</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="ident">stop</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [LREM](https://redis.io/commands/lrem) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lrem</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">count</span>: <span class="ident">isize</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LREM&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">count</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [LTRIM](https://redis.io/commands/ltrim) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ltrim</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">start</span>: <span class="ident">isize</span>,
+        <span class="ident">stop</span>: <span class="ident">isize</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;LTRIM&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">start</span>.<span class="ident">to_string</span>(), <span class="kw-2">&amp;</span><span class="ident">stop</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [RPOP](https://redis.io/commands/rpop) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rpop</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FromStr</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run_command_from_string_response</span>(<span class="string">&quot;RPOP&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>])
+    }
+
+    <span class="doccomment">/// See redis [RPUSH](https://redis.io/commands/rpush) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rpush</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;RPUSH&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
+    }
+
+    <span class="doccomment">/// See redis [RPUSHX](https://redis.io/commands/rpushx) command.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rpushx</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">value</span>: <span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;RPUSHX&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">to_string</span>()])
     }
 }
 

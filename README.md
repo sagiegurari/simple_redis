@@ -5,6 +5,8 @@
 > Simple and resilient [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
 
 * [Overview](#overview)
+    * [Connection Resiliency](#overview-connection)
+    * [Subscription Resiliency](#overview-subscription)
 * [Usage](#usage)
 * [Installation](#installation)
 * [API Documentation](https://sagiegurari.github.io/simple_redis/)
@@ -19,20 +21,23 @@ While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/r
 it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal connection
 and subscription (pubsub) handling.<br>
 In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub instances in parallel.<br>
-<br>
+
+<a name="overview-connection"></a>
+### Connection Resiliency
 Connection resiliency is managed by verifying the internally managed connection before every operation against the redis server.<br>
 In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 connection only.<br>
 However, this comes at a small performance cost of PING operation to the redis server.<br>
-In [redis-rs](https://crates.io/crates/redis), connections are no longer usable in case the connection is broken and if operations are invoked
-on the client directly, it will basically open a new connection for every operation which is very costly.<br>
 <br>
+*In [redis-rs](https://crates.io/crates/redis), connections are no longer usable in case the connection is broken and if operations are invoked
+on the client directly, it will basically open a new connection for every operation which is very costly.*
+
+<a name="overview-subscription"></a>
+### Subscription Resiliency
 Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
 automatically in case of any error while fetching a message from the subscribed channels.<br>
-[redis-rs](https://crates.io/crates/redis) doesn't provide any such automatic resiliency and resubscription capabilities.
 <br>
-<br>
-**This library is still in initial development stage and many more features will come soon.**
+*[redis-rs](https://crates.io/crates/redis) doesn't provide any such automatic resiliency and resubscription capabilities.*
 
 <a name="usage"></a>
 ## Usage

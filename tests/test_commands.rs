@@ -886,8 +886,30 @@ fn set_all() {
     int_result = client.scard("set_all_2").unwrap();
     assert_eq!(int_result, 3);
 
-    let vec_result = client.sdiff(vec!["set_all_1", "set_all_2"]).unwrap();
+    let mut vec_result = client.sdiff(vec!["set_all_1", "set_all_2"]).unwrap();
     assert_eq!(vec_result.len(), 2);
     assert!(vec_result.contains(&String::from("member2")));
     assert!(vec_result.contains(&String::from("member4")));
+
+    vec_result = client.smembers("set_all_1").unwrap();
+    assert_eq!(vec_result.len(), 4);
+    assert!(vec_result.contains(&String::from("member1")));
+    assert!(vec_result.contains(&String::from("member2")));
+    assert!(vec_result.contains(&String::from("member3")));
+    assert!(vec_result.contains(&String::from("member4")));
+
+    let mut bool_result = client.sismember("set_all_1", "member4").unwrap();
+    assert!(bool_result);
+    bool_result = client.sismember("set_all_1", "BAD").unwrap();
+    assert!(!bool_result);
+
+    bool_result = client.sismember("set_all_1", "member100").unwrap();
+    assert!(!bool_result);
+    client.smove("set_all_2", "set_all_1", "member100").unwrap();
+    bool_result = client.sismember("set_all_1", "member100").unwrap();
+    assert!(bool_result);
+
+    client.srem("set_all_1", "member100").unwrap();
+    bool_result = client.sismember("set_all_1", "member100").unwrap();
+    assert!(!bool_result);
 }

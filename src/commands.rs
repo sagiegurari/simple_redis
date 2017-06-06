@@ -512,6 +512,42 @@ impl Client {
     ) -> RedisResult<Vec<String>> {
         self.run_command::<Vec<String>>("SDIFF", keys)
     }
+
+    /// See redis [SISMEMBER](https://redis.io/commands/sismember) command.
+    pub fn sismember(
+        self: &mut Client,
+        key: &str,
+        member: &str,
+    ) -> RedisBoolResult {
+        self.run_command("SISMEMBER", vec![key, member])
+    }
+
+    /// See redis [SMEMBERS](https://redis.io/commands/smembers) command.
+    pub fn smembers(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("SMEMBERS", vec![key])
+    }
+
+    /// See redis [SMOVE](https://redis.io/commands/smove) command.
+    pub fn smove(
+        self: &mut Client,
+        source_key: &str,
+        destination_key: &str,
+        member: &str,
+    ) -> RedisEmptyResult {
+        self.run_command("SMOVE", vec![source_key, destination_key, member])
+    }
+
+    /// See redis [SREM](https://redis.io/commands/srem) command.
+    pub fn srem(
+        self: &mut Client,
+        key: &str,
+        member: &str,
+    ) -> RedisEmptyResult {
+        self.run_command("SREM", vec![key, member])
+    }
 }
 
 #[cfg(test)]

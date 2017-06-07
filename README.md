@@ -127,6 +127,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2017-06-06  | v0.2.6  | Maintenance |
 | 2017-06-06  | v0.2.5  | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |
 | 2017-06-02  | v0.1.6  | Initial release. |

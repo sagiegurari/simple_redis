@@ -50,7 +50,7 @@
                    </a>
                </span><a class='srclink' href='../../src/simple_redis/client.rs.html#13-20' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Client { /* fields omitted */ }</pre><div class='docblock'><p>The redis client which enables to invoke redis operations.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/simple_redis/commands.rs.html#11-551' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/simple_redis/commands.rs.html#12-580' title='goto source code'>[src]</a></span></h3>
 <div class='docblock'><p>Defines the redis commands exposed by the redis client.</p>
 </div><div class='impl-items'><h4 id='method.auth' class="method"><span id='auth.v' class='invisible'><code>fn <a href='#method.auth' class='fnname'>auth</a>(&amp;mut self, password: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, RedisError&gt;</code></span></h4>
 <div class='docblock'><p>See redis <a href="https://redis.io/commands/auth">AUTH</a> command.</p>
@@ -145,6 +145,20 @@ This function will always return a String response.</p>
 <div class='docblock'><p>See redis <a href="https://redis.io/commands/hget">HGET</a> command.</p>
 </div><h4 id='method.hget_string' class="method"><span id='hget_string.v' class='invisible'><code>fn <a href='#method.hget_string' class='fnname'>hget_string</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;field: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>, RedisError&gt;</code></span></h4>
 <div class='docblock'><p>See redis <a href="https://redis.io/commands/hget">HGET</a> command.</p>
+</div><h4 id='method.hgetall' class="method"><span id='hgetall.v' class='invisible'><code>fn <a href='#method.hgetall' class='fnname'>hgetall</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html" title="struct std::collections::hash::map::HashMap">HashMap</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;, RedisError&gt;</code></span></h4>
+<div class='docblock'><p>See redis <a href="https://redis.io/commands/hgetall">HGETALL</a> command.</p>
+
+<h1 id='examples-6' class='section-header'><a href='#examples-6'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+          <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">hgetall</span>(<span class="string">&quot;my_map&quot;</span>) {
+              <span class="prelude-val">Ok</span>(<span class="ident">map</span>) <span class="op">=&gt;</span> {
+                  <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="string">&quot;my_field&quot;</span>) {
+                      <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Got field value from map: {}&quot;</span>, <span class="ident">value</span>),
+                      <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Map field is emtpy&quot;</span>),
+                  }
+              },
+              <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to read map from Redis: {}&quot;</span>, <span class="ident">error</span>),
+          }</pre>
 </div><h4 id='method.hset' class="method"><span id='hset.v' class='invisible'><code>fn <a href='#method.hset' class='fnname'>hset</a>&lt;T:&nbsp;RedisArg&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;field: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;value: T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, RedisError&gt;</code></span></h4>
 <div class='docblock'><p>See redis <a href="https://redis.io/commands/hset">HSET</a> command.</p>
 </div><h4 id='method.hsetnx' class="method"><span id='hsetnx.v' class='invisible'><code>fn <a href='#method.hsetnx' class='fnname'>hsetnx</a>&lt;T:&nbsp;RedisArg&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;field: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;value: T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, RedisError&gt;</code></span></h4>
@@ -209,7 +223,7 @@ This function ensures that we have a valid connection and it is used internally 
 commands.<br>
 This function is also public to enable invoking operations that are not directly exposed by the client.</p>
 
-<h1 id='examples-6' class='section-header'><a href='#examples-6'>Examples</a></h1>
+<h1 id='examples-7' class='section-header'><a href='#examples-7'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
           <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]) {
               <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>),
@@ -227,14 +241,14 @@ This function is also public to enable invoking operations that are not directly
 <div class='docblock'><p>Subscribes to the provided channel.<br>
 Actual subscription only occurs at the first call to get_message.</p>
 
-<h1 id='examples-7' class='section-header'><a href='#examples-7'>Examples</a></h1>
+<h1 id='examples-8' class='section-header'><a href='#examples-8'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
           <span class="ident">client</span>.<span class="ident">subscribe</span>(<span class="string">&quot;important_notifications&quot;</span>);</pre>
 </div><h4 id='method.psubscribe' class="method"><span id='psubscribe.v' class='invisible'><code>fn <a href='#method.psubscribe' class='fnname'>psubscribe</a>(self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, channel: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, RedisError&gt;</code></span></h4>
 <div class='docblock'><p>Subscribes to the provided channel pattern.<br>
 Actual subscription only occurs at the first call to get_message.</p>
 
-<h1 id='examples-8' class='section-header'><a href='#examples-8'>Examples</a></h1>
+<h1 id='examples-9' class='section-header'><a href='#examples-9'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
           <span class="ident">client</span>.<span class="ident">psubscribe</span>(<span class="string">&quot;important_notifications*&quot;</span>);</pre>
 </div><h4 id='method.unsubscribe' class="method"><span id='unsubscribe.v' class='invisible'><code>fn <a href='#method.unsubscribe' class='fnname'>unsubscribe</a>(self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>, channel: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, RedisError&gt;</code></span></h4>
@@ -244,7 +258,7 @@ Actual subscription only occurs at the first call to get_message.</p>
 </div><h4 id='method.get_message' class="method"><span id='get_message.v' class='invisible'><code>fn <a href='#method.get_message' class='fnname'>get_message</a>(self: &amp;mut <a class="struct" href="../../simple_redis/client/struct.Client.html" title="struct simple_redis::client::Client">Client</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Msg, RedisError&gt;</code></span></h4>
 <div class='docblock'><p>Fetches the next message from any of the subscribed channels.</p>
 
-<h1 id='examples-9' class='section-header'><a href='#examples-9'>Examples</a></h1>
+<h1 id='examples-10' class='section-header'><a href='#examples-10'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
           <span class="ident">client</span>.<span class="ident">subscribe</span>(<span class="string">&quot;important_notifications&quot;</span>);
 

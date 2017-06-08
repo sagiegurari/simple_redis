@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-233' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-243' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
 <p>Simple and resilient <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with
@@ -98,6 +98,16 @@ automatically in case of any error while fetching a message from the subscribed 
             <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>(<span class="string">&quot;my_numeric_key&quot;</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Read value from Redis: {}&quot;</span>, <span class="ident">value</span>),
                 <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to get value from Redis: {}&quot;</span>, <span class="ident">error</span>)
+            };
+
+            <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">hgetall</span>(<span class="string">&quot;my_map&quot;</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">map</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="string">&quot;my_field&quot;</span>) {
+                        <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Got field value from map: {}&quot;</span>, <span class="ident">value</span>),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Map field is emtpy&quot;</span>),
+                    }
+                },
+                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to read map from Redis: {}&quot;</span>, <span class="ident">error</span>),
             };
 
             <span class="doccomment">/// run some command that is not built in the library</span>

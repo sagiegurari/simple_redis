@@ -276,6 +276,16 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -398,6 +408,16 @@
 <span class="doccomment">//!             match client.get::&lt;f32&gt;(&quot;my_numeric_key&quot;) {</span>
 <span class="doccomment">//!                 Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
 <span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
+<span class="doccomment">//!             };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             match client.hgetall(&quot;my_map&quot;) {</span>
+<span class="doccomment">//!                 Ok(map) =&gt; {</span>
+<span class="doccomment">//!                     match map.get(&quot;my_field&quot;) {</span>
+<span class="doccomment">//!                         Some(value) =&gt; println!(&quot;Got field value from map: {}&quot;, value),</span>
+<span class="doccomment">//!                         None =&gt; println!(&quot;Map field is emtpy&quot;),</span>
+<span class="doccomment">//!                     }</span>
+<span class="doccomment">//!                 },</span>
+<span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to read map from Redis: {}&quot;, error),</span>
 <span class="doccomment">//!             };</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!             /// run some command that is not built in the library</span>

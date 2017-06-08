@@ -121,6 +121,16 @@
 //!                 Err(error) => println!("Unable to get value from Redis: {}", error)
 //!             };
 //!
+//!             match client.hgetall("my_map") {
+//!                 Ok(map) => {
+//!                     match map.get("my_field") {
+//!                         Some(value) => println!("Got field value from map: {}", value),
+//!                         None => println!("Map field is emtpy"),
+//!                     }
+//!                 },
+//!                 Err(error) => println!("Unable to read map from Redis: {}", error),
+//!             };
+//!
 //!             /// run some command that is not built in the library
 //!             match client.run_command::<String>("ECHO", vec!["testing"]) {
 //!                 Ok(value) => assert_eq!(value, "testing"),

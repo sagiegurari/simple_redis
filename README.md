@@ -79,6 +79,16 @@ match client.get::<f32>("my_numeric_key") {
     Err(error) => println!("Unable to get value from Redis: {}", error)
 };
 
+match client.hgetall("my_map") {
+    Ok(map) => {
+        match map.get("my_field") {
+            Some(value) => println!("Got field value from map: {}", value),
+            None => println!("Map field is emtpy"),
+        }
+    },
+    Err(error) => println!("Unable to read map from Redis: {}", error),
+};
+
 /// run some command that is not built in the library
 match client.run_command::<String>("ECHO", vec!["testing"]) {
     Ok(value) => assert_eq!(value, "testing"),
@@ -127,8 +137,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2017-06-06  | v0.2.7  | Maintenance |
-| 2017-06-06  | v0.2.5  | More commands added |
+| 2017-06-08  | v0.2.8  | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |
 | 2017-06-02  | v0.1.6  | Initial release. |
 

@@ -4,6 +4,7 @@
 //!
 
 use client::Client;
+use std::collections::HashMap;
 use std::str::FromStr;
 use types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 
@@ -314,6 +315,34 @@ impl Client {
         field: &str,
     ) -> RedisStringResult {
         self.run_command_string_response("HGET", vec![key, field])
+    }
+
+    /// See redis [HGETALL](https://redis.io/commands/hgetall) command.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
+    /// #     Ok(mut client) =>  {
+    ///           match client.hgetall("my_map") {
+    ///               Ok(map) => {
+    ///                   match map.get("my_field") {
+    ///                       Some(value) => println!("Got field value from map: {}", value),
+    ///                       None => println!("Map field is emtpy"),
+    ///                   }
+    ///               },
+    ///               Err(error) => println!("Unable to read map from Redis: {}", error),
+    ///           }
+    /// #     },
+    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
+    /// # }
+    /// ```
+    ///
+    pub fn hgetall(
+        self: &mut Client,
+        key: &str,
+    ) -> RedisResult<HashMap<String, String>> {
+        self.run_command::<HashMap<String, String>>("HGETALL", vec![key])
     }
 
     /// See redis [HSET](https://redis.io/commands/hset) command.

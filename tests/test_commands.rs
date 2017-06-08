@@ -731,6 +731,33 @@ fn hget_hset_hdel() {
 }
 
 #[test]
+fn hgetall() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    client.del("hgetall").unwrap();
+
+    client.hset("hgetall", "field1", 12.5f64).unwrap();
+    client.hset("hgetall", "field2", "test").unwrap();
+
+    let mut bool_result = client.hexists("hgetall", "field1").unwrap();
+    assert!(bool_result);
+    bool_result = client.hexists("hgetall", "field2").unwrap();
+    assert!(bool_result);
+
+    let float_result = client.hget::<f64>("hgetall", "field1").unwrap();
+    assert_eq!(float_result, 12.5f64);
+
+    let mut string_result = client.hget_string("hgetall", "field1").unwrap();
+    assert_eq!(string_result, "12.5");
+    string_result = client.hget_string("hgetall", "field2").unwrap();
+    assert_eq!(string_result, "test");
+
+    let map = client.hgetall("hgetall").unwrap();
+    assert_eq!(map.get("field1").unwrap(), "12.5");
+    assert_eq!(map.get("field2").unwrap(), "test");
+}
+
+#[test]
 fn hsetnx() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 

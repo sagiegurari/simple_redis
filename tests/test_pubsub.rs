@@ -28,7 +28,7 @@ fn pub_sub() {
                 }
             );
 
-            match subscriber.get_message() {
+            match subscriber.get_message(0) {
                 Ok(message) => {
                     let payload: String = message.get_payload().unwrap();
                     assert_eq!(payload, "test pub_sub message")
@@ -65,7 +65,7 @@ fn pub_sub() {
                 }
             );
 
-            match subscriber.get_message() {
+            match subscriber.get_message(0) {
                 Ok(message) => {
                     let payload: String = message.get_payload().unwrap();
                     assert_eq!(payload, "good")
@@ -104,7 +104,7 @@ fn pub_psub() {
                 }
             );
 
-            match subscriber.get_message() {
+            match subscriber.get_message(0) {
                 Ok(message) => {
                     let payload: String = message.get_payload().unwrap();
                     assert_eq!(payload, "test pub_sub message")
@@ -141,7 +141,7 @@ fn pub_psub() {
                 }
             );
 
-            match subscriber.get_message() {
+            match subscriber.get_message(0) {
                 Ok(message) => {
                     let payload: String = message.get_payload().unwrap();
                     assert_eq!(payload, "good")

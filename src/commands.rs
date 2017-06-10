@@ -12,7 +12,7 @@ use types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStrin
 impl Client {
     /// See redis [AUTH](https://redis.io/commands/auth) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -43,7 +43,7 @@ impl Client {
 
     /// See redis [PUBLISH](https://redis.io/commands/publish) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -67,7 +67,7 @@ impl Client {
 
     /// See redis [GET](https://redis.io/commands/get) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -91,7 +91,7 @@ impl Client {
     /// See redis [GET](https://redis.io/commands/get) command.<br>
     /// This function will always return a String response.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -114,7 +114,7 @@ impl Client {
 
     /// See redis [SET](https://redis.io/commands/set) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -138,7 +138,7 @@ impl Client {
 
     /// See redis [SETEX](https://redis.io/commands/setex) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -319,7 +319,7 @@ impl Client {
 
     /// See redis [HGETALL](https://redis.io/commands/hgetall) command.
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {

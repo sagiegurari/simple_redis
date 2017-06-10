@@ -106,13 +106,13 @@ result = client.psubscribe("*_notifications");
 assert!(result.is_ok());
 
 loop {
-    /// fetch next message
-    match client.get_message() {
+    // fetch next message (wait up to 5 seconds, 0 for no timeout)
+    match client.get_message(5000) {
         Ok(message) => {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "my important message")
-        }
-        _ => panic!("test error"),
+        },
+        Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
     }
 }
 ````
@@ -137,6 +137,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2017-06-10  | v0.3.0  | Added timeout support for get_message |
 | 2017-06-08  | v0.2.8  | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |
 | 2017-06-02  | v0.1.6  | Initial release. |

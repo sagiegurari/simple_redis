@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-243' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-250' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
 <p>Simple and resilient <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with
@@ -139,13 +139,13 @@ automatically in case of any error while fetching a message from the subscribed 
             <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
 
             <span class="kw">loop</span> {
-                <span class="doccomment">/// fetch next message</span>
-                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get_message</span>() {
+                <span class="comment">// fetch next message (wait up to 5 seconds, 0 for no timeout)</span>
+                <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get_message</span>(<span class="number">5000</span>) {
                     <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> {
                         <span class="kw">let</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">message</span>.<span class="ident">get_payload</span>().<span class="ident">unwrap</span>();
                         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">payload</span>, <span class="string">&quot;my important message&quot;</span>)
-                    }
-                    _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;test error&quot;</span>),
+                    },
+                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Error while fetching message, should retry again, info: {}&quot;</span>, <span class="ident">error</span>),
                 }
             }
         },
@@ -167,6 +167,13 @@ simple_redis = &quot;*&quot;
                            <td class='docblock-short'>
                                 
                            </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="types/index.html"
+                                  title='mod simple_redis::types'>types</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -176,8 +183,15 @@ simple_redis = &quot;*&quot;
                                 <p>Constructs a new redis client.<br>
 The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></p>
                            </td>
-                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+                       </tr></table><h2 id='types-1' class='section-header'><a href="#types-1">Type Definitions</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.ErrorInfo.html"
+                                  title='type simple_redis::ErrorInfo'>ErrorInfo</a></td>
+                           <td class='docblock-short'>
+                                <p>Error Info</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class="type" href="type.Message.html"
                                   title='type simple_redis::Message'>Message</a></td>

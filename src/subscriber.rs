@@ -4,7 +4,10 @@
 //!
 
 extern crate redis;
+use std::ops::Add;
 use std::option::Option;
+use std::time;
+use std::time::SystemTime;
 use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
 
 /// The redis pubsub wrapper.
@@ -58,16 +61,54 @@ fn subscribe_all(
 }
 
 
-fn get_message(subscriber: &mut Subscriber) -> RedisMessageResult {
+fn get_message(
+    subscriber: &mut Subscriber,
+    timeout: u64,
+) -> RedisMessageResult {
     match subscriber.pubsub {
         Some(ref redis_pubsub) => {
-            match redis_pubsub.get_message() {
-                Ok(message) => Ok(message),
-                Err(error) => {
-                    subscriber.subscribed = false;
-                    Err(RedisError { info: ErrorInfo::RedisError(error) })
+            let duration;
+            let timeout_duration;
+            if timeout > 0 {
+                timeout_duration = time::Duration::from_millis(timeout);
+                duration = Some(timeout_duration);
+            } else {
+                timeout_duration = time::Duration::new(0, 0);
+                duration = None;
+            }
+
+            let output;
+
+            let mut timeout_result = redis_pubsub.set_read_timeout(duration);
+
+            if timeout_result.is_err() {
+                output = Err(RedisError { info: ErrorInfo::Description("Unable to set read timeout.") })
+            } else {
+                let start = SystemTime::now();
+                let message_result = redis_pubsub.get_message();
+
+                timeout_result = redis_pubsub.set_read_timeout(None);
+                if timeout_result.is_err() {
+                    output = Err(RedisError { info: ErrorInfo::Description("Unable to set read timeout.") })
+                } else {
+                    output = match message_result {
+                        Ok(message) => Ok(message),
+                        Err(error) => {
+                            let actual_end = SystemTime::now();
+                            let max_end = start.add(timeout_duration);
+
+                            if timeout > 0 && actual_end >= max_end {
+                                Err(RedisError { info: ErrorInfo::TimeoutError("Timeout") })
+                            } else {
+                                subscriber.subscribed = false;
+                                Err(RedisError { info: ErrorInfo::RedisError(error) })
+                            }
+                        }
+                    }
                 }
             }
+
+            output
         }
         None => Err(RedisError { info: ErrorInfo::Description("Error while fetching pubsub.") }),
     }
@@ -76,11 +117,12 @@ fn get_message(subscriber: &mut Subscriber) -> RedisMessageResult {
 fn subscribe_and_get(
     subscriber: &mut Subscriber,
     client: &redis::Client,
+    timeout: u64,
 ) -> RedisMessageResult {
     match subscribe_all(subscriber, client) {
         Err(error) => Err(error),
         _ => {
-            match get_message(subscriber) {
+            match get_message(subscriber, timeout) {
                 Ok(message) => Ok(message),
                 Err(error) => Err(error),
             }
@@ -208,14 +250,20 @@ impl Subscriber {
     pub fn get_message(
         self: &mut Subscriber,
         client: &redis::Client,
+        timeout: u64,
     ) -> RedisMessageResult {
         if self.pubsub.is_some() {
-            match get_message(self) {
+            match get_message(self, timeout) {
                 Ok(message) => Ok(message),
-                _ => subscribe_and_get(self, client),
+                Err(error) => {
+                    match error.info {
+                        ErrorInfo::TimeoutError(description) => Err(RedisError { info: ErrorInfo::TimeoutError(description) }),
+                        _ => subscribe_and_get(self, client, timeout),
+                    }
+                }
             }
         } else {
-            subscribe_and_get(self, client)
+            subscribe_and_get(self, client, timeout)
         }
 
     }

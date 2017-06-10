@@ -162,13 +162,13 @@
 //!             assert!(result.is_ok());
 //!
 //!             loop {
-//!                 /// fetch next message
-//!                 match client.get_message() {
+//!                 // fetch next message (wait up to 5 seconds, 0 for no timeout)
+//!                 match client.get_message(5000) {
 //!                     Ok(message) => {
 //!                         let payload: String = message.get_payload().unwrap();
 //!                         assert_eq!(payload, "my important message")
-//!                     }
-//!                     _ => panic!("test error"),
+//!                     },
+//!                     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
 //!                 }
 //!             }
 //!         },
@@ -186,14 +186,17 @@
 //! ```
 //!
 
-mod types;
 mod connection;
 mod subscriber;
 mod commands;
+pub mod types;
 pub mod client;
 
 /// Error Type
 pub type RedisError = types::RedisError;
+
+/// Error Info
+pub type ErrorInfo = types::ErrorInfo;
 
 /// PubSub message
 pub type Message = types::Message;
@@ -204,7 +207,11 @@ pub type RedisResult<T> = types::RedisResult<T>;
 /// Constructs a new redis client.<br>
 /// The redis connection string must be in the following format: `redis://[:<passwd>@]<hostname>[:port][/<db>]`
 ///
-/// # Examples
+/// # Arguments
+///
+/// * `connection_string` - The connection string in the format of: `redis://[:<passwd>@]<hostname>[:port][/<db>]`
+///
+/// # Example
 ///
 /// ```
 /// extern crate simple_redis;

@@ -339,6 +339,35 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # client</span>
 <span class="doccomment">//!</span>
@@ -394,7 +423,12 @@
     <span class="doccomment">/// commands.&lt;br&gt;</span>
     <span class="doccomment">/// This function is also public to enable invoking operations that are not directly exposed by the client.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `command` - The Redis command, for example: `GET`</span>
+    <span class="doccomment">/// * `args` - Vector of arguments for the given command</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
@@ -465,7 +499,11 @@
     <span class="doccomment">/// Subscribes to the provided channel.&lt;br&gt;</span>
     <span class="doccomment">/// Actual subscription only occurs at the first call to get_message.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `channel` - The channel name, for example: `level_info`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
@@ -487,7 +525,11 @@
     <span class="doccomment">/// Subscribes to the provided channel pattern.&lt;br&gt;</span>
     <span class="doccomment">/// Actual subscription only occurs at the first call to get_message.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `channel` - The channel pattern, for example: `level_*`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
@@ -522,21 +564,30 @@
         <span class="self">self</span>.<span class="ident">subscriber</span>.<span class="ident">punsubscribe</span>(<span class="ident">channel</span>)
     }
 
-    <span class="doccomment">/// Fetches the next message from any of the subscribed channels.</span>
+    <span class="doccomment">/// Fetches the next message from any of the subscribed channels.&lt;br&gt;</span>
+    <span class="doccomment">/// This function will return a TimeoutError in case no message was read in the provided timeout value (defined in</span>
+    <span class="doccomment">/// millies).&lt;br&gt;</span>
+    <span class="doccomment">/// If the provided timeout value is 0, there will be no timeout and the call will block until a message is read or</span>
+    <span class="doccomment">/// a connection error happens.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `timeout` - The timeout value in millies or 0 for no timeout</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust,no_run</span>
     <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
     <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
     <span class="doccomment">///           client.subscribe(&quot;important_notifications&quot;);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">///           match client.get_message() {</span>
+    <span class="doccomment">///           // get next message (wait up to 5 seconds, 0 for no timeout)</span>
+    <span class="doccomment">///           match client.get_message(5000) {</span>
     <span class="doccomment">///               Ok(message) =&gt; {</span>
     <span class="doccomment">///                   let payload : String = message.get_payload().unwrap();</span>
     <span class="doccomment">///                   println!(&quot;Got message: {}&quot;, payload);</span>
     <span class="doccomment">///               },</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Error while fetching message, should retry again.&quot;)</span>
+    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Error while fetching message, should retry again, info: {}&quot;, error),</span>
     <span class="doccomment">///           }</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// #         println!(&quot;Subscribed to channel.&quot;);</span>
@@ -544,15 +595,22 @@
     <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_message</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>) <span class="op">-&gt;</span> <span class="ident">RedisMessageResult</span> {
-        <span class="self">self</span>.<span class="ident">subscriber</span>.<span class="ident">get_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_message</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">timeout</span>: <span class="ident">u64</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RedisMessageResult</span> {
+        <span class="self">self</span>.<span class="ident">subscriber</span>.<span class="ident">get_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="ident">timeout</span>)
     }
 }
 
 <span class="doccomment">/// Constructs a new redis client.&lt;br&gt;</span>
 <span class="doccomment">/// The redis connection string must be in the following format: `redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]`</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
+<span class="doccomment">/// # Arguments</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * `connection_string` - The connection string in the format of: `redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// extern crate simple_redis;</span>

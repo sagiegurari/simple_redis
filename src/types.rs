@@ -13,7 +13,9 @@ pub enum ErrorInfo {
     /// Root redis error
     RedisError(redis::RedisError),
     /// Description text of the error reason
-    Description(&'static str)
+    Description(&'static str),
+    /// TimeoutError error
+    TimeoutError(&'static str)
 }
 
 #[derive(Debug)]
@@ -29,6 +31,7 @@ impl error::Error for RedisError {
         match self.info {
             ErrorInfo::RedisError(ref cause) => cause.description(),
             ErrorInfo::Description(description) => description,
+            ErrorInfo::TimeoutError(description) => description,
         }
     }
 
@@ -50,10 +53,12 @@ impl fmt::Display for RedisError {
         match self.info {
             ErrorInfo::RedisError(ref cause) => cause.fmt(format),
             ErrorInfo::Description(description) => description.fmt(format),
+            ErrorInfo::TimeoutError(description) => description.fmt(format),
         }
     }
 }
 
+/// Defines a redis command argument
 pub trait RedisArg: Sized + ToString {}
 
 macro_rules! as_redis_arg {

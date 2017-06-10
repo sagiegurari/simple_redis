@@ -52,7 +52,12 @@ impl Client {
     /// commands.<br>
     /// This function is also public to enable invoking operations that are not directly exposed by the client.
     ///
-    /// # Examples
+    /// # Arguments
+    ///
+    /// * `command` - The Redis command, for example: `GET`
+    /// * `args` - Vector of arguments for the given command
+    ///
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -123,7 +128,11 @@ impl Client {
     /// Subscribes to the provided channel.<br>
     /// Actual subscription only occurs at the first call to get_message.
     ///
-    /// # Examples
+    /// # Arguments
+    ///
+    /// * `channel` - The channel name, for example: `level_info`
+    ///
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -145,7 +154,11 @@ impl Client {
     /// Subscribes to the provided channel pattern.<br>
     /// Actual subscription only occurs at the first call to get_message.
     ///
-    /// # Examples
+    /// # Arguments
+    ///
+    /// * `channel` - The channel pattern, for example: `level_*`
+    ///
+    /// # Example
     ///
     /// ```
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -180,21 +193,30 @@ impl Client {
         self.subscriber.punsubscribe(channel)
     }
 
-    /// Fetches the next message from any of the subscribed channels.
+    /// Fetches the next message from any of the subscribed channels.<br>
+    /// This function will return a TimeoutError in case no message was read in the provided timeout value (defined in
+    /// millies).<br>
+    /// If the provided timeout value is 0, there will be no timeout and the call will block until a message is read or
+    /// a connection error happens.
     ///
-    /// # Examples
+    /// # Arguments
+    ///
+    /// * `timeout` - The timeout value in millies or 0 for no timeout
+    ///
+    /// # Example
     ///
     /// ```rust,no_run
     /// # match simple_redis::create("redis://127.0.0.1:6379/") {
     /// #     Ok(mut client) =>  {
     ///           client.subscribe("important_notifications");
     ///
-    ///           match client.get_message() {
+    ///           // get next message (wait up to 5 seconds, 0 for no timeout)
+    ///           match client.get_message(5000) {
     ///               Ok(message) => {
     ///                   let payload : String = message.get_payload().unwrap();
     ///                   println!("Got message: {}", payload);
     ///               },
-    ///               Err(error) => println!("Error while fetching message, should retry again.")
+    ///               Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
     ///           }
     /// #
     /// #         println!("Subscribed to channel.");
@@ -202,15 +224,22 @@ impl Client {
     /// #     Err(error) => println!("Unable to create Redis client: {}", error)
     /// # }
     /// ```
-    pub fn get_message(self: &mut Client) -> RedisMessageResult {
-        self.subscriber.get_message(&self.client)
+    pub fn get_message(
+        self: &mut Client,
+        timeout: u64,
+    ) -> RedisMessageResult {
+        self.subscriber.get_message(&self.client, timeout)
     }
 }
 
 /// Constructs a new redis client.<br>
 /// The redis connection string must be in the following format: `redis://[:<passwd>@]<hostname>[:port][/<db>]`
 ///
-/// # Examples
+/// # Arguments
+///
+/// * `connection_string` - The connection string in the format of: `redis://[:<passwd>@]<hostname>[:port][/<db>]`
+///
+/// # Example
 ///
 /// ```
 /// extern crate simple_redis;

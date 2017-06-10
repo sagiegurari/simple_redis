@@ -79,13 +79,17 @@
 //! connection and subscription (pubsub) handling.<br>
 //! In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub
 //! instances in parallel.<br>
-//! <br>
+//!
+//! ## Connection Resiliency
+//!
 //! Connection resiliency is managed by verifying the internally managed connection before every operation against the
 //! redis server.<br>
 //! In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 //! connection only.<br>
 //! However, this comes at a small performance cost of PING operation to the redis server.<br>
-//! <br>
+//!
+//! ## Subscription Resiliency
+//!
 //! Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
 //! automatically in case of any error while fetching a message from the subscribed channels.
 //!
@@ -184,6 +188,13 @@
 //! [dependencies]
 //! simple_redis = "*"
 //! ```
+//!
+//! # Contributing
+//! See [contributing guide](https://github.com/sagiegurari/simple_redis/blob/master/.github/CONTRIBUTING.md)
+//!
+//! # License
+//! Developed by Sagie Gur-Ari and licensed under the
+//! [Apache 2](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) open source license.
 //!
 
 mod connection;

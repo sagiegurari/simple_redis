@@ -293,6 +293,17 @@
 <span id="248">248</span>
 <span id="249">249</span>
 <span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -375,13 +386,17 @@
 <span class="doccomment">//! connection and subscription (pubsub) handling.&lt;br&gt;</span>
 <span class="doccomment">//! In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub</span>
 <span class="doccomment">//! instances in parallel.&lt;br&gt;</span>
-<span class="doccomment">//! &lt;br&gt;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Connection Resiliency</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! Connection resiliency is managed by verifying the internally managed connection before every operation against the</span>
 <span class="doccomment">//! redis server.&lt;br&gt;</span>
 <span class="doccomment">//! In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid</span>
 <span class="doccomment">//! connection only.&lt;br&gt;</span>
 <span class="doccomment">//! However, this comes at a small performance cost of PING operation to the redis server.&lt;br&gt;</span>
-<span class="doccomment">//! &lt;br&gt;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Subscription Resiliency</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests</span>
 <span class="doccomment">//! automatically in case of any error while fetching a message from the subscribed channels.</span>
 <span class="doccomment">//!</span>
@@ -480,6 +495,13 @@
 <span class="doccomment">//! [dependencies]</span>
 <span class="doccomment">//! simple_redis = &quot;*&quot;</span>
 <span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Contributing</span>
+<span class="doccomment">//! See [contributing guide](https://github.com/sagiegurari/simple_redis/blob/master/.github/CONTRIBUTING.md)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # License</span>
+<span class="doccomment">//! Developed by Sagie Gur-Ari and licensed under the</span>
+<span class="doccomment">//! [Apache 2](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) open source license.</span>
 <span class="doccomment">//!</span>
 
 <span class="kw">mod</span> <span class="ident">connection</span>;

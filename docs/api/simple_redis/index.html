@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-250' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-261' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
 <p>Simple and resilient <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with
@@ -59,15 +59,17 @@ While not as comprehensive or flexiable as <a href="https://crates.io/crates/red
 it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal
 connection and subscription (pubsub) handling.<br>
 In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub
-instances in parallel.<br>
-<br>
-Connection resiliency is managed by verifying the internally managed connection before every operation against the
+instances in parallel.<br></p>
+
+<h2 id='connection-resiliency' class='section-header'><a href='#connection-resiliency'>Connection Resiliency</a></h2>
+<p>Connection resiliency is managed by verifying the internally managed connection before every operation against the
 redis server.<br>
 In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 connection only.<br>
-However, this comes at a small performance cost of PING operation to the redis server.<br>
-<br>
-Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
+However, this comes at a small performance cost of PING operation to the redis server.<br></p>
+
+<h2 id='subscription-resiliency' class='section-header'><a href='#subscription-resiliency'>Subscription Resiliency</a></h2>
+<p>Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
 automatically in case of any error while fetching a message from the subscribed channels.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
@@ -159,6 +161,13 @@ automatically in case of any error while fetching a message from the subscribed 
 <pre><code class="language-ini">[dependencies]
 simple_redis = &quot;*&quot;
 </code></pre>
+
+<h1 id='contributing' class='section-header'><a href='#contributing'>Contributing</a></h1>
+<p>See <a href="https://github.com/sagiegurari/simple_redis/blob/master/.github/CONTRIBUTING.md">contributing guide</a></p>
+
+<h1 id='license' class='section-header'><a href='#license'>License</a></h1>
+<p>Developed by Sagie Gur-Ari and licensed under the
+<a href="https://github.com/sagiegurari/simple_redis/blob/master/LICENSE">Apache 2</a> open source license.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>

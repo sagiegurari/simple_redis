@@ -29,6 +29,7 @@ after_success: |
   sudo make install &&
   cd ../.. &&
   rm -rf kcov-33 &&
+  ls ./target/debug &&
   for file in target/debug/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
   for file in target/debug/test_-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
   bash <(curl -s https://codecov.io/bash) &&

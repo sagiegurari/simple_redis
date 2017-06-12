@@ -250,12 +250,7 @@ mod tests {
 
     #[test]
     fn create_valid_url() {
-        let result = create("redis://127.0.0.1:6379/");
-        assert!(result.is_ok());
-
-        match result {
-            Ok(client) => assert!(!client.is_connection_open()),
-            _ => panic!("test error"),
-        };
+        let client = create("redis://127.0.0.1:6379/").unwrap();
+        assert!(!client.is_connection_open());
     }
 }

@@ -6,6 +6,7 @@
 extern crate redis;
 use std::error;
 use std::fmt;
+use std::fmt::Display;
 
 #[derive(Debug)]
 /// Holds the error information
@@ -44,7 +45,7 @@ impl error::Error for RedisError {
     }
 }
 
-impl fmt::Display for RedisError {
+impl Display for RedisError {
     /// Formats the value using the given formatter.
     fn fmt(
         &self,
@@ -99,3 +100,35 @@ pub type RedisStringResult = RedisResult<String>;
 
 /// Holds bool result or error
 pub type RedisBoolResult = RedisResult<bool>;
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::error::Error;
+    use std::io::Write;
+
+    #[test]
+    fn redis_error_description() {
+        let redis_error = RedisError { info: ErrorInfo::Description("test") };
+        
+        assert_eq!(redis_error.description(), "test");
+        assert!(redis_error.cause().is_none());
+        
+        let mut writer = Vec::new();
+        write!(&mut writer, "formatted {}", redis_error).unwrap();
+        assert_eq!(writer, b"formatted test");
+    }
+
+    #[test]
+    fn redis_error_timeout_error() {
+        let redis_error = RedisError { info: ErrorInfo::TimeoutError("timeout") };
+        
+        assert_eq!(redis_error.description(), "timeout");
+        assert!(redis_error.cause().is_none());
+        
+        let mut writer = Vec::new();
+        write!(&mut writer, "formatted {}", redis_error).unwrap();
+        assert_eq!(writer, b"formatted timeout");
+    }
+}

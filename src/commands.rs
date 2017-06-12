@@ -591,25 +591,17 @@ mod tests {
 
     #[test]
     fn create_valid_url() {
-        let result = client::create("redis://127.0.0.1:6379/");
-        assert!(result.is_ok());
-
-        match result {
-            Ok(client) => assert!(!client.is_connection_open()),
-            _ => panic!("test error"),
-        };
+        let client = client::create("redis://127.0.0.1:6379/").unwrap();
+        assert!(!client.is_connection_open());
     }
 
     #[test]
     fn run_command() {
         let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
-
         assert!(!client.is_connection_open());
 
-        match client.run_command::<String>("ECHO", vec!["testing"]) {
-            Ok(value) => assert_eq!(value, "testing"),
-            _ => panic!("test error"),
-        }
+        let value = client.run_command::<String>("ECHO", vec!["testing"]).unwrap();
+        assert_eq!(value, "testing");
 
         assert!(client.is_connection_open());
     }
@@ -625,9 +617,7 @@ mod tests {
 
         assert!(client.is_connection_open());
 
-        match client.get_string("set_get") {
-            Ok(value) => assert_eq!(value, "my_value"),
-            _ => panic!("test error"),
-        }
+        let value = client.get_string("set_get").unwrap();
+        assert_eq!(value, "my_value");
     }
 }

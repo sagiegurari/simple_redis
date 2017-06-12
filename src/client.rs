@@ -259,7 +259,6 @@ pub fn create(connection_string: &str) -> Result<Client, RedisError> {
             let client = Client { client: redis_client, connection: redis_connection, subscriber: redis_pubsub };
 
             Ok(client)
-
         }
         Err(error) => Err(RedisError { info: ErrorInfo::RedisError(error) }),
     }
@@ -277,49 +276,32 @@ mod tests {
 
     #[test]
     fn create_valid_url() {
-        let result = create("redis://127.0.0.1:6379/");
-        assert!(result.is_ok());
-
-        match result {
-            Ok(client) => assert!(!client.is_connection_open()),
-            _ => panic!("test error"),
-        };
+        let client = create("redis://127.0.0.1:6379/").unwrap();
+        assert!(!client.is_connection_open());
     }
 
     #[test]
     fn run_command() {
-        match create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = create("redis://127.0.0.1:6379/").unwrap();
+        assert!(!client.is_connection_open());
 
-                match client.run_command::<String>("ECHO", vec!["testing"]) {
-                    Ok(value) => assert_eq!(value, "testing"),
-                    _ => panic!("test error"),
-                }
+        let value = client.run_command::<String>("ECHO", vec!["testing"]).unwrap();
+        assert_eq!(value, "testing");
 
-                assert!(client.is_connection_open());
-            }
-            _ => panic!("test error"),
-        };
+        assert!(client.is_connection_open());
     }
 
     #[test]
     fn run_command_typed_response() {
-        match create("redis://127.0.0.1:6379/") {
-            Ok(mut client) => {
-                assert!(!client.is_connection_open());
+        let mut client = create("redis://127.0.0.1:6379/").unwrap();
+        assert!(!client.is_connection_open());
 
-                let result = client.run_command_empty_response("SET", vec!["client_test1", "my_value"]);
-                assert!(result.is_ok());
+        let result = client.run_command_empty_response("SET", vec!["client_test1", "my_value"]);
+        assert!(result.is_ok());
 
-                assert!(client.is_connection_open());
+        assert!(client.is_connection_open());
 
-                match client.run_command_string_response("GET", vec!["client_test1"]) {
-                    Ok(value) => assert_eq!(value, "my_value"),
-                    _ => panic!("test error"),
-                }
-            }
-            _ => panic!("test error"),
-        };
+        let value = client.run_command_string_response("GET", vec!["client_test1"]).unwrap();
+        assert_eq!(value, "my_value");
     }
 }

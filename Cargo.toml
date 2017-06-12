@@ -26,3 +26,4 @@ default = []
 
 [badges]
 travis-ci = { repository = "sagiegurari/simple_redis", branch = "master" }
+codecov = { repository = "sagiegurari/simple_redis", branch = "master", service = "github" }

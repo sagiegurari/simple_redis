@@ -4,6 +4,32 @@ rust:
   - stable
   - beta
   - nightly
-env: RUST_BACKTRACE=1
+env: RUST_BACKTRACE=1 RUSTFLAGS="-C link-dead-code"
 services:
   - redis-server
+before_install:
+  - sudo apt-get update
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+      - gcc
+      - binutils-dev
+after_success: |
+  wget https://github.com/SimonKagstrom/kcov/archive/v33.zip &&
+  unzip v33.zip &&
+  cd kcov-33 &&
+  mkdir build && 
+  cd ./build && 
+  cmake .. && 
+  make && 
+  sudo make install &&
+  cd ../.. &&
+  rm -rf kcov-33 &&
+  for file in target/debug/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
+  for file in target/debug/test_-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
+  bash <(curl -s https://codecov.io/bash) &&
+  echo "Uploaded code coverage"

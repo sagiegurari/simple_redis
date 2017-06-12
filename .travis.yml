@@ -4,7 +4,7 @@ rust:
   - stable
   - beta
   - nightly
-env: RUST_BACKTRACE=1 RUSTFLAGS="-C link-dead-code"
+env: RUST_BACKTRACE=1
 services:
   - redis-server
 before_install:
@@ -30,7 +30,7 @@ after_success: |
   cd ../.. &&
   rm -rf kcov-33 &&
   ls ./target/debug &&
-  for file in target/debug/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
-  for file in target/debug/test_-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
+  for file in target/debug/deps/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
+  for file in target/debug/deps/test_-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
   bash <(curl -s https://codecov.io/bash) &&
   echo "Uploaded code coverage"

@@ -79,12 +79,12 @@ fn get_message(
 
             let output;
 
+            let start = SystemTime::now();
             let mut timeout_result = redis_pubsub.set_read_timeout(duration);
 
             if timeout_result.is_err() {
                 output = Err(RedisError { info: ErrorInfo::Description("Unable to set read timeout.") })
             } else {
-                let start = SystemTime::now();
                 let message_result = redis_pubsub.get_message();
 
                 timeout_result = redis_pubsub.set_read_timeout(None);

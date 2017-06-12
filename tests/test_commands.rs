@@ -236,7 +236,7 @@ fn pub_sub_timeout() {
     let result = subscriber.subscribe("pub_sub_timeout");
     assert!(result.is_ok());
 
-    let message_result = subscriber.get_message(500);
+    let message_result = subscriber.get_message(50);
 
     assert!(message_result.is_err());
 

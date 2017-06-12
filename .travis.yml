@@ -4,7 +4,7 @@ rust:
   - stable
   - beta
   - nightly
-env: RUST_BACKTRACE=1 RUSTFLAGS="-C link-dead-code"
+env: RUST_BACKTRACE=1 RUSTFLAGS="-C link-dead-code" KCOV_VERSION=33
 services:
   - redis-server
 before_install:
@@ -18,19 +18,22 @@ addons:
       - cmake
       - gcc
       - binutils-dev
-after_success: |
-  wget https://github.com/SimonKagstrom/kcov/archive/v33.zip &&
-  unzip v33.zip &&
-  cd kcov-33 &&
-  mkdir build && 
-  cd ./build && 
-  cmake .. && 
-  make && 
-  sudo make install &&
-  cd ../.. &&
-  rm -rf kcov-33 &&
-  ls ./target/debug/deps &&
-  for file in target/debug/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
-  for file in target/debug/test_*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done &&
-  bash <(curl -s https://codecov.io/bash) &&
-  echo "Uploaded code coverage"
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+  - echo "Running coverage"
+  - wget https://github.com/SimonKagstrom/kcov/archive/v$KCOV_VERSION.zip
+  - unzip v$KCOV_VERSION.zip
+  - cd kcov-$KCOV_VERSION
+  - mkdir build
+  - cd ./build
+  - cmake ..
+  - make
+  - sudo make install
+  - cd ../..
+  - rm -rf kcov-$KCOV_VERSION
+  - ls ./target/debug/deps
+  - for file in target/debug/simple_redis-*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done
+  - for file in target/debug/test_*[^\.d]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done
+  - bash <(curl -s https://codecov.io/bash)
+  - echo "Uploaded code coverage"

@@ -6,7 +6,7 @@
 extern crate redis;
 use std::ops::Add;
 use std::option::Option;
-use std::time;
+use std::time::Duration;
 use std::time::SystemTime;
 use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
 
@@ -70,21 +70,22 @@ fn get_message(
             let duration;
             let timeout_duration;
             if timeout > 0 {
-                timeout_duration = time::Duration::from_millis(timeout);
+                timeout_duration = Duration::from_millis(timeout);
                 duration = Some(timeout_duration);
             } else {
-                timeout_duration = time::Duration::new(0, 0);
+                timeout_duration = Duration::new(0, 0);
                 duration = None;
             }
 
             let output;
 
-            let start = SystemTime::now();
             let mut timeout_result = redis_pubsub.set_read_timeout(duration);
 
             if timeout_result.is_err() {
                 output = Err(RedisError { info: ErrorInfo::Description("Unable to set read timeout.") })
             } else {
+                let start = SystemTime::now();
+
                 let message_result = redis_pubsub.get_message();
 
                 timeout_result = redis_pubsub.set_read_timeout(None);
@@ -94,8 +95,9 @@ fn get_message(
                     output = match message_result {
                         Ok(message) => Ok(message),
                         Err(error) => {
-                            let actual_end = SystemTime::now();
                             let max_end = start.add(timeout_duration);
+                            let mut actual_end = SystemTime::now();
+                            actual_end = actual_end.add(Duration::from_millis(50)); // possible miscalculation
 
                             if timeout > 0 && actual_end >= max_end {
                                 Err(RedisError { info: ErrorInfo::TimeoutError("Timeout") })

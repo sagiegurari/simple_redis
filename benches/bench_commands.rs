@@ -14,11 +14,9 @@ fn set_get_del(bencher: &mut Bencher) {
 
     assert!(client.is_connection_open());
 
-    bencher.iter(
-        || {
-            client.set("bnch_set_get", "my_value").unwrap();
-            client.get_string("bnch_set_get").unwrap();
-            client.del("bnch_set_get").unwrap();
-        }
-    );
+    bencher.iter(|| {
+        client.set("bnch_set_get", "my_value").unwrap();
+        client.get_string("bnch_set_get").unwrap();
+        client.del("bnch_set_get").unwrap();
+    });
 }

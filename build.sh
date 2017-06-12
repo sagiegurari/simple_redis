@@ -1,6 +1,6 @@
 
 function kill_redis {
-    ps -ef | grep redis-server | awk '{print $2}' | xargs kill -9
+    ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9
 }
 
 kill_redis

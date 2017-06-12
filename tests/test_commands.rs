@@ -64,23 +64,21 @@ fn pub_sub() {
     let mut result = subscriber.subscribe("pub_sub");
     assert!(result.is_ok());
 
-    thread::spawn(
-        || {
-            thread::sleep(time::Duration::from_secs(2));
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
 
-            match simple_redis::create("redis://127.0.0.1:6379/") {
-                Ok(mut publisher) => {
-                    assert!(!publisher.is_connection_open());
+        match simple_redis::create("redis://127.0.0.1:6379/") {
+            Ok(mut publisher) => {
+                assert!(!publisher.is_connection_open());
 
-                    let result = publisher.publish("pub_sub", "test pub_sub message");
-                    assert!(result.is_ok());
+                let result = publisher.publish("pub_sub", "test pub_sub message");
+                assert!(result.is_ok());
 
-                    assert!(publisher.is_connection_open());
-                }
-                _ => panic!("test error"),
-            };
-        }
-    );
+                assert!(publisher.is_connection_open());
+            }
+            _ => panic!("test error"),
+        };
+    });
 
     match subscriber.get_message(0) {
         Ok(message) => {
@@ -96,28 +94,26 @@ fn pub_sub() {
     result = subscriber.unsubscribe("pub_sub");
     assert!(result.is_ok());
 
-    thread::spawn(
-        || {
-            thread::sleep(time::Duration::from_secs(2));
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
 
-            match simple_redis::create("redis://127.0.0.1:6379/") {
-                Ok(mut publisher) => {
-                    assert!(!publisher.is_connection_open());
+        match simple_redis::create("redis://127.0.0.1:6379/") {
+            Ok(mut publisher) => {
+                assert!(!publisher.is_connection_open());
 
-                    let mut result = publisher.publish("pub_sub", "bad");
-                    assert!(result.is_ok());
+                let mut result = publisher.publish("pub_sub", "bad");
+                assert!(result.is_ok());
 
-                    assert!(publisher.is_connection_open());
+                assert!(publisher.is_connection_open());
 
-                    thread::sleep(time::Duration::from_secs(1));
+                thread::sleep(time::Duration::from_secs(1));
 
-                    result = publisher.publish("pub_sub2", "good");
-                    assert!(result.is_ok());
-                }
-                _ => panic!("test error"),
-            };
-        }
-    );
+                result = publisher.publish("pub_sub2", "good");
+                assert!(result.is_ok());
+            }
+            _ => panic!("test error"),
+        };
+    });
 
     match subscriber.get_message(0) {
         Ok(message) => {
@@ -137,23 +133,21 @@ fn pub_psub_simple() {
     let result = subscriber.psubscribe("pub_psub_simple::123");
     assert!(result.is_ok());
 
-    thread::spawn(
-        || {
-            thread::sleep(time::Duration::from_secs(2));
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
 
-            match simple_redis::create("redis://127.0.0.1:6379/") {
-                Ok(mut publisher) => {
-                    assert!(!publisher.is_connection_open());
+        match simple_redis::create("redis://127.0.0.1:6379/") {
+            Ok(mut publisher) => {
+                assert!(!publisher.is_connection_open());
 
-                    let result = publisher.publish("pub_psub_simple::123", "test pub_sub message");
-                    assert!(result.is_ok());
+                let result = publisher.publish("pub_psub_simple::123", "test pub_sub message");
+                assert!(result.is_ok());
 
-                    assert!(publisher.is_connection_open());
-                }
-                _ => panic!("test error"),
-            };
-        }
-    );
+                assert!(publisher.is_connection_open());
+            }
+            _ => panic!("test error"),
+        };
+    });
 
     match subscriber.get_message(0) {
         Ok(message) => {
@@ -173,23 +167,21 @@ fn pub_psub_pattern() {
     let mut result = subscriber.psubscribe("pub_psub_pattern::*");
     assert!(result.is_ok());
 
-    thread::spawn(
-        || {
-            thread::sleep(time::Duration::from_secs(2));
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
 
-            match simple_redis::create("redis://127.0.0.1:6379/") {
-                Ok(mut publisher) => {
-                    assert!(!publisher.is_connection_open());
+        match simple_redis::create("redis://127.0.0.1:6379/") {
+            Ok(mut publisher) => {
+                assert!(!publisher.is_connection_open());
 
-                    let result = publisher.publish("pub_psub_pattern::123", "test pub_sub message");
-                    assert!(result.is_ok());
+                let result = publisher.publish("pub_psub_pattern::123", "test pub_sub message");
+                assert!(result.is_ok());
 
-                    assert!(publisher.is_connection_open());
-                }
-                _ => panic!("test error"),
-            };
-        }
-    );
+                assert!(publisher.is_connection_open());
+            }
+            _ => panic!("test error"),
+        };
+    });
 
     match subscriber.get_message(0) {
         Ok(message) => {
@@ -205,28 +197,26 @@ fn pub_psub_pattern() {
     result = subscriber.punsubscribe("pub_psub_pattern::*");
     assert!(result.is_ok());
 
-    thread::spawn(
-        || {
-            thread::sleep(time::Duration::from_secs(2));
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
 
-            match simple_redis::create("redis://127.0.0.1:6379/") {
-                Ok(mut publisher) => {
-                    assert!(!publisher.is_connection_open());
+        match simple_redis::create("redis://127.0.0.1:6379/") {
+            Ok(mut publisher) => {
+                assert!(!publisher.is_connection_open());
 
-                    let mut result = publisher.publish("pub_psub_pattern::123", "bad");
-                    assert!(result.is_ok());
+                let mut result = publisher.publish("pub_psub_pattern::123", "bad");
+                assert!(result.is_ok());
 
-                    assert!(publisher.is_connection_open());
+                assert!(publisher.is_connection_open());
 
-                    thread::sleep(time::Duration::from_secs(1));
+                thread::sleep(time::Duration::from_secs(1));
 
-                    result = publisher.publish("pub_psub_pattern2::123", "good");
-                    assert!(result.is_ok());
-                }
-                _ => panic!("test error"),
-            };
-        }
-    );
+                result = publisher.publish("pub_psub_pattern2::123", "good");
+                assert!(result.is_ok());
+            }
+            _ => panic!("test error"),
+        };
+    });
 
     match subscriber.get_message(0) {
         Ok(message) => {

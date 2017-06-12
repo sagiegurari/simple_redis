@@ -247,7 +247,7 @@ fn pub_sub_timeout() {
                     println!("Got timeout error: {}", description);
                     ()
                 }
-                _ => panic!("Invalid Error Type"),
+                _ => panic!("Invalid Error Type: {}", error),
             }
         }
         _ => panic!("Invalid Result"),

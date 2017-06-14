@@ -4,7 +4,11 @@ rust:
   - stable
   - beta
   - nightly
-env: RUST_BACKTRACE=1 RUSTFLAGS="-C link-dead-code" KCOV_VERSION=33
+env:
+  global:
+    - RUST_BACKTRACE=1
+    - RUSTFLAGS="-C link-dead-code"
+    - KCOV_VERSION=33
 services:
   - redis-server
 before_install:

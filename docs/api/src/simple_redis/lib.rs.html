@@ -299,6 +299,31 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
 </pre><pre class="rust ">
 <span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">anonymous_parameters</span>,
         <span class="ident">const_err</span>,
@@ -476,6 +501,31 @@
 <span class="doccomment">//!                     },</span>
 <span class="doccomment">//!                     Err(error) =&gt; println!(&quot;Error while fetching message, should retry again, info: {}&quot;, error),</span>
 <span class="doccomment">//!                 }</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!         },</span>
+<span class="doccomment">//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Closing Connection</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! extern crate simple_redis;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
+<span class="doccomment">//!         Ok(mut client) =&gt;  {</span>
+<span class="doccomment">//!             println!(&quot;Created Redis Client&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             match client.set(&quot;my_key&quot;, &quot;my_value&quot;) {</span>
+<span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
+<span class="doccomment">//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)</span>
+<span class="doccomment">//!             };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!             match client.quit() {</span>
+<span class="doccomment">//!                 Err(error) =&gt; println!(&quot;Error: {}&quot;, error),</span>
+<span class="doccomment">//!                 _ =&gt; println!(&quot;Connection Closed.&quot;)</span>
 <span class="doccomment">//!             }</span>
 <span class="doccomment">//!         },</span>
 <span class="doccomment">//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>

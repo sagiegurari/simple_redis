@@ -294,54 +294,32 @@ impl Subscriber {
     }
 
     pub fn unsubscribe_all(self: &mut Subscriber) -> RedisEmptyResult {
+        let mut result = Ok(());
+
         if self.subscribed {
-            match self.pubsub {
-                Some(ref mut redis_pubsub) => {
-                    let mut result = Ok(());
-                    let mut error_found = false;
+            let mut list = self.subscriptions.to_vec();
+            for channel in &list {
+                result = self.unsubscribe(channel);
 
-                    for channel in &self.subscriptions {
-                        result = match redis_pubsub.unsubscribe(channel.to_string()) {
-                            Err(error) => {
-                                error_found = true;
-                                Err(RedisError { info: ErrorInfo::RedisError(error) })
-                            }
-                            _ => Ok(()),
-                        };
-
-                        if error_found {
-                            break;
-                        }
-                    }
-                    for channel in &self.psubscriptions {
-                        result = match redis_pubsub.punsubscribe(channel.to_string()) {
-                            Err(error) => {
-                                error_found = true;
-                                Err(RedisError { info: ErrorInfo::RedisError(error) })
-                            }
-                            _ => Ok(()),
-                        };
-
-                        if error_found {
-                            break;
-                        }
-                    }
-
-                    if !error_found {
-                        self.subscriptions.clear();
-                        self.psubscriptions.clear();
-                    }
-
-                    result
+                if result.is_err() {
+                    break;
                 }
-                None => Err(RedisError { info: ErrorInfo::Description("Error while fetching pubsub.") }),
+            }
+
+            list = self.psubscriptions.to_vec();
+            for channel in &list {
+                result = self.punsubscribe(channel);
+
+                if result.is_err() {
+                    break;
+                }
             }
         } else {
             self.subscriptions.clear();
             self.psubscriptions.clear();
-
-            Ok(())
         }
+
+        result
     }
 }
 

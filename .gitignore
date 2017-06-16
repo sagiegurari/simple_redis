@@ -6,3 +6,4 @@ temp/
 Cargo.lock
 **/*.log
 dump.rdb
+/rs*.sh

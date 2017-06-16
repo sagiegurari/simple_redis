@@ -46,15 +46,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.publish("important_notifications", "message text") {
-    ///               Err(error) => println!("Publish error: {}", error),
-    ///               _ => println!("Message published")
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.publish("important_notifications", "message text") {
+    ///   Err(error) => println!("Publish error: {}", error),
+    ///   _ => println!("Message published")
+    /// }
     /// ```
     ///
     pub fn publish(
@@ -70,15 +66,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.get::<i64>("my_key") {
-    ///               Ok(value) => println!("Read value from Redis: {}", value),
-    ///               Err(error) => println!("Unable to get value from Redis: {}", error)
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.get::<i64>("my_key") {
+    ///     Ok(value) => println!("Read value from Redis: {}", value),
+    ///     Err(error) => println!("Unable to get value from Redis: {}", error)
+    /// }
     /// ```
     ///
     pub fn get<T: FromStr>(
@@ -94,15 +86,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.get_string("my_key") {
-    ///               Ok(value) => println!("Read value from Redis: {}", value),
-    ///               Err(error) => println!("Unable to get value from Redis: {}", error)
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.get_string("my_key") {
+    ///     Ok(value) => println!("Read value from Redis: {}", value),
+    ///     Err(error) => println!("Unable to get value from Redis: {}", error)
+    /// }
     /// ```
     ///
     pub fn get_string(
@@ -117,15 +105,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.set("my_key", "my_value") {
-    ///               Err(error) => println!("Unable to set value in Redis: {}", error),
-    ///               _ => println!("Value set in Redis")
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.set("my_key", "my_value") {
+    ///     Err(error) => println!("Unable to set value in Redis: {}", error),
+    ///     _ => println!("Value set in Redis")
+    /// }
     /// ```
     ///
     pub fn set<T: RedisArg>(
@@ -141,15 +125,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.setex("my_key", "my_value", 10) {
-    ///               Err(error) => println!("Unable to set value in Redis: {}", error),
-    ///               _ => println!("Value set in Redis and will expire in 10 seconds")
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.setex("my_key", "my_value", 10) {
+    ///     Err(error) => println!("Unable to set value in Redis: {}", error),
+    ///     _ => println!("Value set in Redis and will expire in 10 seconds")
+    /// }
     /// ```
     ///
     pub fn setex<T: RedisArg>(
@@ -322,20 +302,16 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.hgetall("my_map") {
-    ///               Ok(map) => {
-    ///                   match map.get("my_field") {
-    ///                       Some(value) => println!("Got field value from map: {}", value),
-    ///                       None => println!("Map field is emtpy"),
-    ///                   }
-    ///               },
-    ///               Err(error) => println!("Unable to read map from Redis: {}", error),
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.hgetall("my_map") {
+    ///     Ok(map) => {
+    ///         match map.get("my_field") {
+    ///             Some(value) => println!("Got field value from map: {}", value),
+    ///             None => println!("Map field is emtpy"),
+    ///         }
+    ///     },
+    ///     Err(error) => println!("Unable to read map from Redis: {}", error),
+    /// }
     /// ```
     ///
     pub fn hgetall(

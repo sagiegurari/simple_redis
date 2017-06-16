@@ -249,6 +249,30 @@ impl Subscriber {
         unsubscribe(self, channel, true)
     }
 
+    pub fn is_subscribed(
+        self: &mut Subscriber,
+        channel: &str,
+    ) -> bool {
+        let search_result = self.subscriptions.iter().position(|x| *x == channel.to_string());
+
+        match search_result {
+            None => false,
+            _ => true,
+        }
+    }
+
+    pub fn is_psubscribed(
+        self: &mut Subscriber,
+        channel: &str,
+    ) -> bool {
+        let search_result = self.psubscriptions.iter().position(|x| *x == channel.to_string());
+
+        match search_result {
+            None => false,
+            _ => true,
+        }
+    }
+
     pub fn get_message(
         self: &mut Subscriber,
         client: &redis::Client,
@@ -267,7 +291,57 @@ impl Subscriber {
         } else {
             subscribe_and_get(self, client, timeout)
         }
+    }
 
+    pub fn unsubscribe_all(self: &mut Subscriber) -> RedisEmptyResult {
+        if self.subscribed {
+            match self.pubsub {
+                Some(ref mut redis_pubsub) => {
+                    let mut result = Ok(());
+                    let mut error_found = false;
+
+                    for channel in &self.subscriptions {
+                        result = match redis_pubsub.unsubscribe(channel.to_string()) {
+                            Err(error) => {
+                                error_found = true;
+                                Err(RedisError { info: ErrorInfo::RedisError(error) })
+                            }
+                            _ => Ok(()),
+                        };
+
+                        if error_found {
+                            break;
+                        }
+                    }
+                    for channel in &self.psubscriptions {
+                        result = match redis_pubsub.punsubscribe(channel.to_string()) {
+                            Err(error) => {
+                                error_found = true;
+                                Err(RedisError { info: ErrorInfo::RedisError(error) })
+                            }
+                            _ => Ok(()),
+                        };
+
+                        if error_found {
+                            break;
+                        }
+                    }
+
+                    if !error_found {
+                        self.subscriptions.clear();
+                        self.psubscriptions.clear();
+                    }
+
+                    result
+                }
+                None => Err(RedisError { info: ErrorInfo::Description("Error while fetching pubsub.") }),
+            }
+        } else {
+            self.subscriptions.clear();
+            self.psubscriptions.clear();
+
+            Ok(())
+        }
     }
 }
 

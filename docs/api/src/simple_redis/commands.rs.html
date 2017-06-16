@@ -642,30 +642,6 @@
 <span id="597">597</span>
 <span id="598">598</span>
 <span id="599">599</span>
-<span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
-<span id="603">603</span>
-<span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
-<span id="607">607</span>
-<span id="608">608</span>
-<span id="609">609</span>
-<span id="610">610</span>
-<span id="611">611</span>
-<span id="612">612</span>
-<span id="613">613</span>
-<span id="614">614</span>
-<span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -715,15 +691,11 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.publish(&quot;important_notifications&quot;, &quot;message text&quot;) {</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Publish error: {}&quot;, error),</span>
-    <span class="doccomment">///               _ =&gt; println!(&quot;Message published&quot;)</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.publish(&quot;important_notifications&quot;, &quot;message text&quot;) {</span>
+    <span class="doccomment">///   Err(error) =&gt; println!(&quot;Publish error: {}&quot;, error),</span>
+    <span class="doccomment">///   _ =&gt; println!(&quot;Message published&quot;)</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">publish</span>(
@@ -739,15 +711,11 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.get::&lt;i64&gt;(&quot;my_key&quot;) {</span>
-    <span class="doccomment">///               Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.get::&lt;i64&gt;(&quot;my_key&quot;) {</span>
+    <span class="doccomment">///     Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
+    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FromStr</span><span class="op">&gt;</span>(
@@ -763,15 +731,11 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.get_string(&quot;my_key&quot;) {</span>
-    <span class="doccomment">///               Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.get_string(&quot;my_key&quot;) {</span>
+    <span class="doccomment">///     Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),</span>
+    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_string</span>(
@@ -786,15 +750,11 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.set(&quot;my_key&quot;, &quot;my_value&quot;) {</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
-    <span class="doccomment">///               _ =&gt; println!(&quot;Value set in Redis&quot;)</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.set(&quot;my_key&quot;, &quot;my_value&quot;) {</span>
+    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
+    <span class="doccomment">///     _ =&gt; println!(&quot;Value set in Redis&quot;)</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
@@ -810,15 +770,11 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.setex(&quot;my_key&quot;, &quot;my_value&quot;, 10) {</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
-    <span class="doccomment">///               _ =&gt; println!(&quot;Value set in Redis and will expire in 10 seconds&quot;)</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.setex(&quot;my_key&quot;, &quot;my_value&quot;, 10) {</span>
+    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),</span>
+    <span class="doccomment">///     _ =&gt; println!(&quot;Value set in Redis and will expire in 10 seconds&quot;)</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setex</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RedisArg</span><span class="op">&gt;</span>(
@@ -991,20 +947,16 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
-    <span class="doccomment">/// #     Ok(mut client) =&gt;  {</span>
-    <span class="doccomment">///           match client.hgetall(&quot;my_map&quot;) {</span>
-    <span class="doccomment">///               Ok(map) =&gt; {</span>
-    <span class="doccomment">///                   match map.get(&quot;my_field&quot;) {</span>
-    <span class="doccomment">///                       Some(value) =&gt; println!(&quot;Got field value from map: {}&quot;, value),</span>
-    <span class="doccomment">///                       None =&gt; println!(&quot;Map field is emtpy&quot;),</span>
-    <span class="doccomment">///                   }</span>
-    <span class="doccomment">///               },</span>
-    <span class="doccomment">///               Err(error) =&gt; println!(&quot;Unable to read map from Redis: {}&quot;, error),</span>
-    <span class="doccomment">///           }</span>
-    <span class="doccomment">/// #     },</span>
-    <span class="doccomment">/// #     Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
-    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
+    <span class="doccomment">/// match client.hgetall(&quot;my_map&quot;) {</span>
+    <span class="doccomment">///     Ok(map) =&gt; {</span>
+    <span class="doccomment">///         match map.get(&quot;my_field&quot;) {</span>
+    <span class="doccomment">///             Some(value) =&gt; println!(&quot;Got field value from map: {}&quot;, value),</span>
+    <span class="doccomment">///             None =&gt; println!(&quot;Map field is emtpy&quot;),</span>
+    <span class="doccomment">///         }</span>
+    <span class="doccomment">///     },</span>
+    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Unable to read map from Redis: {}&quot;, error),</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hgetall</span>(

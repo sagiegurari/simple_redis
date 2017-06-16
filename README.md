@@ -118,6 +118,15 @@ loop {
 }
 ````
 
+Once finished with the redis client, you can close the connection using the redis QUIT command:
+
+````rust
+match client.quit() {
+    Err(error) => println!("Error: {}", error),
+    _ => println!("Connection Closed.")
+}
+````
+
 <a name="installation"></a>
 ## Installation
 In order to use this library, just add it as a dependency:
@@ -138,6 +147,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2017-06-16  | v0.3.7  | More commands added |
 | 2017-06-13  | v0.3.6  | Maintenance |
 | 2017-06-10  | v0.3.1  | Added timeout support for get_message |
 | 2017-06-08  | v0.2.8  | More commands added |

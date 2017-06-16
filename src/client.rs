@@ -46,6 +46,31 @@ impl Client {
         self.connection.is_connection_open()
     }
 
+    /// Closes the internal connection to redis.<br>
+    /// The client can still be reused and any invocation of other operations after this call,
+    /// will reopen the connection.<br>
+    /// See redis [QUIT](https://redis.io/commands/quit) command.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.quit() {
+    ///     Err(error) => println!("Error: {}", error),
+    ///     _ => println!("Connection Closed.")
+    /// }
+    /// ```
+    ///
+    pub fn quit(self: &mut Client) -> RedisEmptyResult {
+        let mut result = self.run_command_empty_response("QUIT", vec![]);
+
+        if result.is_ok() {
+            result = self.unsubscribe_all();
+        }
+
+        result
+    }
+
     /// Invokes the requested command with the provided arguments (all provided via args) and returns the operation
     /// response.<br>
     /// This function ensures that we have a valid connection and it is used internally by all other exposed
@@ -60,15 +85,11 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           match client.run_command::<String>("ECHO", vec!["testing"]) {
-    ///               Ok(value) => assert_eq!(value, "testing"),
-    ///               _ => panic!("test error"),
-    ///           }
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// match client.run_command::<String>("ECHO", vec!["testing"]) {
+    ///     Ok(value) => assert_eq!(value, "testing"),
+    ///     _ => panic!("test error"),
+    /// }
     /// ```
     pub fn run_command<T: redis::FromRedisValue>(
         self: &mut Client,
@@ -135,14 +156,8 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           client.subscribe("important_notifications");
-    /// #
-    /// #         println!("Subscribed to channel.");
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// client.subscribe("important_notifications");
     /// ```
     pub fn subscribe(
         self: &mut Client,
@@ -161,20 +176,30 @@ impl Client {
     /// # Example
     ///
     /// ```
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           client.psubscribe("important_notifications*");
-    /// #
-    /// #         println!("Subscribed to channel.");
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// client.psubscribe("important_notifications*");
     /// ```
     pub fn psubscribe(
         self: &mut Client,
         channel: &str,
     ) -> RedisEmptyResult {
         self.subscriber.psubscribe(channel)
+    }
+
+    /// Returns true if subscribed to the provided channel.
+    pub fn is_subscribed(
+        self: &mut Client,
+        channel: &str,
+    ) -> bool {
+        self.subscriber.is_subscribed(channel)
+    }
+
+    /// Returns true if subscribed to the provided channel pattern.
+    pub fn is_psubscribed(
+        self: &mut Client,
+        channel: &str,
+    ) -> bool {
+        self.subscriber.is_psubscribed(channel)
     }
 
     /// Unsubscribes from the provided channel.
@@ -193,6 +218,11 @@ impl Client {
         self.subscriber.punsubscribe(channel)
     }
 
+    /// Unsubscribes from all channels.
+    pub fn unsubscribe_all(self: &mut Client) -> RedisEmptyResult {
+        self.subscriber.unsubscribe_all()
+    }
+
     /// Fetches the next message from any of the subscribed channels.<br>
     /// This function will return a TimeoutError in case no message was read in the provided timeout value (defined in
     /// millies).<br>
@@ -206,23 +236,17 @@ impl Client {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # match simple_redis::create("redis://127.0.0.1:6379/") {
-    /// #     Ok(mut client) =>  {
-    ///           client.subscribe("important_notifications");
+    /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+    /// client.subscribe("important_notifications");
     ///
-    ///           // get next message (wait up to 5 seconds, 0 for no timeout)
-    ///           match client.get_message(5000) {
-    ///               Ok(message) => {
-    ///                   let payload : String = message.get_payload().unwrap();
-    ///                   println!("Got message: {}", payload);
-    ///               },
-    ///               Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
-    ///           }
-    /// #
-    /// #         println!("Subscribed to channel.");
-    /// #     },
-    /// #     Err(error) => println!("Unable to create Redis client: {}", error)
-    /// # }
+    /// // get next message (wait up to 5 seconds, 0 for no timeout)
+    /// match client.get_message(5000) {
+    ///     Ok(message) => {
+    ///         let payload : String = message.get_payload().unwrap();
+    ///         println!("Got message: {}", payload);
+    ///     },
+    ///     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
+    /// }
     /// ```
     pub fn get_message(
         self: &mut Client,

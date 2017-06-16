@@ -1,4 +1,5 @@
 extern crate simple_redis;
+use std::{thread, time};
 
 #[test]
 fn create_invalid_url() {
@@ -56,4 +57,122 @@ fn run_command_typed_response() {
 
     let error_result = client.run_command_string_response("BADCOMMAND", vec!["int_test_1"]);
     assert!(error_result.is_err());
+}
+
+#[test]
+fn quit_no_subscriptions() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+
+    client.quit().unwrap();
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+}
+
+#[test]
+fn quit_internal_subscriptions() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+
+    assert!(!client.is_subscribed("quit_internal_subscriptions"));
+    assert!(!client.is_psubscribed("quit_internal_*"));
+
+    client.subscribe("quit_internal_subscriptions").unwrap();
+    client.psubscribe("quit_internal_*").unwrap();
+
+    assert!(client.is_subscribed("quit_internal_subscriptions"));
+    assert!(client.is_psubscribed("quit_internal_*"));
+
+    client.quit().unwrap();
+    assert!(!client.is_connection_open());
+
+    assert!(!client.is_subscribed("quit_internal_subscriptions"));
+    assert!(!client.is_psubscribed("quit_internal_*"));
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+}
+
+#[test]
+fn quit_live_subscriptions() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+
+    assert!(!client.is_subscribed("quit_live_subscriptions"));
+    assert!(!client.is_psubscribed("quit_live_*"));
+
+    client.subscribe("quit_live_subscriptions").unwrap();
+    client.psubscribe("quit_live_*").unwrap();
+
+    assert!(client.is_subscribed("quit_live_subscriptions"));
+    assert!(client.is_psubscribed("quit_live_*"));
+
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
+        let mut publisher = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+        publisher.publish("quit_live_subscriptions_TEST", "test pub_sub message").unwrap();
+    });
+
+    match client.get_message(0) {
+        Ok(message) => {
+            let payload: String = message.get_payload().unwrap();
+            assert_eq!(payload, "test pub_sub message")
+        }
+        _ => panic!("test error"),
+    }
+
+    client.quit().unwrap();
+    assert!(!client.is_connection_open());
+
+    assert!(!client.is_subscribed("quit_live_subscriptions"));
+    assert!(!client.is_psubscribed("quit_live_*"));
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+
+    thread::spawn(|| {
+        thread::sleep(time::Duration::from_secs(2));
+        let mut publisher = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+        publisher.publish("quit_live_subscriptions_TEST", "test pub_sub message").unwrap();
+    });
+
+    let message_result = client.get_message(2500);
+    assert!(message_result.is_err());
 }

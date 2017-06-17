@@ -62,7 +62,12 @@ impl Client {
     /// ```
     ///
     pub fn quit(self: &mut Client) -> RedisEmptyResult {
-        let mut result = self.run_command_empty_response("QUIT", vec![]);
+        let mut result;
+        if self.is_connection_open() {
+            result = self.run_command_empty_response("QUIT", vec![]);
+        } else {
+            result = Ok(());
+        }
 
         if result.is_ok() {
             result = self.unsubscribe_all();

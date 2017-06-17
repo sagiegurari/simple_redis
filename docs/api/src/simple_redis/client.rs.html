@@ -374,6 +374,11 @@
 <span id="329">329</span>
 <span id="330">330</span>
 <span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # client</span>
 <span class="doccomment">//!</span>
@@ -439,7 +444,12 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">quit</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;QUIT&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[]);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_connection_open</span>() {
+            <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;QUIT&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[]);
+        } <span class="kw">else</span> {
+            <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Ok</span>(());
+        }
 
         <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_ok</span>() {
             <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">unsubscribe_all</span>();

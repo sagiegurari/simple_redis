@@ -60,6 +60,24 @@ fn run_command_typed_response() {
 }
 
 #[test]
+fn quit_no_connection() {
+    let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
+
+    assert!(!client.is_connection_open());
+
+    client.quit().unwrap();
+
+    assert!(!client.is_connection_open());
+
+    match client.echo("testing") {
+        Ok(value) => assert_eq!(value, "testing"),
+        _ => panic!("test error"),
+    }
+
+    assert!(client.is_connection_open());
+}
+
+#[test]
 fn quit_no_subscriptions() {
     let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
 
@@ -73,6 +91,8 @@ fn quit_no_subscriptions() {
     assert!(client.is_connection_open());
 
     client.quit().unwrap();
+
+    assert!(!client.is_connection_open());
 
     match client.echo("testing") {
         Ok(value) => assert_eq!(value, "testing"),

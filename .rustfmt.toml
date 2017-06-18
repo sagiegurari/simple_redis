@@ -1,7 +1,6 @@
 
 array_layout = "Block"
 array_width = 100
-chain_indent = "Block"
 chain_one_line_max = 100
 closure_block_indent_threshold = -1
 comment_width = 120

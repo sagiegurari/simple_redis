@@ -37,6 +37,7 @@ script:
   - cd ../..
   - rm -rf kcov-$KCOV_VERSION
   - ls ./target/debug/deps
-  - for file in target/debug/deps/*[^\.rlib]; do mkdir -p "target/coverage/$(basename $file)"; kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage/$(basename $file)" "$file"; done
+  - mkdir -p ./target/coverage
+  - for file in target/debug/deps/*[^\.rlib]; do kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage" "$file" || true; done
   - bash <(curl -s https://codecov.io/bash)
   - echo "Uploaded code coverage"

@@ -13,7 +13,7 @@ script = [
 ]
 
 [tasks.init]
-depedencies = [
+dependencies = [
   "stop-redis",
   "start-redis"
 ]

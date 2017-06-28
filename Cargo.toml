@@ -1,6 +1,6 @@
 [package]
 name = "simple_redis"
-version = "0.3.16"
+version = "0.3.17"
 authors = ["Sagie Gur-Ari <sagiegurari@gmail.com>"]
 description = "Simple and resilient redis client."
 license = "Apache-2.0"
@@ -28,6 +28,11 @@ redis = "^0.8.0"
 [features]
 default = []
 
-[badges]
-travis-ci = { repository = "sagiegurari/simple_redis", branch = "master" }
-codecov = { repository = "sagiegurari/simple_redis", branch = "master", service = "github" }
+[badges.travis-ci]
+branch = "master"
+repository = "sagiegurari/simple_redis"
+
+[badges.codecov]
+branch = "master"
+repository = "sagiegurari/simple_redis"
+service = "github"

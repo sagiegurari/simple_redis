@@ -222,6 +222,10 @@
 //! [Apache 2](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) open source license.
 //!
 
+#[cfg(test)]
+#[path = "./lib_test.rs"]
+mod lib_test;
+
 mod connection;
 mod subscriber;
 mod commands;
@@ -261,21 +265,4 @@ pub type RedisResult<T> = types::RedisResult<T>;
 /// ```
 pub fn create(connection_string: &str) -> Result<client::Client, RedisError> {
     client::create(connection_string)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn create_invalid_url() {
-        let result = create("test/bad/url");
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn create_valid_url() {
-        let client = create("redis://127.0.0.1:6379/").unwrap();
-        assert!(!client.is_connection_open());
-    }
 }

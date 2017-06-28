@@ -3,6 +3,10 @@
 //! Manages the pubsub subscriber connection and if needed resubscribes in case of reconnections.
 //!
 
+#[cfg(test)]
+#[path = "./subscriber_test.rs"]
+mod subscriber_test;
+
 extern crate redis;
 use std::ops::Add;
 use std::option::Option;

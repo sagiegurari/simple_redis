@@ -372,11 +372,19 @@
 <span id="327">327</span>
 <span id="328">328</span>
 <span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Manages the pubsub subscriber connection and if needed resubscribes in case of reconnections.</span>
 <span class="doccomment">//!</span>
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;./subscriber_test.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">subscriber_test</span>;
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">redis</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>;

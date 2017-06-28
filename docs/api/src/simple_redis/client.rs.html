@@ -341,49 +341,15 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # client</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Implements the redis client capabilities.</span>
 <span class="doccomment">//!</span>
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;./client_test.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">client_test</span>;
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">redis</span>;
 <span class="kw">use</span> <span class="ident">connection</span>;
@@ -672,48 +638,6 @@
             <span class="prelude-val">Ok</span>(<span class="ident">client</span>)
         }
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
-    }
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">create_invalid_url</span>() {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">create</span>(<span class="string">&quot;test/bad/url&quot;</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_err</span>());
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">create_valid_url</span>() {
-        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">run_command</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">run_command</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;testing&quot;</span>]).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;testing&quot;</span>);
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">run_command_typed_response</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">create</span>(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">run_command_empty_response</span>(<span class="string">&quot;SET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;client_test1&quot;</span>, <span class="string">&quot;my_value&quot;</span>]);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_ok</span>());
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">is_connection_open</span>());
-
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">run_command_string_response</span>(<span class="string">&quot;GET&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;client_test1&quot;</span>]).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="string">&quot;my_value&quot;</span>);
     }
 }
 </pre>

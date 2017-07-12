@@ -12,11 +12,11 @@ script = [
   "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9",
 ]
 
-[tasks.init]
+[tasks.init-build-flow]
 dependencies = [
   "stop-redis",
   "start-redis"
 ]
 
-[tasks.end]
+[tasks.end-build-flow]
 alias = "stop-redis"

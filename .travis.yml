@@ -25,7 +25,7 @@ addons:
 script:
   - cargo install --debug cargo-make
   - cargo make ci-flow
-  - echo "Running coverage"
+  - echo "Installing kcov"
   - wget https://github.com/SimonKagstrom/kcov/archive/v$KCOV_VERSION.zip
   - unzip v$KCOV_VERSION.zip
   - cd kcov-$KCOV_VERSION
@@ -36,8 +36,6 @@ script:
   - sudo make install
   - cd ../..
   - rm -rf kcov-$KCOV_VERSION
-  - ls ./target/debug/deps
-  - mkdir -p ./target/coverage
-  - for file in target/debug/deps/*[^\.rlib]; do kcov --include-pattern=${TRAVIS_BUILD_DIR}/src/ "target/coverage" "$file" || true; done
+  - cargo make coverage-flow
   - bash <(curl -s https://codecov.io/bash)
-  - echo "Uploaded code coverage"
+  - echo "Uploaded Code Coverage"

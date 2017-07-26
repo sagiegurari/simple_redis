@@ -1,4 +1,7 @@
 
+[tasks.outdated]
+force = true
+
 [tasks.start-redis]
 script = [
   "echo \"Starting Redis\"",

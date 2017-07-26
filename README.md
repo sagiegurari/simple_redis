@@ -1,7 +1,7 @@
 # simple_redis
 
 [![crates.io](https://img.shields.io/crates/v/simple_redis.svg)](https://crates.io/crates/simple_redis) [![Build Status](https://travis-ci.org/sagiegurari/simple_redis.svg)](http://travis-ci.org/sagiegurari/simple_redis) [![Build status](https://ci.appveyor.com/api/projects/status/knyrs33tyjqgt06u?svg=true)](https://ci.appveyor.com/project/sagiegurari/simple-redis) [![codecov](https://codecov.io/gh/sagiegurari/simple_redis/branch/master/graph/badge.svg)](https://codecov.io/gh/sagiegurari/simple_redis)<br>
-[![license](https://img.shields.io/crates/l/simple_redis.svg)](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) [![Libraries.io for GitHub](https://img.shields.io/librariesio/github/sagiegurari/simple_redis.svg)](https://libraries.io/cargo/simple_redis) [![Documentation](https://docs.rs/simple_redis/badge.svg)](https://docs.rs/crate/simple_redis/) [![downloads](https://img.shields.io/crates/d/simple_redis.svg)](https://crates.io/crates/simple_redis)<br>
+[![license](https://img.shields.io/github/license/sagiegurari/simple_redis.svg)](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) [![Libraries.io for GitHub](https://img.shields.io/librariesio/github/sagiegurari/simple_redis.svg)](https://libraries.io/cargo/simple_redis) [![Documentation](https://docs.rs/simple_redis/badge.svg)](https://docs.rs/crate/simple_redis/) [![downloads](https://img.shields.io/crates/d/simple_redis.svg)](https://crates.io/crates/simple_redis)<br>
 [![Built with cargo-make](https://sagiegurari.github.io/cargo-make/assets/badges/cargo-make.svg)](https://sagiegurari.github.io/cargo-make)
 
 > Simple and resilient [redis](https://redis.io/) client for [rust](https://www.rust-lang.org/).
@@ -148,7 +148,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2017-07-21  | v0.3.26 | Maintenance |
+| 2017-07-26  | v0.3.27 | Maintenance |
 | 2017-06-16  | v0.3.9  | More commands added |
 | 2017-06-13  | v0.3.6  | Maintenance |
 | 2017-06-10  | v0.3.1  | Added timeout support for get_message |

@@ -148,7 +148,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2017-08-20  | v0.3.29 | Maintenance |
+| 2017-09-01  | v0.3.30 | Maintenance |
 | 2017-06-16  | v0.3.9  | More commands added |
 | 2017-06-13  | v0.3.6  | Maintenance |
 | 2017-06-10  | v0.3.1  | Added timeout support for get_message |

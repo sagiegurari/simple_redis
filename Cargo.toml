@@ -1,6 +1,6 @@
 [package]
 name = "simple_redis"
-version = "0.3.29"
+version = "0.3.30"
 authors = ["Sagie Gur-Ari <sagiegurari@gmail.com>"]
 description = "Simple and resilient redis client."
 license = "Apache-2.0"
@@ -11,15 +11,15 @@ readme = "README.md"
 keywords = ["redis", "cache", "pubsub", "database"]
 categories = ["caching", "database"]
 include = [
-    "**/*.rs",
-    "src/*",
-    "tests/*",
-    "docs/*",
-    "examples/*",
-    "Cargo.toml",
-    "LICENSE",
-    "README.md",
-    "Makefile.toml"
+    "/benches/*",
+    "/docs/*",
+    "/examples/*",
+    "/src/*",
+    "/tests/*",
+    "/Cargo.toml",
+    "/LICENSE",
+    "/README.md",
+    "/Makefile.toml"
 ]
 
 [dependencies]

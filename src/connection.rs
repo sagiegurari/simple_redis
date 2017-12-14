@@ -12,7 +12,7 @@ use std::option::Option;
 use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisResult};
 
 /// The redis client which enables to invoke redis operations.
-pub struct Connection {
+pub(crate) struct Connection {
     /// Holds the current redis connection
     connection: Option<redis::Connection>
 }
@@ -44,7 +44,7 @@ impl Connection {
     /// Returns true if the currently stored connection is valid, otherwise false.<br>
     /// There is no need to call this function as any redis operation invocation will
     /// ensure a valid connection is created.
-    pub fn is_connection_open(self: &Connection) -> bool {
+    pub(crate) fn is_connection_open(self: &Connection) -> bool {
         let open;
 
         match self.connection {
@@ -59,7 +59,7 @@ impl Connection {
         open
     }
 
-    pub fn get_redis_connection(
+    pub(crate) fn get_redis_connection(
         self: &mut Connection,
         client: &redis::Client,
     ) -> RedisResult<&redis::Connection> {
@@ -76,6 +76,6 @@ impl Connection {
 }
 
 /// Creates and returns a new connection
-pub fn create() -> Connection {
+pub(crate) fn create() -> Connection {
     Connection { connection: None }
 }

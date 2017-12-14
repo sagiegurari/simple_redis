@@ -16,7 +16,7 @@ script = [
 [tasks.stop-redis]
 script = [
   "echo \"Stopping any running Redis\"",
-  "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9",
+  "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9 || true",
 ]
 
 [tasks.init-build-flow]

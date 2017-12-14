@@ -15,7 +15,7 @@ use std::time::SystemTime;
 use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
 
 /// The redis pubsub wrapper.
-pub struct Subscriber {
+pub(crate) struct Subscriber {
     subscribed: bool,
     subscriptions: Vec<String>,
     psubscriptions: Vec<String>,
@@ -225,35 +225,35 @@ fn unsubscribe(
 }
 
 impl Subscriber {
-    pub fn subscribe(
+    pub(crate) fn subscribe(
         self: &mut Subscriber,
         channel: &str,
     ) -> RedisEmptyResult {
         subscribe(self, channel, false)
     }
 
-    pub fn psubscribe(
+    pub(crate) fn psubscribe(
         self: &mut Subscriber,
         channel: &str,
     ) -> RedisEmptyResult {
         subscribe(self, channel, true)
     }
 
-    pub fn unsubscribe(
+    pub(crate) fn unsubscribe(
         self: &mut Subscriber,
         channel: &str,
     ) -> RedisEmptyResult {
         unsubscribe(self, channel, false)
     }
 
-    pub fn punsubscribe(
+    pub(crate) fn punsubscribe(
         self: &mut Subscriber,
         channel: &str,
     ) -> RedisEmptyResult {
         unsubscribe(self, channel, true)
     }
 
-    pub fn is_subscribed(
+    pub(crate) fn is_subscribed(
         self: &mut Subscriber,
         channel: &str,
     ) -> bool {
@@ -265,7 +265,7 @@ impl Subscriber {
         }
     }
 
-    pub fn is_psubscribed(
+    pub(crate) fn is_psubscribed(
         self: &mut Subscriber,
         channel: &str,
     ) -> bool {
@@ -277,7 +277,7 @@ impl Subscriber {
         }
     }
 
-    pub fn get_message(
+    pub(crate) fn get_message(
         self: &mut Subscriber,
         client: &redis::Client,
         timeout: u64,
@@ -297,7 +297,7 @@ impl Subscriber {
         }
     }
 
-    pub fn unsubscribe_all(self: &mut Subscriber) -> RedisEmptyResult {
+    pub(crate) fn unsubscribe_all(self: &mut Subscriber) -> RedisEmptyResult {
         let mut result = Ok(());
 
         if self.subscribed {
@@ -328,6 +328,6 @@ impl Subscriber {
 }
 
 /// Creates and returns a new connection
-pub fn create() -> Subscriber {
+pub(crate) fn create() -> Subscriber {
     Subscriber { subscribed: false, subscriptions: vec![], psubscriptions: vec![], pubsub: None }
 }

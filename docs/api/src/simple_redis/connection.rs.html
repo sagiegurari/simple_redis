@@ -139,7 +139,7 @@
 <span class="kw">use</span> <span class="ident">types</span>::{<span class="ident">ErrorInfo</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisError</span>, <span class="ident">RedisResult</span>};
 
 <span class="doccomment">/// The redis client which enables to invoke redis operations.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Connection</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Connection</span> {
     <span class="doccomment">/// Holds the current redis connection</span>
     <span class="ident">connection</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">redis</span>::<span class="ident">Connection</span><span class="op">&gt;</span>
 }
@@ -171,7 +171,7 @@
     <span class="doccomment">/// Returns true if the currently stored connection is valid, otherwise false.&lt;br&gt;</span>
     <span class="doccomment">/// There is no need to call this function as any redis operation invocation will</span>
     <span class="doccomment">/// ensure a valid connection is created.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_connection_open</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_connection_open</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="ident">Connection</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">open</span>;
 
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">connection</span> {
@@ -186,7 +186,7 @@
         <span class="ident">open</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_redis_connection</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_redis_connection</span>(
         <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Connection</span>,
         <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>,
     ) <span class="op">-&gt;</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Connection</span><span class="op">&gt;</span> {
@@ -203,7 +203,7 @@
 }
 
 <span class="doccomment">/// Creates and returns a new connection</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>() <span class="op">-&gt;</span> <span class="ident">Connection</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">create</span>() <span class="op">-&gt;</span> <span class="ident">Connection</span> {
     <span class="ident">Connection</span> { <span class="ident">connection</span>: <span class="prelude-val">None</span> }
 }
 </pre>
@@ -232,7 +232,7 @@
                     <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

@@ -11,7 +11,8 @@ extern crate redis;
 use connection;
 use std::str::FromStr;
 use subscriber;
-use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult, RedisStringResult};
+use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult,
+            RedisResult, RedisStringResult};
 
 /// The redis client which enables to invoke redis operations.
 pub struct Client {
@@ -20,7 +21,7 @@ pub struct Client {
     /// Holds the current redis connection
     connection: connection::Connection,
     /// Internal subscriber
-    subscriber: subscriber::Subscriber
+    subscriber: subscriber::Subscriber,
 }
 
 fn run_command_on_connection<T: redis::FromRedisValue>(
@@ -37,7 +38,9 @@ fn run_command_on_connection<T: redis::FromRedisValue>(
     let result: redis::RedisResult<T> = cmd.query(connection);
 
     match result {
-        Err(error) => Err(RedisError { info: ErrorInfo::RedisError(error) }),
+        Err(error) => Err(RedisError {
+            info: ErrorInfo::RedisError(error),
+        }),
         Ok(output) => Ok(output),
     }
 }
@@ -118,12 +121,12 @@ impl Client {
         args: Vec<&str>,
     ) -> RedisResult<T> {
         match self.run_command::<String>(command, args) {
-            Ok(value) => {
-                match T::from_str(&value) {
-                    Ok(typed_value) => Ok(typed_value),
-                    _ => Err(RedisError { info: ErrorInfo::Description("Unable to parse output value.") }),
-                }
-            }
+            Ok(value) => match T::from_str(&value) {
+                Ok(typed_value) => Ok(typed_value),
+                _ => Err(RedisError {
+                    info: ErrorInfo::Description("Unable to parse output value."),
+                }),
+            },
             Err(error) => Err(error),
         }
     }
@@ -168,10 +171,7 @@ impl Client {
     /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
     /// client.subscribe("important_notifications");
     /// ```
-    pub fn subscribe(
-        self: &mut Client,
-        channel: &str,
-    ) -> RedisEmptyResult {
+    pub fn subscribe(self: &mut Client, channel: &str) -> RedisEmptyResult {
         self.subscriber.subscribe(channel)
     }
 
@@ -188,42 +188,27 @@ impl Client {
     /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
     /// client.psubscribe("important_notifications*");
     /// ```
-    pub fn psubscribe(
-        self: &mut Client,
-        channel: &str,
-    ) -> RedisEmptyResult {
+    pub fn psubscribe(self: &mut Client, channel: &str) -> RedisEmptyResult {
         self.subscriber.psubscribe(channel)
     }
 
     /// Returns true if subscribed to the provided channel.
-    pub fn is_subscribed(
-        self: &mut Client,
-        channel: &str,
-    ) -> bool {
+    pub fn is_subscribed(self: &mut Client, channel: &str) -> bool {
         self.subscriber.is_subscribed(channel)
     }
 
     /// Returns true if subscribed to the provided channel pattern.
-    pub fn is_psubscribed(
-        self: &mut Client,
-        channel: &str,
-    ) -> bool {
+    pub fn is_psubscribed(self: &mut Client, channel: &str) -> bool {
         self.subscriber.is_psubscribed(channel)
     }
 
     /// Unsubscribes from the provided channel.
-    pub fn unsubscribe(
-        self: &mut Client,
-        channel: &str,
-    ) -> RedisEmptyResult {
+    pub fn unsubscribe(self: &mut Client, channel: &str) -> RedisEmptyResult {
         self.subscriber.unsubscribe(channel)
     }
 
     /// Unsubscribes from the provided channel pattern.
-    pub fn punsubscribe(
-        self: &mut Client,
-        channel: &str,
-    ) -> RedisEmptyResult {
+    pub fn punsubscribe(self: &mut Client, channel: &str) -> RedisEmptyResult {
         self.subscriber.punsubscribe(channel)
     }
 
@@ -257,10 +242,7 @@ impl Client {
     ///     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
     /// }
     /// ```
-    pub fn get_message(
-        self: &mut Client,
-        timeout: u64,
-    ) -> RedisMessageResult {
+    pub fn get_message(self: &mut Client, timeout: u64) -> RedisMessageResult {
         self.subscriber.get_message(&self.client, timeout)
     }
 }
@@ -289,10 +271,16 @@ pub fn create(connection_string: &str) -> Result<Client, RedisError> {
             let redis_connection = connection::create();
             let redis_pubsub = subscriber::create();
 
-            let client = Client { client: redis_client, connection: redis_connection, subscriber: redis_pubsub };
+            let client = Client {
+                client: redis_client,
+                connection: redis_connection,
+                subscriber: redis_pubsub,
+            };
 
             Ok(client)
         }
-        Err(error) => Err(RedisError { info: ErrorInfo::RedisError(error) }),
+        Err(error) => Err(RedisError {
+            info: ErrorInfo::RedisError(error),
+        }),
     }
 }

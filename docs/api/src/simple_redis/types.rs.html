@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -146,9 +147,6 @@
 <span id="101">101</span>
 <span id="102">102</span>
 <span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # types</span>
 <span class="doccomment">//!</span>
@@ -172,14 +170,14 @@
     <span class="doccomment">/// Description text of the error reason</span>
     <span class="ident">Description</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
     <span class="doccomment">/// TimeoutError error</span>
-    <span class="ident">TimeoutError</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>)
+    <span class="ident">TimeoutError</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="doccomment">/// Redis Error struct</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RedisError</span> {
     <span class="doccomment">/// Holds the error information</span>
-    <span class="kw">pub</span> <span class="ident">info</span>: <span class="ident">ErrorInfo</span>
+    <span class="kw">pub</span> <span class="ident">info</span>: <span class="ident">ErrorInfo</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">RedisError</span> {
@@ -203,10 +201,7 @@
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RedisError</span> {
     <span class="doccomment">/// Formats the value using the given formatter.</span>
-    <span class="kw">fn</span> <span class="ident">fmt</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">format</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>,
-    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">format</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">info</span> {
             <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="kw-2">ref</span> <span class="ident">cause</span>) <span class="op">=&gt;</span> <span class="ident">cause</span>.<span class="ident">fmt</span>(<span class="ident">format</span>),
             <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="ident">description</span>) <span class="op">=&gt;</span> <span class="ident">description</span>.<span class="ident">fmt</span>(<span class="ident">format</span>),

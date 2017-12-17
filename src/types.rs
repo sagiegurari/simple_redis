@@ -20,14 +20,14 @@ pub enum ErrorInfo {
     /// Description text of the error reason
     Description(&'static str),
     /// TimeoutError error
-    TimeoutError(&'static str)
+    TimeoutError(&'static str),
 }
 
 #[derive(Debug)]
 /// Redis Error struct
 pub struct RedisError {
     /// Holds the error information
-    pub info: ErrorInfo
+    pub info: ErrorInfo,
 }
 
 impl error::Error for RedisError {
@@ -51,10 +51,7 @@ impl error::Error for RedisError {
 
 impl Display for RedisError {
     /// Formats the value using the given formatter.
-    fn fmt(
-        &self,
-        format: &mut fmt::Formatter,
-    ) -> Result<(), fmt::Error> {
+    fn fmt(&self, format: &mut fmt::Formatter) -> Result<(), fmt::Error> {
         match self.info {
             ErrorInfo::RedisError(ref cause) => cause.fmt(format),
             ErrorInfo::Description(description) => description.fmt(format),

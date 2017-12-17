@@ -17,7 +17,9 @@ fn run_command() {
     let mut client = client::create("redis://127.0.0.1:6379/").unwrap();
     assert!(!client.is_connection_open());
 
-    let value = client.run_command::<String>("ECHO", vec!["testing"]).unwrap();
+    let value = client
+        .run_command::<String>("ECHO", vec!["testing"])
+        .unwrap();
     assert_eq!(value, "testing");
 
     assert!(client.is_connection_open());

@@ -4,7 +4,9 @@ use std::io::Write;
 
 #[test]
 fn redis_error_description() {
-    let redis_error = RedisError { info: ErrorInfo::Description("test") };
+    let redis_error = RedisError {
+        info: ErrorInfo::Description("test"),
+    };
 
     assert_eq!(redis_error.description(), "test");
     assert!(redis_error.cause().is_none());
@@ -16,7 +18,9 @@ fn redis_error_description() {
 
 #[test]
 fn redis_error_timeout_error() {
-    let redis_error = RedisError { info: ErrorInfo::TimeoutError("timeout") };
+    let redis_error = RedisError {
+        info: ErrorInfo::TimeoutError("timeout"),
+    };
 
     assert_eq!(redis_error.description(), "timeout");
     assert!(redis_error.cause().is_none());

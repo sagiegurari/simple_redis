@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -376,6 +377,18 @@
 <span id="331">331</span>
 <span id="332">332</span>
 <span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -398,13 +411,10 @@
     <span class="ident">subscribed</span>: <span class="ident">bool</span>,
     <span class="ident">subscriptions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">psubscriptions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">pubsub</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">redis</span>::<span class="ident">PubSub</span><span class="op">&gt;</span>
+    <span class="ident">pubsub</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">redis</span>::<span class="ident">PubSub</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">subscribe_all</span>(
-    <span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-    <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>,
-) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+<span class="kw">fn</span> <span class="ident">subscribe_all</span>(<span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
     <span class="comment">// get pubsub</span>
     <span class="kw">match</span> <span class="ident">client</span>.<span class="ident">get_pubsub</span>() {
         <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">redis_pubsub</span>) <span class="op">=&gt;</span> {
@@ -413,8 +423,12 @@
 
                 <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_err</span>() {
                     <span class="kw">let</span> <span class="ident">subscription_error</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span>.<span class="ident">err</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
-                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while subscribing.&quot;</span>) }),
+                        <span class="prelude-val">Some</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                        }),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while subscribing.&quot;</span>),
+                        }),
                     };
 
                     <span class="kw">return</span> <span class="ident">subscription_error</span>;
@@ -426,8 +440,12 @@
 
                 <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_err</span>() {
                     <span class="kw">let</span> <span class="ident">subscription_error</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span>.<span class="ident">err</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
-                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while subscribing.&quot;</span>) }),
+                        <span class="prelude-val">Some</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                        }),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while subscribing.&quot;</span>),
+                        }),
                     };
 
                     <span class="kw">return</span> <span class="ident">subscription_error</span>;
@@ -439,15 +457,13 @@
 
             <span class="prelude-val">Ok</span>(())
         }
-        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
+        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+        }),
     }
 }
 
-
-<span class="kw">fn</span> <span class="ident">get_message</span>(
-    <span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-    <span class="ident">timeout</span>: <span class="ident">u64</span>,
-) <span class="op">-&gt;</span> <span class="ident">RedisMessageResult</span> {
+<span class="kw">fn</span> <span class="ident">get_message</span>(<span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">timeout</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">RedisMessageResult</span> {
     <span class="kw">match</span> <span class="ident">subscriber</span>.<span class="ident">pubsub</span> {
         <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">redis_pubsub</span>) <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">duration</span>;
@@ -465,7 +481,9 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timeout_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">set_read_timeout</span>(<span class="ident">duration</span>);
 
             <span class="kw">if</span> <span class="ident">timeout_result</span>.<span class="ident">is_err</span>() {
-                <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>) })
+                <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>),
+                })
             } <span class="kw">else</span> {
                 <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">SystemTime</span>::<span class="ident">now</span>();
 
@@ -473,7 +491,9 @@
 
                 <span class="ident">timeout_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">set_read_timeout</span>(<span class="prelude-val">None</span>);
                 <span class="kw">if</span> <span class="ident">timeout_result</span>.<span class="ident">is_err</span>() {
-                    <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>) })
+                    <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                        <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>),
+                    })
                 } <span class="kw">else</span> {
                     <span class="ident">output</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">message_result</span> {
                         <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
@@ -483,10 +503,14 @@
                             <span class="ident">actual_end</span> <span class="op">=</span> <span class="ident">actual_end</span>.<span class="ident">add</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>)); <span class="comment">// possible miscalculation</span>
 
                             <span class="kw">if</span> <span class="ident">timeout</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">actual_end</span> <span class="op">&gt;=</span> <span class="ident">max_end</span> {
-                                <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="string">&quot;Timeout&quot;</span>) })
+                                <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="string">&quot;Timeout&quot;</span>),
+                                })
                             } <span class="kw">else</span> {
                                 <span class="ident">subscriber</span>.<span class="ident">subscribed</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                                <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) })
+                                <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                                })
                             }
                         }
                     }
@@ -495,7 +519,9 @@
 
             <span class="ident">output</span>
         }
-        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>) }),
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>),
+        }),
     }
 }
 
@@ -506,20 +532,14 @@
 ) <span class="op">-&gt;</span> <span class="ident">RedisMessageResult</span> {
     <span class="kw">match</span> <span class="ident">subscribe_all</span>(<span class="ident">subscriber</span>, <span class="ident">client</span>) {
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
-        _ <span class="op">=&gt;</span> {
-            <span class="kw">match</span> <span class="ident">get_message</span>(<span class="ident">subscriber</span>, <span class="ident">timeout</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
-            }
-        }
+        _ <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">get_message</span>(<span class="ident">subscriber</span>, <span class="ident">timeout</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
+        },
     }
 }
 
-<span class="kw">fn</span> <span class="ident">subscribe</span>(
-    <span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-    <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">pattern</span>: <span class="ident">bool</span>,
-) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+<span class="kw">fn</span> <span class="ident">subscribe</span>(<span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">pattern</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
     <span class="kw">if</span> <span class="ident">subscriber</span>.<span class="ident">subscribed</span> {
         <span class="kw">if</span> <span class="ident">pattern</span> {
             <span class="ident">subscriber</span>.<span class="ident">psubscriptions</span>.<span class="ident">push</span>(<span class="ident">channel</span>.<span class="ident">to_string</span>());
@@ -531,17 +551,23 @@
             <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">redis_pubsub</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">pattern</span> {
                     <span class="kw">match</span> <span class="ident">redis_pubsub</span>.<span class="ident">psubscribe</span>(<span class="ident">channel</span>.<span class="ident">to_string</span>()) {
-                        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
+                        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                        }),
                         _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
                     }
                 } <span class="kw">else</span> {
                     <span class="kw">match</span> <span class="ident">redis_pubsub</span>.<span class="ident">subscribe</span>(<span class="ident">channel</span>.<span class="ident">to_string</span>()) {
-                        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
+                        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                        }),
                         _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
                     }
                 }
             }
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>) }),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>),
+            }),
         }
     } <span class="kw">else</span> {
         <span class="kw">if</span> <span class="ident">pattern</span> {
@@ -554,16 +580,18 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">unsubscribe</span>(
-    <span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-    <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">pattern</span>: <span class="ident">bool</span>,
-) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+<span class="kw">fn</span> <span class="ident">unsubscribe</span>(<span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">pattern</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
     <span class="kw">let</span> <span class="ident">search_result</span>;
     <span class="kw">if</span> <span class="ident">pattern</span> {
-        <span class="ident">search_result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">psubscriptions</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
+        <span class="ident">search_result</span> <span class="op">=</span> <span class="ident">subscriber</span>
+            .<span class="ident">psubscriptions</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
     } <span class="kw">else</span> {
-        <span class="ident">search_result</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">subscriptions</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
+        <span class="ident">search_result</span> <span class="op">=</span> <span class="ident">subscriber</span>
+            .<span class="ident">subscriptions</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
     }
 
     <span class="kw">match</span> <span class="ident">search_result</span> {
@@ -575,17 +603,23 @@
                     <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">redis_pubsub</span>) <span class="op">=&gt;</span> {
                         <span class="kw">if</span> <span class="ident">pattern</span> {
                             <span class="kw">match</span> <span class="ident">redis_pubsub</span>.<span class="ident">punsubscribe</span>(<span class="ident">channel</span>.<span class="ident">to_string</span>()) {
-                                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
+                                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                                }),
                                 _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
                             }
                         } <span class="kw">else</span> {
                             <span class="kw">match</span> <span class="ident">redis_pubsub</span>.<span class="ident">unsubscribe</span>(<span class="ident">channel</span>.<span class="ident">to_string</span>()) {
-                                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>) }),
+                                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                                }),
                                 _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
                             }
                         }
                     }
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>) }),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                        <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Error while fetching pubsub.&quot;</span>),
+                    }),
                 }
             }
 
@@ -604,39 +638,26 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Subscriber</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">subscribe</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">subscribe</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="ident">subscribe</span>(<span class="self">self</span>, <span class="ident">channel</span>, <span class="bool-val">false</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">psubscribe</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">psubscribe</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="ident">subscribe</span>(<span class="self">self</span>, <span class="ident">channel</span>, <span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unsubscribe</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unsubscribe</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="ident">unsubscribe</span>(<span class="self">self</span>, <span class="ident">channel</span>, <span class="bool-val">false</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">punsubscribe</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">punsubscribe</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="ident">unsubscribe</span>(<span class="self">self</span>, <span class="ident">channel</span>, <span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_subscribed</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">search_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">subscriptions</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_subscribed</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">search_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">subscriptions</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
 
         <span class="kw">match</span> <span class="ident">search_result</span> {
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -644,11 +665,10 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_psubscribed</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">search_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">psubscriptions</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_psubscribed</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>, <span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">search_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">psubscriptions</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">==</span> <span class="ident">channel</span>.<span class="ident">to_string</span>());
 
         <span class="kw">match</span> <span class="ident">search_result</span> {
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -664,12 +684,12 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pubsub</span>.<span class="ident">is_some</span>() {
             <span class="kw">match</span> <span class="ident">get_message</span>(<span class="self">self</span>, <span class="ident">timeout</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">match</span> <span class="ident">error</span>.<span class="ident">info</span> {
-                        <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="ident">description</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> { <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="ident">description</span>) }),
-                        _ <span class="op">=&gt;</span> <span class="ident">subscribe_and_get</span>(<span class="self">self</span>, <span class="ident">client</span>, <span class="ident">timeout</span>),
-                    }
-                }
+                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">error</span>.<span class="ident">info</span> {
+                    <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="ident">description</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                        <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="ident">description</span>),
+                    }),
+                    _ <span class="op">=&gt;</span> <span class="ident">subscribe_and_get</span>(<span class="self">self</span>, <span class="ident">client</span>, <span class="ident">timeout</span>),
+                },
             }
         } <span class="kw">else</span> {
             <span class="ident">subscribe_and_get</span>(<span class="self">self</span>, <span class="ident">client</span>, <span class="ident">timeout</span>)
@@ -708,7 +728,12 @@
 
 <span class="doccomment">/// Creates and returns a new connection</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">create</span>() <span class="op">-&gt;</span> <span class="ident">Subscriber</span> {
-    <span class="ident">Subscriber</span> { <span class="ident">subscribed</span>: <span class="bool-val">false</span>, <span class="ident">subscriptions</span>: <span class="macro">vec</span><span class="macro">!</span>[], <span class="ident">psubscriptions</span>: <span class="macro">vec</span><span class="macro">!</span>[], <span class="ident">pubsub</span>: <span class="prelude-val">None</span> }
+    <span class="ident">Subscriber</span> {
+        <span class="ident">subscribed</span>: <span class="bool-val">false</span>,
+        <span class="ident">subscriptions</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+        <span class="ident">psubscriptions</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+        <span class="ident">pubsub</span>: <span class="prelude-val">None</span>,
+    }
 }
 </pre>
 </section>

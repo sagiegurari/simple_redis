@@ -10,8 +10,11 @@
     <title>simple_redis - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Crate simple_redis</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'simple_redis', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -49,32 +59,26 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-219' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'>
-<h1 id='simple_redis' class='section-header'><a href='#simple_redis'>simple_redis</a></h1>
+               </span><a class='srclink' href='../src/simple_redis/lib.rs.html#1-221' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><h1 id="simple_redis" class="section-header"><a href="#simple_redis">simple_redis</a></h1>
 <p>Simple and resilient <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with
 internal connection and subscription handling.</p>
-
 <p>This library provides a very basic, simple API for the most common redis operations.<br>
 While not as comprehensive or flexiable as <a href="https://crates.io/crates/redis">redis-rs</a>,
 it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal
 connection and subscription (pubsub) handling.<br>
 In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub
 instances in parallel.<br></p>
-
-<h2 id='connection-resiliency' class='section-header'><a href='#connection-resiliency'>Connection Resiliency</a></h2>
+<h2 id="connection-resiliency" class="section-header"><a href="#connection-resiliency">Connection Resiliency</a></h2>
 <p>Connection resiliency is managed by verifying the internally managed connection before every operation against the
 redis server.<br>
 In case of any connection issue, a new connection will be allocated to ensure the operation is invoked on a valid
 connection only.<br>
 However, this comes at a small performance cost of PING operation to the redis server.<br></p>
-
-<h2 id='subscription-resiliency' class='section-header'><a href='#subscription-resiliency'>Subscription Resiliency</a></h2>
+<h2 id="subscription-resiliency" class="section-header"><a href="#subscription-resiliency">Subscription Resiliency</a></h2>
 <p>Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
 automatically in case of any error while fetching a message from the subscribed channels.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<h2 id='initialization-and-simple-operations' class='section-header'><a href='#initialization-and-simple-operations'>Initialization and Simple Operations</a></h2>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1><h2 id="initialization-and-simple-operations" class="section-header"><a href="#initialization-and-simple-operations">Initialization and Simple Operations</a></h2>
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
 
@@ -126,8 +130,7 @@ automatically in case of any error while fetching a message from the subscribed 
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
     }
 }</pre>
-
-<h2 id='subscription-flow' class='section-header'><a href='#subscription-flow'>Subscription Flow</a></h2>
+<h2 id="subscription-flow" class="section-header"><a href="#subscription-flow">Subscription Flow</a></h2>
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
 
@@ -155,8 +158,7 @@ automatically in case of any error while fetching a message from the subscribed 
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
     }
 }</pre>
-
-<h2 id='closing-connection' class='section-header'><a href='#closing-connection'>Closing Connection</a></h2>
+<h2 id="closing-connection" class="section-header"><a href="#closing-connection">Closing Connection</a></h2>
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">simple_redis</span>;
 
@@ -178,18 +180,14 @@ automatically in case of any error while fetching a message from the subscribed 
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, <span class="ident">error</span>)
     }
 }</pre>
-
-<h1 id='installation' class='section-header'><a href='#installation'>Installation</a></h1>
+<h1 id="installation" class="section-header"><a href="#installation">Installation</a></h1>
 <p>In order to use this library, just add it as a dependency:</p>
-
 <pre><code class="language-ini">[dependencies]
 simple_redis = &quot;*&quot;
 </code></pre>
-
-<h1 id='contributing' class='section-header'><a href='#contributing'>Contributing</a></h1>
+<h1 id="contributing" class="section-header"><a href="#contributing">Contributing</a></h1>
 <p>See <a href="https://github.com/sagiegurari/simple_redis/blob/master/.github/CONTRIBUTING.md">contributing guide</a></p>
-
-<h1 id='license' class='section-header'><a href='#license'>License</a></h1>
+<h1 id="license" class="section-header"><a href="#license">License</a></h1>
 <p>Developed by Sagie Gur-Ari and licensed under the
 <a href="https://github.com/sagiegurari/simple_redis/blob/master/LICENSE">Apache 2</a> open source license.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
@@ -198,16 +196,16 @@ simple_redis = &quot;*&quot;
                            <td><a class="mod" href="client/index.html"
                                   title='mod simple_redis::client'>client</a></td>
                            <td class='docblock-short'>
-                                <h1 id='client' class='section-header'><a href='#client'>client</a></h1>
-<p>Implements the redis client capabilities.</p>
+                                <h1>client</h1>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="mod" href="types/index.html"
                                   title='mod simple_redis::types'>types</a></td>
                            <td class='docblock-short'>
-                                <h1 id='types' class='section-header'><a href='#types'>types</a></h1>
-<p>Defines the various types and aliases used or exposed by the simple_redis library.</p>
+                                <h1>types</h1>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -217,14 +215,16 @@ simple_redis = &quot;*&quot;
                            <td class='docblock-short'>
                                 <p>Constructs a new redis client.<br>
 The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></p>
+
                            </td>
-                       </tr></table><h2 id='types-1' class='section-header'><a href="#types-1">Type Definitions</a></h2>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class="type" href="type.ErrorInfo.html"
                                   title='type simple_redis::ErrorInfo'>ErrorInfo</a></td>
                            <td class='docblock-short'>
                                 <p>Error Info</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -232,6 +232,7 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                                   title='type simple_redis::Message'>Message</a></td>
                            <td class='docblock-short'>
                                 <p>PubSub message</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -239,6 +240,7 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                                   title='type simple_redis::RedisError'>RedisError</a></td>
                            <td class='docblock-short'>
                                 <p>Error Type</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -246,6 +248,7 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                                   title='type simple_redis::RedisResult'>RedisResult</a></td>
                            <td class='docblock-short'>
                                 <p>Redis result which either holds a value or a Redis error</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -260,20 +263,22 @@ The redis connection string must be in the following format: <code>redis://[:&lt
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

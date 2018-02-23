@@ -17,7 +17,9 @@ fn main() {
 
                 match simple_redis::create("redis://127.0.0.1:6379/") {
                     Ok(mut publisher) => {
-                        publisher.publish("pub_sub_example", "example message").unwrap();
+                        publisher
+                            .publish("pub_sub_example", "example message")
+                            .unwrap();
 
                         publisher.publish("pub_sub_test", "test message").unwrap();
                     }
@@ -64,9 +66,13 @@ fn main() {
 
                 match simple_redis::create("redis://127.0.0.1:6379/") {
                     Ok(mut publisher) => {
-                        publisher.publish("pub_sub_example", "example message").unwrap();
+                        publisher
+                            .publish("pub_sub_example", "example message")
+                            .unwrap();
 
-                        publisher.publish("pub_sub_second_run", "second message").unwrap();
+                        publisher
+                            .publish("pub_sub_second_run", "second message")
+                            .unwrap();
                     }
                     _ => panic!("test error"),
                 };

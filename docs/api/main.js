@@ -47,6 +47,8 @@
     // 2 for "In Return Types"
     var currentTab = 0;
 
+    var themesWidth = null;
+
     function hasClass(elem, className) {
         if (elem && className && elem.className) {
             var elemClass = elem.className;
@@ -109,25 +111,40 @@
     function showSidebar() {
         var elems = document.getElementsByClassName("sidebar-elems")[0];
         if (elems) {
-            elems.style.display = "block";
+            addClass(elems, "show-it");
         }
         var sidebar = document.getElementsByClassName('sidebar')[0];
-        sidebar.style.position = 'fixed';
-        sidebar.style.width = '100%';
-        sidebar.style.marginLeft = '0';
-        document.getElementsByTagName("body")[0].style.marginTop = '45px';
+        if (sidebar) {
+            addClass(sidebar, 'mobile');
+            var filler = document.getElementById("sidebar-filler");
+            if (!filler) {
+                var div = document.createElement("div");
+                div.id = "sidebar-filler";
+                sidebar.appendChild(div);
+            }
+        }
+        var themePicker = document.getElementsByClassName("theme-picker");
+        if (themePicker && themePicker.length > 0) {
+            themePicker[0].style.display = "none";
+        }
     }
 
     function hideSidebar() {
         var elems = document.getElementsByClassName("sidebar-elems")[0];
         if (elems) {
-            elems.style.display = "";
+            removeClass(elems, "show-it");
         }
         var sidebar = document.getElementsByClassName('sidebar')[0];
-        sidebar.style.position = '';
-        sidebar.style.width = '';
-        sidebar.style.marginLeft = '';
+        removeClass(sidebar, 'mobile');
+        var filler = document.getElementById("sidebar-filler");
+        if (filler) {
+            filler.remove();
+        }
         document.getElementsByTagName("body")[0].style.marginTop = '';
+        var themePicker = document.getElementsByClassName("theme-picker");
+        if (themePicker && themePicker.length > 0) {
+            themePicker[0].style.display = null;
+        }
     }
 
     // used for special search precedence
@@ -250,6 +267,7 @@
                 addClass(search, "hidden");
                 removeClass(document.getElementById("main"), "hidden");
             }
+            defocusSearchBar();
             break;
 
         case "s":
@@ -344,35 +362,33 @@
      * This code is an unmodified version of the code written by Marco de Wit
      * and was found at http://stackoverflow.com/a/18514751/745719
      */
-    var levenshtein = (function() {
-        var row2 = [];
-        return function(s1, s2) {
-            if (s1 === s2) {
-                return 0;
+    var levenshtein_row2 = [];
+    function levenshtein(s1, s2) {
+        if (s1 === s2) {
+            return 0;
+        }
+        var s1_len = s1.length, s2_len = s2.length;
+        if (s1_len && s2_len) {
+            var i1 = 0, i2 = 0, a, b, c, c2, row = levenshtein_row2;
+            while (i1 < s1_len) {
+                row[i1] = ++i1;
             }
-            var s1_len = s1.length, s2_len = s2.length;
-            if (s1_len && s2_len) {
-                var i1 = 0, i2 = 0, a, b, c, c2, row = row2;
-                while (i1 < s1_len) {
-                    row[i1] = ++i1;
+            while (i2 < s2_len) {
+                c2 = s2.charCodeAt(i2);
+                a = i2;
+                ++i2;
+                b = i2;
+                for (i1 = 0; i1 < s1_len; ++i1) {
+                    c = a + (s1.charCodeAt(i1) !== c2 ? 1 : 0);
+                    a = row[i1];
+                    b = b < a ? (b < c ? b + 1 : c) : (a < c ? a + 1 : c);
+                    row[i1] = b;
                 }
-                while (i2 < s2_len) {
-                    c2 = s2.charCodeAt(i2);
-                    a = i2;
-                    ++i2;
-                    b = i2;
-                    for (i1 = 0; i1 < s1_len; ++i1) {
-                        c = a + (s1.charCodeAt(i1) !== c2 ? 1 : 0);
-                        a = row[i1];
-                        b = b < a ? (b < c ? b + 1 : c) : (a < c ? a + 1 : c);
-                        row[i1] = b;
-                    }
-                }
-                return b;
             }
-            return s1_len + s2_len;
-        };
-    })();
+            return b;
+        }
+        return s1_len + s2_len;
+    }
 
     function initSearch(rawSearchIndex) {
         var currentResults, index, searchIndex;
@@ -391,12 +407,20 @@
         /**
          * Executes the query and builds an index of results
          * @param  {[Object]} query     [The user query]
-         * @param  {[type]} max         [The maximum results returned]
          * @param  {[type]} searchWords [The list of search words to query
          *                               against]
          * @return {[type]}             [A search index of results]
          */
-        function execQuery(query, max, searchWords) {
+        function execQuery(query, searchWords) {
+            function itemTypeFromName(typename) {
+                for (var i = 0; i < itemTypes.length; ++i) {
+                    if (itemTypes[i] === typename) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
             var valLower = query.query.toLowerCase(),
                 val = valLower,
                 typeFilter = itemTypeFromName(query.type),
@@ -585,7 +609,7 @@
                 var lev_distance = MAX_LEV_DISTANCE + 1;
                 if (obj.name === val.name) {
                     if (literalSearch === true) {
-                        if (val.generics.length !== 0) {
+                        if (val.generics && val.generics.length !== 0) {
                             if (obj.generics && obj.length >= val.generics.length) {
                                 var elems = obj.generics.slice(0);
                                 var allFound = true;
@@ -622,7 +646,7 @@
                 }
                 // Names didn't match so let's check if one of the generic types could.
                 if (literalSearch === true) {
-                     if (obj.generics.length > 0) {
+                     if (obj.generics && obj.generics.length > 0) {
                         for (var x = 0; x < obj.generics.length; ++x) {
                             if (obj.generics[x] === val.name) {
                                 return true;
@@ -681,6 +705,9 @@
             }
 
             function checkPath(startsWith, lastElem, ty) {
+                if (startsWith.length === 0) {
+                    return 0;
+                }
                 var ret_lev = MAX_LEV_DISTANCE + 1;
                 var path = ty.path.split("::");
 
@@ -706,18 +733,7 @@
                         lev_total += lev;
                     }
                     if (aborted === false) {
-                        var extra = MAX_LEV_DISTANCE + 1;
-                        if (i + startsWith.length < path.length) {
-                            extra = levenshtein(path[i + startsWith.length], lastElem);
-                        }
-                        if (extra > MAX_LEV_DISTANCE) {
-                            extra = levenshtein(ty.name, lastElem);
-                        }
-                        if (extra < MAX_LEV_DISTANCE + 1) {
-                            lev_total += extra;
-                            ret_lev = Math.min(ret_lev,
-                                               Math.round(lev_total / (startsWith.length + 1)));
-                        }
+                        ret_lev = Math.min(ret_lev, Math.round(lev_total / startsWith.length));
                     }
                 }
                 return ret_lev;
@@ -934,6 +950,13 @@
                     }
 
                     lev += lev_add;
+                    if (lev > 0 && val.length > 3 && searchWords[j].startsWith(val)) {
+                        if (val.length < 6) {
+                            lev -= 1;
+                        } else {
+                            lev = 0;
+                        }
+                    }
                     if (in_args <= MAX_LEV_DISTANCE) {
                         if (results_in_args[fullId] === undefined) {
                             results_in_args[fullId] = {
@@ -1013,9 +1036,8 @@
             return true;
         }
 
-        function getQuery() {
-            var matches, type, query, raw =
-                document.getElementsByClassName('search-input')[0].value;
+        function getQuery(raw) {
+            var matches, type, query;
             query = raw;
 
             matches = query.match(/^(fn|mod|struct|enum|trait|type|const|macro)\s*:\s*/i);
@@ -1124,6 +1146,10 @@
                     e.preventDefault();
                 } else if (e.which === 16) { // shift
                     // Does nothing, it's just to avoid losing "focus" on the highlighted element.
+                } else if (e.which === 27) { // escape
+                    removeClass(actives[currentTab][0], 'highlighted');
+                    document.getElementsByClassName('search-input')[0].value = '';
+                    defocusSearchBar();
                 } else if (actives[currentTab].length > 0) {
                     removeClass(actives[currentTab][0], 'highlighted');
                 }
@@ -1215,7 +1241,7 @@
         }
 
         function showResults(results) {
-            var output, query = getQuery();
+            var output, query = getQuery(document.getElementsByClassName('search-input')[0].value);
 
             currentResults = query.id;
             output = '<h1>Results for ' + escape(query.query) +
@@ -1259,7 +1285,7 @@
                 resultIndex;
             var params = getQueryStringParams();
 
-            query = getQuery();
+            query = getQuery(document.getElementsByClassName('search-input')[0].value);
             if (e) {
                 e.preventDefault();
             }
@@ -1281,17 +1307,8 @@
                 }
             }
 
-            results = execQuery(query, 20000, index);
+            results = execQuery(query, index);
             showResults(results);
-        }
-
-        function itemTypeFromName(typename) {
-            for (var i = 0; i < itemTypes.length; ++i) {
-                if (itemTypes[i] === typename) {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         function buildIndex(rawSearchIndex) {
@@ -1447,7 +1464,7 @@
 
         // Draw a convenient sidebar of known crates if we have a listing
         if (rootPath === '../') {
-            var sidebar = document.getElementsByClassName('sidebar')[0];
+            var sidebar = document.getElementsByClassName('sidebar-elems')[0];
             var div = document.createElement('div');
             div.className = 'block crate';
             div.innerHTML = '<h3>Crates</h3>';
@@ -1524,7 +1541,9 @@
                 ul.appendChild(li);
             }
             div.appendChild(ul);
-            sidebar.appendChild(div);
+            if (sidebar) {
+                sidebar.appendChild(div);
+            }
         }
 
         block("primitive", "Primitive Types");
@@ -1544,14 +1563,31 @@
     window.initSidebarItems = initSidebarItems;
 
     window.register_implementors = function(imp) {
-        var list = document.getElementById('implementors-list');
+        var implementors = document.getElementById('implementors-list');
+        var synthetic_implementors = document.getElementById('synthetic-implementors-list');
+
         var libs = Object.getOwnPropertyNames(imp);
         for (var i = 0; i < libs.length; ++i) {
             if (libs[i] === currentCrate) { continue; }
             var structs = imp[libs[i]];
+
+            struct_loop:
             for (var j = 0; j < structs.length; ++j) {
+                var struct = structs[j];
+
+                var list = struct.synthetic ? synthetic_implementors : implementors;
+
+                if (struct.synthetic) {
+                    for (var k = 0; k < struct.types.length; k++) {
+                        if (window.inlined_types.has(struct.types[k])) {
+                            continue struct_loop;
+                        }
+                        window.inlined_types.add(struct.types[k]);
+                    }
+                }
+
                 var code = document.createElement('code');
-                code.innerHTML = structs[j];
+                code.innerHTML = struct.text;
 
                 var x = code.getElementsByTagName('a');
                 for (var k = 0; k < x.length; k++) {
@@ -1860,7 +1896,7 @@
     if (sidebar_menu) {
         sidebar_menu.onclick = function() {
             var sidebar = document.getElementsByClassName('sidebar')[0];
-            if (sidebar.style.position === "fixed") {
+            if (hasClass(sidebar, "mobile") === true) {
                 hideSidebar();
             } else {
                 showSidebar();
@@ -1876,4 +1912,9 @@
 // Sets the focus on the search bar at the top of the page
 function focusSearchBar() {
     document.getElementsByClassName('search-input')[0].focus();
+}
+
+// Removes the focus from the search bar
+function defocusSearchBar() {
+    document.getElementsByClassName('search-input')[0].blur();
 }

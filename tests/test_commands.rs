@@ -241,15 +241,13 @@ fn pub_sub_timeout() {
     assert!(message_result.is_err());
 
     match message_result {
-        Err(error) => {
-            match error.info {
-                TimeoutError(description) => {
-                    println!("Got timeout error: {}", description);
-                    ()
-                }
-                _ => panic!("Invalid Error Type: {}", error),
+        Err(error) => match error.info {
+            TimeoutError(description) => {
+                println!("Got timeout error: {}", description);
+                ()
             }
-        }
+            _ => panic!("Invalid Error Type: {}", error),
+        },
         _ => panic!("Invalid Result"),
     }
 }

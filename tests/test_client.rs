@@ -52,7 +52,9 @@ fn run_command_typed_response() {
 
     assert!(client.is_connection_open());
 
-    let string_result = client.run_command_string_response("GET", vec!["int_test_1"]).unwrap();
+    let string_result = client
+        .run_command_string_response("GET", vec!["int_test_1"])
+        .unwrap();
     assert_eq!(string_result, "my_value");
 
     let error_result = client.run_command_string_response("BADCOMMAND", vec!["int_test_1"]);
@@ -163,7 +165,9 @@ fn quit_live_subscriptions() {
     thread::spawn(|| {
         thread::sleep(time::Duration::from_secs(2));
         let mut publisher = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
-        publisher.publish("quit_live_subscriptions_TEST", "test pub_sub message").unwrap();
+        publisher
+            .publish("quit_live_subscriptions_TEST", "test pub_sub message")
+            .unwrap();
     });
 
     match client.get_message(0) {
@@ -190,7 +194,9 @@ fn quit_live_subscriptions() {
     thread::spawn(|| {
         thread::sleep(time::Duration::from_secs(2));
         let mut publisher = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
-        publisher.publish("quit_live_subscriptions_TEST", "test pub_sub message").unwrap();
+        publisher
+            .publish("quit_live_subscriptions_TEST", "test pub_sub message")
+            .unwrap();
     });
 
     let message_result = client.get_message(2500);

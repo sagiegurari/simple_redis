@@ -18,6 +18,10 @@ environment:
     - channel: nightly
       target: i686-pc-windows-msvc
 
+matrix:
+  allow_failures:
+    - CHANNEL: nightly
+
 install:
   - nuget install redis-64 -excludeversion
   - redis-64\tools\redis-server.exe --service-install

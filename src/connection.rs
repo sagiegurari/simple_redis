@@ -7,7 +7,7 @@
 #[path = "./connection_test.rs"]
 mod connection_test;
 
-extern crate redis;
+use redis;
 use std::option::Option;
 use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisResult};
 

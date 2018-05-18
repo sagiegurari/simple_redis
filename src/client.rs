@@ -7,12 +7,14 @@
 #[path = "./client_test.rs"]
 mod client_test;
 
-extern crate redis;
 use connection;
+use redis;
 use std::str::FromStr;
 use subscriber;
-use types::{ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult,
-            RedisResult, RedisStringResult};
+use types::{
+    ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult,
+    RedisStringResult,
+};
 
 /// The redis client which enables to invoke redis operations.
 pub struct Client {

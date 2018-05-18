@@ -7,7 +7,7 @@
 #[path = "./subscriber_test.rs"]
 mod subscriber_test;
 
-extern crate redis;
+use redis;
 use std::ops::Add;
 use std::option::Option;
 use std::time::Duration;

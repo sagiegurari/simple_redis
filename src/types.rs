@@ -7,7 +7,7 @@
 #[path = "./types_test.rs"]
 mod types_test;
 
-extern crate redis;
+use redis;
 use std::error;
 use std::fmt;
 use std::fmt::Display;
@@ -64,9 +64,9 @@ impl Display for RedisError {
 pub trait RedisArg: Sized + ToString {}
 
 macro_rules! as_redis_arg {
-    ($t:ty) => (
+    ($t:ty) => {
         impl RedisArg for $t {}
-    )
+    };
 }
 
 impl<'a> RedisArg for &'a str {}

@@ -43,7 +43,7 @@ impl error::Error for RedisError {
     /// The lower-level cause of this error, if any.
     fn cause(&self) -> Option<&error::Error> {
         match self.info {
-            ErrorInfo::RedisError(ref cause) => Some(cause as &error::Error),
+            ErrorInfo::RedisError(ref cause) => Some(cause),
             _ => None,
         }
     }

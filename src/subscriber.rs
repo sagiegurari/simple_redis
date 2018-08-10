@@ -263,7 +263,8 @@ impl Subscriber {
     }
 
     pub(crate) fn is_subscribed(self: &mut Subscriber, channel: &str) -> bool {
-        let search_result = self.subscriptions
+        let search_result = self
+            .subscriptions
             .iter()
             .position(|x| *x == channel.to_string());
 
@@ -274,7 +275,8 @@ impl Subscriber {
     }
 
     pub(crate) fn is_psubscribed(self: &mut Subscriber, channel: &str) -> bool {
-        let search_result = self.psubscriptions
+        let search_result = self
+            .psubscriptions
             .iter()
             .position(|x| *x == channel.to_string());
 

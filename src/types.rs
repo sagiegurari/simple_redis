@@ -69,8 +69,7 @@ macro_rules! as_redis_arg {
     };
 }
 
-impl<'a> RedisArg for &'a str {}
-
+as_redis_arg!(&str);
 as_redis_arg!(i8);
 as_redis_arg!(i16);
 as_redis_arg!(u16);

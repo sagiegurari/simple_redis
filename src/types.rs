@@ -70,6 +70,8 @@ macro_rules! as_redis_arg {
 }
 
 as_redis_arg!(&str);
+as_redis_arg!(&String);
+as_redis_arg!(String);
 as_redis_arg!(i8);
 as_redis_arg!(i16);
 as_redis_arg!(u16);

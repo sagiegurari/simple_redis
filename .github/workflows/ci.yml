@@ -24,9 +24,9 @@ jobs:
         command: install
         args: --debug cargo-make
     - name: Startup Redis
-      uses: superchargejs/redis-github-action@v1
+      uses: shogo82148/actions-setup-redis@v1
       with:
-        redis-version: 5
+        redis-version: '5.x'
     - name: Run CI
       if: matrix.rust != 'nightly'
       uses: actions-rs/cargo@v1

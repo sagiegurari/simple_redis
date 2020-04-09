@@ -25,7 +25,7 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
     // get pubsub
     match client.get_connection() {
         Ok(mut redis_connection) => {
-            let redis_pubsub = redis_connection.as_pubsub();
+            let mut redis_pubsub = redis_connection.as_pubsub();
 
             for channel in &subscriber.subscriptions {
                 let result = redis_pubsub.subscribe(channel);
@@ -75,7 +75,7 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
 fn get_message(subscriber: &mut Subscriber, timeout: u64) -> RedisMessageResult {
     match subscriber.pubsub {
         Some(ref redis_connection) => {
-            let redis_pubsub = redis_connection.as_pubsub();
+            let mut redis_pubsub = redis_connection.as_pubsub();
 
             let duration;
             let timeout_duration;

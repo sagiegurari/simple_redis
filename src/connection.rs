@@ -46,7 +46,7 @@ impl Connection {
         let open;
 
         match self.connection {
-            Some(ref redis_connection) => {
+            Some(ref mut redis_connection) => {
                 let result: redis::RedisResult<()> = redis::cmd("PING").query(redis_connection);
 
                 open = result.is_ok();

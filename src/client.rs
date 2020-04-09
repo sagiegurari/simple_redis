@@ -26,7 +26,7 @@ pub struct Client {
 }
 
 fn run_command_on_connection<T: redis::FromRedisValue>(
-    connection: &redis::Connection,
+    connection: &mut redis::Connection,
     command: &str,
     args: Vec<&str>,
 ) -> RedisResult<T> {
@@ -50,7 +50,7 @@ impl Client {
     /// Returns true if the currently stored connection is valid, otherwise false.<br>
     /// There is no need to call this function as any redis operation invocation will
     /// ensure a valid connection is created.
-    pub fn is_connection_open(self: &Client) -> bool {
+    pub fn is_connection_open(self: &mut Client) -> bool {
         self.connection.is_connection_open()
     }
 
@@ -109,7 +109,7 @@ impl Client {
         args: Vec<&str>,
     ) -> RedisResult<T> {
         match self.connection.get_redis_connection(&self.client) {
-            Ok(ref connection) => run_command_on_connection::<T>(connection, command, args),
+            Ok(connection) => run_command_on_connection::<T>(connection, command, args),
             Err(error) => Err(error),
         }
     }

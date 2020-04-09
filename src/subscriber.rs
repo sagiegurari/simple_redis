@@ -15,16 +15,21 @@ use std::time::SystemTime;
 
 /// The redis pubsub wrapper.
 pub(crate) struct Subscriber {
-    subscribed: bool,
     subscriptions: Vec<String>,
     psubscriptions: Vec<String>,
-    pubsub: Option<redis::PubSub>,
+    redis_connection: Option<redis::Connection>,
 }
 
-fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEmptyResult {
+fn subscribe_all<'a>(
+    subscriber: &'a mut Subscriber,
+    client: &redis::Client,
+) -> Result<redis::PubSub<'a>, RedisError> {
     // get pubsub
-    match client.get_pubsub() {
-        Ok(mut redis_pubsub) => {
+    match client.get_connection() {
+        Ok(redis_connection) => {
+            let redis_connection_ref = subscriber.redis_connection.get_or_insert(redis_connection);
+            let mut redis_pubsub = redis_connection_ref.as_pubsub();
+
             for channel in &subscriber.subscriptions {
                 let result = redis_pubsub.subscribe(channel);
 
@@ -59,10 +64,7 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
                 }
             }
 
-            subscriber.subscribed = true;
-            subscriber.pubsub = Some(redis_pubsub);
-
-            Ok(())
+            Ok(redis_pubsub)
         }
         Err(error) => Err(RedisError {
             info: ErrorInfo::RedisError(error),
@@ -70,66 +72,58 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
     }
 }
 
-fn get_message(subscriber: &mut Subscriber, timeout: u64) -> RedisMessageResult {
-    match subscriber.pubsub {
-        Some(ref redis_pubsub) => {
-            let duration;
-            let timeout_duration;
-            if timeout > 0 {
-                timeout_duration = Duration::from_millis(timeout);
-                duration = Some(timeout_duration);
-            } else {
-                timeout_duration = Duration::new(0, 0);
-                duration = None;
-            }
+fn get_message(timeout: u64, mut redis_pubsub: redis::PubSub) -> RedisMessageResult {
+    let duration;
+    let timeout_duration;
+    if timeout > 0 {
+        timeout_duration = Duration::from_millis(timeout);
+        duration = Some(timeout_duration);
+    } else {
+        timeout_duration = Duration::new(0, 0);
+        duration = None;
+    }
 
-            let output;
+    let output;
 
-            let mut timeout_result = redis_pubsub.set_read_timeout(duration);
+    let mut timeout_result = redis_pubsub.set_read_timeout(duration);
 
-            if timeout_result.is_err() {
-                output = Err(RedisError {
-                    info: ErrorInfo::Description("Unable to set read timeout."),
-                })
-            } else {
-                let start = SystemTime::now();
+    if timeout_result.is_err() {
+        output = Err(RedisError {
+            info: ErrorInfo::Description("Unable to set read timeout."),
+        })
+    } else {
+        let start = SystemTime::now();
 
-                let message_result = redis_pubsub.get_message();
+        let message_result = redis_pubsub.get_message();
 
-                timeout_result = redis_pubsub.set_read_timeout(None);
-                if timeout_result.is_err() {
-                    output = Err(RedisError {
-                        info: ErrorInfo::Description("Unable to set read timeout."),
-                    })
-                } else {
-                    output = match message_result {
-                        Ok(message) => Ok(message),
-                        Err(error) => {
-                            let max_end = start.add(timeout_duration);
-                            let mut actual_end = SystemTime::now();
-                            actual_end = actual_end.add(Duration::from_millis(50)); // possible miscalculation
+        timeout_result = redis_pubsub.set_read_timeout(None);
+        if timeout_result.is_err() {
+            output = Err(RedisError {
+                info: ErrorInfo::Description("Unable to set read timeout."),
+            })
+        } else {
+            output = match message_result {
+                Ok(message) => Ok(message),
+                Err(error) => {
+                    let max_end = start.add(timeout_duration);
+                    let mut actual_end = SystemTime::now();
+                    actual_end = actual_end.add(Duration::from_millis(50)); // possible miscalculation
 
-                            if timeout > 0 && actual_end >= max_end {
-                                Err(RedisError {
-                                    info: ErrorInfo::TimeoutError("Timeout"),
-                                })
-                            } else {
-                                subscriber.subscribed = false;
-                                Err(RedisError {
-                                    info: ErrorInfo::RedisError(error),
-                                })
-                            }
-                        }
+                    if timeout > 0 && actual_end >= max_end {
+                        Err(RedisError {
+                            info: ErrorInfo::TimeoutError("Timeout"),
+                        })
+                    } else {
+                        Err(RedisError {
+                            info: ErrorInfo::RedisError(error),
+                        })
                     }
                 }
             }
-
-            output
         }
-        None => Err(RedisError {
-            info: ErrorInfo::Description("Error while fetching pubsub."),
-        }),
     }
+
+    output
 }
 
 fn subscribe_and_get(
@@ -139,7 +133,7 @@ fn subscribe_and_get(
 ) -> RedisMessageResult {
     match subscribe_all(subscriber, client) {
         Err(error) => Err(error),
-        _ => match get_message(subscriber, timeout) {
+        Ok(pubsub) => match get_message(timeout, pubsub) {
             Ok(message) => Ok(message),
             Err(error) => Err(error),
         },
@@ -147,44 +141,13 @@ fn subscribe_and_get(
 }
 
 fn subscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> RedisEmptyResult {
-    if subscriber.subscribed {
-        if pattern {
-            subscriber.psubscriptions.push(channel.to_string());
-        } else {
-            subscriber.subscriptions.push(channel.to_string());
-        }
-
-        match subscriber.pubsub {
-            Some(ref mut redis_pubsub) => {
-                if pattern {
-                    match redis_pubsub.psubscribe(channel.to_string()) {
-                        Err(error) => Err(RedisError {
-                            info: ErrorInfo::RedisError(error),
-                        }),
-                        _ => Ok(()),
-                    }
-                } else {
-                    match redis_pubsub.subscribe(channel.to_string()) {
-                        Err(error) => Err(RedisError {
-                            info: ErrorInfo::RedisError(error),
-                        }),
-                        _ => Ok(()),
-                    }
-                }
-            }
-            None => Err(RedisError {
-                info: ErrorInfo::Description("Error while fetching pubsub."),
-            }),
-        }
+    if pattern {
+        subscriber.psubscriptions.push(channel.to_string());
     } else {
-        if pattern {
-            subscriber.psubscriptions.push(channel.to_string());
-        } else {
-            subscriber.subscriptions.push(channel.to_string());
-        }
-
-        Ok(())
+        subscriber.subscriptions.push(channel.to_string());
     }
+
+    Ok(())
 }
 
 fn unsubscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> RedisEmptyResult {
@@ -196,42 +159,13 @@ fn unsubscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Red
 
     match search_result {
         Some(index) => {
-            let mut unsub_result = Ok(());
-
-            if subscriber.subscribed {
-                unsub_result = match subscriber.pubsub {
-                    Some(ref mut redis_pubsub) => {
-                        if pattern {
-                            match redis_pubsub.punsubscribe(channel.to_string()) {
-                                Err(error) => Err(RedisError {
-                                    info: ErrorInfo::RedisError(error),
-                                }),
-                                _ => Ok(()),
-                            }
-                        } else {
-                            match redis_pubsub.unsubscribe(channel.to_string()) {
-                                Err(error) => Err(RedisError {
-                                    info: ErrorInfo::RedisError(error),
-                                }),
-                                _ => Ok(()),
-                            }
-                        }
-                    }
-                    None => Err(RedisError {
-                        info: ErrorInfo::Description("Error while fetching pubsub."),
-                    }),
-                }
+            if pattern {
+                subscriber.psubscriptions.remove(index);
+            } else {
+                subscriber.subscriptions.remove(index);
             }
 
-            if unsub_result.is_ok() {
-                if pattern {
-                    subscriber.psubscriptions.remove(index);
-                } else {
-                    subscriber.subscriptions.remove(index);
-                }
-            }
-
-            unsub_result
+            Ok(())
         }
         None => Ok(()),
     }
@@ -277,57 +211,22 @@ impl Subscriber {
         client: &redis::Client,
         timeout: u64,
     ) -> RedisMessageResult {
-        if self.pubsub.is_some() {
-            match get_message(self, timeout) {
-                Ok(message) => Ok(message),
-                Err(error) => match error.info {
-                    ErrorInfo::TimeoutError(description) => Err(RedisError {
-                        info: ErrorInfo::TimeoutError(description),
-                    }),
-                    _ => subscribe_and_get(self, client, timeout),
-                },
-            }
-        } else {
-            subscribe_and_get(self, client, timeout)
-        }
+        subscribe_and_get(self, client, timeout)
     }
 
     pub(crate) fn unsubscribe_all(self: &mut Subscriber) -> RedisEmptyResult {
-        let mut result = Ok(());
+        self.subscriptions.clear();
+        self.psubscriptions.clear();
 
-        if self.subscribed {
-            let mut list = self.subscriptions.to_vec();
-            for channel in &list {
-                result = self.unsubscribe(channel);
-
-                if result.is_err() {
-                    break;
-                }
-            }
-
-            list = self.psubscriptions.to_vec();
-            for channel in &list {
-                result = self.punsubscribe(channel);
-
-                if result.is_err() {
-                    break;
-                }
-            }
-        } else {
-            self.subscriptions.clear();
-            self.psubscriptions.clear();
-        }
-
-        result
+        Ok(())
     }
 }
 
 /// Creates and returns a new connection
 pub(crate) fn create() -> Subscriber {
     Subscriber {
-        subscribed: false,
         subscriptions: vec![],
         psubscriptions: vec![],
-        pubsub: None,
+        redis_connection: None,
     }
 }

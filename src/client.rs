@@ -109,7 +109,7 @@ impl Client {
         args: Vec<&str>,
     ) -> RedisResult<T> {
         match self.connection.get_redis_connection(&self.client) {
-            Ok(mut connection) => run_command_on_connection::<T>(connection, command, args),
+            Ok(connection) => run_command_on_connection::<T>(connection, command, args),
             Err(error) => Err(error),
         }
     }

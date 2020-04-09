@@ -60,11 +60,11 @@ impl Connection {
     pub(crate) fn get_redis_connection(
         self: &mut Connection,
         client: &redis::Client,
-    ) -> RedisResult<&redis::Connection> {
+    ) -> RedisResult<&mut redis::Connection> {
         match open_connection(self, client) {
             Err(error) => Err(error),
             _ => match self.connection {
-                Some(ref redis_connection) => Ok(redis_connection),
+                Some(ref mut redis_connection) => Ok(redis_connection),
                 None => Err(RedisError {
                     info: ErrorInfo::Description("Redis connection not available."),
                 }),

@@ -18,14 +18,14 @@ pub(crate) struct Subscriber {
     subscribed: bool,
     subscriptions: Vec<String>,
     psubscriptions: Vec<String>,
-    pubsub: Option<redis::Connection>,
+    redis_connection: Option<redis::Connection>,
 }
 
 fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEmptyResult {
     // get pubsub
     match client.get_connection() {
         Ok(redis_connection) => {
-            let redis_connection_ref = subscriber.pubsub.get_or_insert(redis_connection);
+            let redis_connection_ref = subscriber.redis_connection.get_or_insert(redis_connection);
             let mut redis_pubsub = redis_connection_ref.as_pubsub();
 
             for channel in &subscriber.subscriptions {
@@ -73,7 +73,7 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
 }
 
 fn get_message(subscriber: &mut Subscriber, timeout: u64) -> RedisMessageResult {
-    match subscriber.pubsub {
+    match subscriber.redis_connection {
         Some(ref mut redis_connection) => {
             let mut redis_pubsub = redis_connection.as_pubsub();
 
@@ -158,7 +158,7 @@ fn subscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Redis
             subscriber.subscriptions.push(channel.to_string());
         }
 
-        match subscriber.pubsub {
+        match subscriber.redis_connection {
             Some(ref mut redis_connection) => {
                 let mut redis_pubsub = redis_connection.as_pubsub();
 
@@ -205,7 +205,7 @@ fn unsubscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Red
             let mut unsub_result = Ok(());
 
             if subscriber.subscribed {
-                unsub_result = match subscriber.pubsub {
+                unsub_result = match subscriber.redis_connection {
                     Some(ref mut redis_connection) => {
                         let mut redis_pubsub = redis_connection.as_pubsub();
 
@@ -285,7 +285,7 @@ impl Subscriber {
         client: &redis::Client,
         timeout: u64,
     ) -> RedisMessageResult {
-        if self.pubsub.is_some() {
+        if self.redis_connection.is_some() {
             match get_message(self, timeout) {
                 Ok(message) => Ok(message),
                 Err(error) => match error.info {
@@ -336,6 +336,6 @@ pub(crate) fn create() -> Subscriber {
         subscribed: false,
         subscriptions: vec![],
         psubscriptions: vec![],
-        pubsub: None,
+        redis_connection: None,
     }
 }

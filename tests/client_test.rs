@@ -13,7 +13,7 @@ fn create_valid_url() {
     assert!(result.is_ok());
 
     match result {
-        Ok(client) => assert!(!client.is_connection_open()),
+        Ok(mut client) => assert!(!client.is_connection_open()),
         _ => panic!("test error"),
     };
 }
@@ -170,7 +170,7 @@ fn quit_live_subscriptions() {
             .unwrap();
     });
 
-    match client.get_message(0) {
+    match client.get_message(10000) {
         Ok(message) => {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "test pub_sub message")

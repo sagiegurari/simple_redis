@@ -1,2 +1,2 @@
 var ALIASES = {};
-ALIASES['simple_redis'] = {};
+ALIASES["simple_redis"] = {};

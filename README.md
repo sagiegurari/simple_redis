@@ -45,22 +45,22 @@ automatically in case of any error while fetching a message from the subscribed 
 ## Usage
 In order to use this library, you need to first include the crate as follows:
 
-````rust
+```rust
 extern crate simple_redis;
-````
+```
 
 Afterwards create a redis client using a connection string:
 
-````rust
+```rust
 match simple_redis::create("redis://127.0.0.1:6379/") {
     Ok(mut client) =>  println!("Created Redis Client"),
     Err(error) => println!("Unable to create Redis client: {}", error)
 }
-````
+```
 
 Once you have a redis client, you can invoke any of the available commands directly or use the run_command function to invoke operations that were not implemented by the library.
 
-````rust
+```rust
 match client.set("my_key", "my_value") {
     Err(error) => println!("Unable to set value in Redis: {}", error),
     _ => println!("Value set in Redis")
@@ -117,16 +117,16 @@ loop {
         Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
     }
 }
-````
+```
 
 Once finished with the redis client, you can close the connection using the redis QUIT command:
 
-````rust
+```rust
 match client.quit() {
     Err(error) => println!("Error: {}", error),
     _ => println!("Connection Closed.")
 }
-````
+```
 
 <a name="installation"></a>
 ## Installation
@@ -148,9 +148,8 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
-| 2018-08-10  | v0.3.44 | Maintenance |
+| 2020-04-10  | v0.4.0  | Upgrade redis-rs to 0.15 |
 | 2017-06-16  | v0.3.9  | More commands added |
-| 2017-06-13  | v0.3.6  | Maintenance |
 | 2017-06-10  | v0.3.1  | Added timeout support for get_message |
 | 2017-06-08  | v0.2.8  | More commands added |
 | 2017-06-03  | v0.1.7  | pubsub support added |

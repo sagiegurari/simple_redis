@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../simple_redis/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -196,199 +196,7 @@
 <span id="196">196</span>
 <span id="197">197</span>
 <span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-</pre><pre class="rust ">
-<span class="attribute">#![<span class="ident">deny</span>(
-    <span class="ident">absolute_paths_not_starting_with_crate</span>,
-    <span class="ident">anonymous_parameters</span>,
-    <span class="ident">async_idents</span>,
-    <span class="ident">const_err</span>,
-    <span class="ident">dead_code</span>,
-    <span class="ident">deprecated</span>,
-    <span class="ident">duplicate_associated_type_bindings</span>,
-    <span class="ident">duplicate_macro_exports</span>,
-    <span class="ident">ellipsis_inclusive_range_patterns</span>,
-    <span class="ident">exceeding_bitshifts</span>,
-    <span class="ident">illegal_floating_point_literal_pattern</span>,
-    <span class="ident">improper_ctypes</span>,
-    <span class="ident">incoherent_fundamental_impls</span>,
-    <span class="ident">intra_doc_link_resolution_failure</span>,
-    <span class="ident">invalid_type_param_default</span>,
-    <span class="ident">irrefutable_let_patterns</span>,
-    <span class="ident">late_bound_lifetime_arguments</span>,
-    <span class="ident">legacy_constructor_visibility</span>,
-    <span class="ident">legacy_directory_ownership</span>,
-    <span class="ident">macro_use_extern_crate</span>,
-    <span class="ident">missing_copy_implementations</span>,
-    <span class="ident">missing_docs</span>,
-    <span class="ident">missing_fragment_specifier</span>,
-    <span class="ident">mutable_transmutes</span>,
-    <span class="ident">no_mangle_const_items</span>,
-    <span class="ident">no_mangle_generic_items</span>,
-    <span class="ident">non_camel_case_types</span>,
-    <span class="ident">non_shorthand_field_patterns</span>,
-    <span class="ident">non_snake_case</span>,
-    <span class="ident">non_upper_case_globals</span>,
-    <span class="ident">overflowing_literals</span>,
-    <span class="ident">parenthesized_params_in_types_and_modules</span>,
-    <span class="ident">path_statements</span>,
-    <span class="ident">patterns_in_fns_without_body</span>,
-    <span class="ident">plugin_as_library</span>,
-    <span class="ident">private_in_public</span>,
-    <span class="ident">private_no_mangle_fns</span>,
-    <span class="ident">private_no_mangle_statics</span>,
-    <span class="ident">proc_macro_derive_resolution_fallback</span>,
-    <span class="ident">pub_use_of_private_extern_crate</span>,
-    <span class="ident">question_mark_macro_sep</span>,
-    <span class="ident">safe_extern_statics</span>,
-    <span class="ident">safe_packed_borrows</span>,
-    <span class="ident">stable_features</span>,
-    <span class="ident">trivial_bounds</span>,
-    <span class="ident">trivial_casts</span>,
-    <span class="ident">trivial_numeric_casts</span>,
-    <span class="ident">type_alias_bounds</span>,
-    <span class="ident">tyvar_behind_raw_pointer</span>,
-    <span class="ident">unconditional_recursion</span>,
-    <span class="ident">unions_with_drop_fields</span>,
-    <span class="ident">unknown_crate_types</span>,
-    <span class="ident">unnameable_test_functions</span>,
-    <span class="ident">unreachable_code</span>,
-    <span class="ident">unreachable_patterns</span>,
-    <span class="ident">unreachable_pub</span>,
-    <span class="ident">unsafe_code</span>,
-    <span class="ident">unstable_features</span>,
-    <span class="ident">unstable_name_collisions</span>,
-    <span class="ident">unused_allocation</span>,
-    <span class="ident">unused_assignments</span>,
-    <span class="ident">unused_attributes</span>,
-    <span class="ident">unused_comparisons</span>,
-    <span class="ident">unused_doc_comments</span>,
-    <span class="ident">unused_extern_crates</span>,
-    <span class="ident">unused_features</span>,
-    <span class="ident">unused_import_braces</span>,
-    <span class="ident">unused_imports</span>,
-    <span class="ident">unused_labels</span>,
-    <span class="ident">unused_lifetimes</span>,
-    <span class="ident">unused_macros</span>,
-    <span class="ident">unused_must_use</span>,
-    <span class="ident">unused_mut</span>,
-    <span class="ident">unused_parens</span>,
-    <span class="ident">unused_qualifications</span>,
-    <span class="ident">unused_unsafe</span>,
-    <span class="ident">unused_variables</span>,
-    <span class="ident">where_clauses_object_safety</span>,
-    <span class="ident">while_true</span>
-)]</span>
-<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">unknown_lints</span>)]</span>
-<span class="attribute">#![<span class="ident">allow</span>(
-    <span class="ident">bare_trait_objects</span>,
-    <span class="ident">box_pointers</span>,
-    <span class="ident">elided_lifetimes_in_paths</span>,
-    <span class="ident">missing_debug_implementations</span>,
-    <span class="ident">single_use_lifetimes</span>,
-    <span class="ident">unused_results</span>,
-    <span class="ident">variant_size_differences</span>,
-    <span class="ident">warnings</span>,
-    <span class="ident">renamed_and_removed_lints</span>
-)]</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clippy&quot;</span>, <span class="ident">feature</span>(<span class="ident">plugin</span>))]</span>
-
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # simple_redis</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Simple and resilient [redis](https://redis.io/) client based on [redis-rs](https://crates.io/crates/redis) with</span>
@@ -547,8 +355,6 @@
 <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;./lib_test.rs&quot;</span>]</span>
 <span class="kw">mod</span> <span class="ident">lib_test</span>;
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">redis</span>;
-
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">client</span>;
 <span class="kw">mod</span> <span class="ident">commands</span>;
 <span class="kw">mod</span> <span class="ident">connection</span>;
@@ -586,8 +392,8 @@
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>(<span class="ident">connection_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">client</span>::<span class="ident">Client</span>, <span class="ident">RedisError</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>(<span class="ident">connection_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">client</span>::<span class="ident">Client</span>, <span class="ident">RedisError</span><span class="op">&gt;</span> {
     <span class="ident">client</span>::<span class="ident">create</span>(<span class="ident">connection_string</span>)
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "simple_redis";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "simple_redis";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

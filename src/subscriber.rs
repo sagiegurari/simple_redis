@@ -18,13 +18,15 @@ pub(crate) struct Subscriber {
     subscribed: bool,
     subscriptions: Vec<String>,
     psubscriptions: Vec<String>,
-    pubsub: Option<redis::PubSub>,
+    pubsub: Option<redis::Connection>,
 }
 
 fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEmptyResult {
     // get pubsub
-    match client.get_pubsub() {
-        Ok(mut redis_pubsub) => {
+    match client.get_connection() {
+        Ok(mut redis_connection) => {
+            let redis_pubsub = redis_connection.as_pubsub();
+
             for channel in &subscriber.subscriptions {
                 let result = redis_pubsub.subscribe(channel);
 
@@ -60,7 +62,7 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
             }
 
             subscriber.subscribed = true;
-            subscriber.pubsub = Some(redis_pubsub);
+            subscriber.pubsub = Some(redis_connection);
 
             Ok(())
         }
@@ -72,7 +74,9 @@ fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEm
 
 fn get_message(subscriber: &mut Subscriber, timeout: u64) -> RedisMessageResult {
     match subscriber.pubsub {
-        Some(ref redis_pubsub) => {
+        Some(ref redis_connection) => {
+            let redis_pubsub = redis_connection.as_pubsub();
+
             let duration;
             let timeout_duration;
             if timeout > 0 {
@@ -155,7 +159,9 @@ fn subscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Redis
         }
 
         match subscriber.pubsub {
-            Some(ref mut redis_pubsub) => {
+            Some(ref mut redis_connection) => {
+                let redis_pubsub = redis_connection.as_pubsub();
+
                 if pattern {
                     match redis_pubsub.psubscribe(channel.to_string()) {
                         Err(error) => Err(RedisError {
@@ -200,7 +206,9 @@ fn unsubscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Red
 
             if subscriber.subscribed {
                 unsub_result = match subscriber.pubsub {
-                    Some(ref mut redis_pubsub) => {
+                    Some(ref mut redis_connection) => {
+                        let redis_pubsub = redis_connection.as_pubsub();
+
                         if pattern {
                             match redis_pubsub.punsubscribe(channel.to_string()) {
                                 Err(error) => Err(RedisError {

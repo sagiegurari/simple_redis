@@ -1,5 +1,7 @@
 
 [config]
+init_task = "start-redis"
+end_task = "stop-redis"
 additional_profiles = [
     "ci-coverage-tasks",
     "ci-all-build-tasks",
@@ -11,6 +13,7 @@ additional_profiles = [
 force = true
 
 [tasks.start-redis]
+condition = { env_false = [ 'CARGO_MAKE_CI' ] }
 script = [
   "echo \"Starting Redis\"",
   "redis-server --loglevel warning &",
@@ -18,18 +21,9 @@ script = [
 ]
 
 [tasks.stop-redis]
+condition = { env_false = [ 'CARGO_MAKE_CI' ] }
 script = [
   "echo \"Stopping any running Redis\"",
   "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9 || true",
 ]
 
-[tasks.init]
-condition = { env_false = [ 'CARGO_MAKE_CI' ] }
-dependencies = [
-  "stop-redis",
-  "start-redis"
-]
-
-[tasks.end]
-condition = { env_false = [ 'CARGO_MAKE_CI' ] }
-alias = "stop-redis"

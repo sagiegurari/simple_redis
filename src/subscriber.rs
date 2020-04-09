@@ -19,6 +19,7 @@ pub(crate) struct Subscriber {
     subscriptions: Vec<String>,
     psubscriptions: Vec<String>,
     redis_connection: Option<redis::Connection>,
+    pubsub: Option<redis::PubSub>,
 }
 
 fn subscribe_all(subscriber: &mut Subscriber, client: &redis::Client) -> RedisEmptyResult {

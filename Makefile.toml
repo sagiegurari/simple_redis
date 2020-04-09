@@ -5,7 +5,6 @@ additional_profiles = [
     "ci-all-build-tasks",
     "ci-static-code-analysis-tasks",
     "publish-pre-cleanup"
-#    "none-thread-safe-test"
 ]
 
 [tasks.outdated]
@@ -24,11 +23,13 @@ script = [
   "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9 || true",
 ]
 
-[tasks.init-build-flow]
+[tasks.init]
+condition = { env_false = [ 'CARGO_MAKE_CI' ] }
 dependencies = [
   "stop-redis",
   "start-redis"
 ]
 
-[tasks.end-build-flow]
+[tasks.end]
+condition = { env_false = [ 'CARGO_MAKE_CI' ] }
 alias = "stop-redis"

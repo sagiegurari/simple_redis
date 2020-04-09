@@ -42,7 +42,7 @@ impl Connection {
     /// Returns true if the currently stored connection is valid, otherwise false.<br>
     /// There is no need to call this function as any redis operation invocation will
     /// ensure a valid connection is created.
-    pub(crate) fn is_connection_open(self: &Connection) -> bool {
+    pub(crate) fn is_connection_open(self: &mut Connection) -> bool {
         let open;
 
         match self.connection {

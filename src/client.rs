@@ -26,7 +26,7 @@ pub struct Client {
 }
 
 fn run_command_on_connection<T: redis::FromRedisValue>(
-    connection: &redis::Connection,
+    connection: &mut redis::Connection,
     command: &str,
     args: Vec<&str>,
 ) -> RedisResult<T> {

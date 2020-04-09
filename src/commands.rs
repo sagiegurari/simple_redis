@@ -7,10 +7,10 @@
 #[path = "./commands_test.rs"]
 mod commands_test;
 
-use client::Client;
+use crate::client::Client;
+use crate::types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 use std::collections::HashMap;
 use std::str::FromStr;
-use types::{RedisArg, RedisBoolResult, RedisEmptyResult, RedisResult, RedisStringResult};
 
 /// Defines the redis commands exposed by the redis client.
 impl Client {

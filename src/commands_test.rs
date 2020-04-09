@@ -1,4 +1,4 @@
-use client;
+use crate::client;
 
 #[test]
 fn create_invalid_url() {

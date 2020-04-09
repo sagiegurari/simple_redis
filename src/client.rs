@@ -7,14 +7,13 @@
 #[path = "./client_test.rs"]
 mod client_test;
 
-use connection;
-use redis;
-use std::str::FromStr;
-use subscriber;
-use types::{
+use crate::connection;
+use crate::subscriber;
+use crate::types::{
     ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult,
     RedisStringResult,
 };
+use std::str::FromStr;
 
 /// The redis client which enables to invoke redis operations.
 pub struct Client {
@@ -71,12 +70,11 @@ impl Client {
     /// ```
     ///
     pub fn quit(self: &mut Client) -> RedisEmptyResult {
-        let mut result;
-        if self.is_connection_open() {
-            result = self.run_command_empty_response("QUIT", vec![]);
+        let mut result = if self.is_connection_open() {
+            self.run_command_empty_response("QUIT", vec![])
         } else {
-            result = Ok(());
-        }
+            Ok(())
+        };
 
         if result.is_ok() {
             result = self.unsubscribe_all();

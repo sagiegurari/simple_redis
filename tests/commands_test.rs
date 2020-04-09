@@ -16,7 +16,7 @@ fn auth() {
     assert!(client.is_connection_open());
 
     let result = client.auth("my_password");
-    /// we are running with redis without auth, so we should be getting an error
+    // we are running with redis without auth, so we should be getting an error
     assert!(result.is_err());
 
     assert!(!client.is_connection_open());

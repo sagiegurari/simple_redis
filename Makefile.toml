@@ -1,7 +1,12 @@
 
-[env]
-CARGO_MAKE_BUILD_BENCH = "TRUE"
-CARGO_MAKE_BUILD_EXAMPLES = "TRUE"
+[config]
+additional_profiles = [
+    "ci-coverage-tasks",
+    "ci-all-build-tasks",
+    "ci-static-code-analysis-tasks",
+    "publish-pre-cleanup"
+#    "none-thread-safe-test"
+]
 
 [tasks.outdated]
 force = true

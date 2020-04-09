@@ -7,8 +7,6 @@
 #[path = "./types_test.rs"]
 mod types_test;
 
-use redis;
-use std::error;
 use std::fmt;
 use std::fmt::Display;
 
@@ -28,25 +26,6 @@ pub enum ErrorInfo {
 pub struct RedisError {
     /// Holds the error information
     pub info: ErrorInfo,
-}
-
-impl error::Error for RedisError {
-    /// A short description of the error.
-    fn description(&self) -> &str {
-        match self.info {
-            ErrorInfo::RedisError(ref cause) => cause.description(),
-            ErrorInfo::Description(description) => description,
-            ErrorInfo::TimeoutError(description) => description,
-        }
-    }
-
-    /// The lower-level cause of this error, if any.
-    fn cause(&self) -> Option<&error::Error> {
-        match self.info {
-            ErrorInfo::RedisError(ref cause) => Some(cause),
-            _ => None,
-        }
-    }
 }
 
 impl Display for RedisError {

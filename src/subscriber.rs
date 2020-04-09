@@ -7,12 +7,11 @@
 #[path = "./subscriber_test.rs"]
 mod subscriber_test;
 
-use redis;
+use crate::types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
 use std::ops::Add;
 use std::option::Option;
 use std::time::Duration;
 use std::time::SystemTime;
-use types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
 
 /// The redis pubsub wrapper.
 pub(crate) struct Subscriber {
@@ -189,18 +188,11 @@ fn subscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> Redis
 }
 
 fn unsubscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> RedisEmptyResult {
-    let search_result;
-    if pattern {
-        search_result = subscriber
-            .psubscriptions
-            .iter()
-            .position(|x| *x == channel.to_string());
+    let search_result = if pattern {
+        subscriber.psubscriptions.iter().position(|x| x == channel)
     } else {
-        search_result = subscriber
-            .subscriptions
-            .iter()
-            .position(|x| *x == channel.to_string());
-    }
+        subscriber.subscriptions.iter().position(|x| x == channel)
+    };
 
     match search_result {
         Some(index) => {
@@ -263,10 +255,7 @@ impl Subscriber {
     }
 
     pub(crate) fn is_subscribed(self: &mut Subscriber, channel: &str) -> bool {
-        let search_result = self
-            .subscriptions
-            .iter()
-            .position(|x| *x == channel.to_string());
+        let search_result = self.subscriptions.iter().position(|x| x == channel);
 
         match search_result {
             None => false,
@@ -275,10 +264,7 @@ impl Subscriber {
     }
 
     pub(crate) fn is_psubscribed(self: &mut Subscriber, channel: &str) -> bool {
-        let search_result = self
-            .psubscriptions
-            .iter()
-            .position(|x| *x == channel.to_string());
+        let search_result = self.psubscriptions.iter().position(|x| x == channel);
 
         match search_result {
             None => false,

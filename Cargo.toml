@@ -4,6 +4,7 @@ version = "0.3.44"
 authors = ["Sagie Gur-Ari <sagiegurari@gmail.com>"]
 description = "Simple and resilient redis client."
 license = "Apache-2.0"
+edition = "2018"
 documentation = "https://sagiegurari.github.io/simple_redis/api/simple_redis/index.html"
 homepage = "http://github.com/sagiegurari/simple_redis"
 repository = "https://github.com/sagiegurari/simple_redis.git"
@@ -23,20 +24,14 @@ include = [
 ]
 
 [dependencies]
-redis = "^0.8.0"
+redis = "^0.8"
+
+[dev-dependencies]
+doc-comment = "^0.3"
+rusty-hook = "^0.10"
 
 [features]
 default = []
-
-[badges.travis-ci]
-branch = "master"
-repository = "sagiegurari/simple_redis"
-
-[badges.appveyor]
-repository = "sagiegurari/simple_redis"
-service = "github"
-branch = "master"
-project_name = "sagiegurari/simple-redis"
 
 [badges.codecov]
 branch = "master"

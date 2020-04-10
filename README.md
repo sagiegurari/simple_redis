@@ -113,7 +113,7 @@ fn main() {
             assert!(result.is_ok());
 
             // fetch messages from all subscriptions
-            client.fetch_messages(&|message: Message| -> bool {
+            client.fetch_messages(&mut |message: Message| -> bool {
                 let payload : String = message.get_payload().unwrap();
                 println!("Got message: {}", payload);
 

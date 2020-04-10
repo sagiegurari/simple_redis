@@ -172,7 +172,7 @@ fn quit_live_subscriptions() {
     });
 
     client
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "test pub_sub message");
             true

@@ -81,7 +81,7 @@ fn pub_sub() {
     });
 
     subscriber
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "test pub_sub message");
             true
@@ -116,7 +116,7 @@ fn pub_sub() {
     });
 
     subscriber
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "good");
             true
@@ -150,7 +150,7 @@ fn pub_psub_simple() {
     });
 
     subscriber
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "test pub_sub message");
             true
@@ -184,7 +184,7 @@ fn pub_psub_pattern() {
     });
 
     subscriber
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "test pub_sub message");
             true
@@ -219,7 +219,7 @@ fn pub_psub_pattern() {
     });
 
     subscriber
-        .fetch_messages(&|message: Message| -> bool {
+        .fetch_messages(&mut |message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
             assert_eq!(payload, "good");
             true

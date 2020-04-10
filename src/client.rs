@@ -234,7 +234,7 @@ impl Client {
     /// client.subscribe("important_notifications");
     ///
     /// // fetch messages from all subscriptions
-    /// client.fetch_messages(&|message: simple_redis::Message| -> bool {
+    /// client.fetch_messages(&mut |message: simple_redis::Message| -> bool {
     ///     let payload : String = message.get_payload().unwrap();
     ///     println!("Got message: {}", payload);
     ///
@@ -244,7 +244,7 @@ impl Client {
     /// ```
     pub fn fetch_messages(
         self: &mut Client,
-        on_message: &dyn Fn(Message) -> bool,
+        on_message: &mut dyn FnMut(Message) -> bool,
     ) -> RedisEmptyResult {
         self.subscriber.fetch_messages(&self.client, on_message)
     }

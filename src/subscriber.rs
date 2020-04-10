@@ -71,7 +71,7 @@ fn subscribe_all<'a>(
 
 fn fetch_messages(
     mut redis_pubsub: redis::PubSub,
-    on_message: &dyn Fn(Message) -> bool,
+    on_message: &mut dyn FnMut(Message) -> bool,
 ) -> RedisEmptyResult {
     loop {
         let message_result = redis_pubsub.get_message();
@@ -94,7 +94,7 @@ fn fetch_messages(
 fn subscribe_and_fetch(
     subscriber: &mut Subscriber,
     client: &redis::Client,
-    on_message: &dyn Fn(Message) -> bool,
+    on_message: &mut dyn FnMut(Message) -> bool,
 ) -> RedisEmptyResult {
     match subscribe_all(subscriber, client) {
         Err(error) => Err(error),
@@ -175,12 +175,16 @@ impl Subscriber {
         Ok(())
     }
 
+    fn has_subscriptions(self: &Subscriber) -> bool {
+        !self.subscriptions.is_empty() || !self.psubscriptions.is_empty()
+    }
+
     pub(crate) fn fetch_messages(
         self: &mut Subscriber,
         client: &redis::Client,
-        on_message: &dyn Fn(Message) -> bool,
+        on_message: &mut dyn FnMut(Message) -> bool,
     ) -> RedisEmptyResult {
-        if self.subscriptions.is_empty() && self.psubscriptions.is_empty() {
+        if !self.has_subscriptions() {
             Err(RedisError {
                 info: ErrorInfo::Description("No subscriptions defined."),
             })

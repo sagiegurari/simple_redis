@@ -28,31 +28,23 @@ fn main() {
                 };
             });
 
-            // get next message
+            // get next two messages, since we subscribed via pattern to same channel
+            let mut counter: usize = 0;
             subscriber
-                .fetch_messages(&|message: Message| -> bool {
+                .fetch_messages(&mut |message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
                     println!("Read message: {}", payload);
                     assert_eq!(payload, "example message");
 
-                    true
-                })
-                .unwrap();
+                    counter = counter + 1;
 
-            // we get the first message again, since we subscribed via pattern to same channel
-            subscriber
-                .fetch_messages(&|message: Message| -> bool {
-                    let payload: String = message.get_payload().unwrap();
-                    println!("Read message: {}", payload);
-                    assert_eq!(payload, "example message");
-
-                    true
+                    counter >= 2
                 })
                 .unwrap();
 
             // wait for another message which only comes on the pattern channel
             subscriber
-                .fetch_messages(&|message: Message| -> bool {
+                .fetch_messages(&mut |message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
                     println!("Read message: {}", payload);
                     assert_eq!(payload, "test message");
@@ -83,7 +75,7 @@ fn main() {
             });
 
             subscriber
-                .fetch_messages(&|message: Message| -> bool {
+                .fetch_messages(&mut |message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
                     println!("Read message: {}", payload);
                     assert_eq!(payload, "second message");

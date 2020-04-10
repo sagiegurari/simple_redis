@@ -7,7 +7,7 @@
 #[path = "./subscriber_test.rs"]
 mod subscriber_test;
 
-use crate::types::{ErrorInfo, RedisEmptyResult, RedisError, RedisMessageResult};
+use crate::types::{ErrorInfo, Message, RedisEmptyResult, RedisError, RedisMessageResult};
 use std::ops::Add;
 use std::option::Option;
 use std::time::Duration;
@@ -140,6 +140,39 @@ fn subscribe_and_get(
     }
 }
 
+fn fetch_messages(
+    mut redis_pubsub: redis::PubSub,
+    on_message: &dyn Fn(Message) -> bool,
+) -> RedisEmptyResult {
+    loop {
+        let message_result = redis_pubsub.get_message();
+
+        match message_result {
+            Ok(message) => {
+                if on_message(message) {
+                    return Ok(());
+                }
+            }
+            Err(error) => {
+                return Err(RedisError {
+                    info: ErrorInfo::RedisError(error),
+                });
+            }
+        }
+    }
+}
+
+fn subscribe_and_fetch(
+    subscriber: &mut Subscriber,
+    client: &redis::Client,
+    on_message: &dyn Fn(Message) -> bool,
+) -> RedisEmptyResult {
+    match subscribe_all(subscriber, client) {
+        Err(error) => Err(error),
+        Ok(pubsub) => fetch_messages(pubsub, on_message),
+    }
+}
+
 fn subscribe(subscriber: &mut Subscriber, channel: &str, pattern: bool) -> RedisEmptyResult {
     if pattern {
         subscriber.psubscriptions.push(channel.to_string());
@@ -219,6 +252,20 @@ impl Subscriber {
         self.psubscriptions.clear();
 
         Ok(())
+    }
+
+    pub(crate) fn fetch_messages(
+        self: &mut Subscriber,
+        client: &redis::Client,
+        on_message: &dyn Fn(Message) -> bool,
+    ) -> RedisEmptyResult {
+        if self.subscriptions.is_empty() && self.psubscriptions.is_empty() {
+            Err(RedisError {
+                info: ErrorInfo::Description("No subscriptions defined."),
+            })
+        } else {
+            Ok(())
+        }
     }
 }
 

@@ -1,4 +1,5 @@
-extern crate simple_redis;
+use simple_redis;
+use simple_redis::Message;
 use std::{thread, time};
 
 #[test]
@@ -170,13 +171,13 @@ fn quit_live_subscriptions() {
             .unwrap();
     });
 
-    match client.get_message(10000) {
-        Ok(message) => {
+    client
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message")
-        }
-        _ => panic!("test error"),
-    }
+            assert_eq!(payload, "test pub_sub message");
+            true
+        })
+        .unwrap();
 
     client.quit().unwrap();
     assert!(!client.is_connection_open());
@@ -190,15 +191,4 @@ fn quit_live_subscriptions() {
     }
 
     assert!(client.is_connection_open());
-
-    thread::spawn(|| {
-        thread::sleep(time::Duration::from_secs(2));
-        let mut publisher = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
-        publisher
-            .publish("quit_live_subscriptions_TEST", "test pub_sub message")
-            .unwrap();
-    });
-
-    let message_result = client.get_message(2500);
-    assert!(message_result.is_err());
 }

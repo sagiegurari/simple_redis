@@ -11,6 +11,7 @@ additional_profiles = [
 force = true
 
 [tasks.start-redis]
+dependencies = [ "stop-redis" ]
 script = [
   "echo \"Starting Redis\"",
   "redis-server --loglevel warning &",

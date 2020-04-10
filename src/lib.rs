@@ -83,7 +83,7 @@
 //! ## Subscription Flow
 //!
 //! ```rust,no_run
-//! extern crate simple_redis;
+//! use simple_redis::Message;
 //!
 //! fn main() {
 //!     match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -95,16 +95,14 @@
 //!             result = client.psubscribe("*_notifications");
 //!             assert!(result.is_ok());
 //!
-//!             loop {
-//!                 // fetch next message (wait up to 5 seconds, 0 for no timeout)
-//!                 match client.get_message(5000) {
-//!                     Ok(message) => {
-//!                         let payload: String = message.get_payload().unwrap();
-//!                         assert_eq!(payload, "my important message")
-//!                     },
-//!                     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
-//!                 }
-//!             }
+//!             // fetch messages from all subscriptions
+//!             client.fetch_messages(&|message: Message| -> bool {
+//!                 let payload : String = message.get_payload().unwrap();
+//!                 println!("Got message: {}", payload);
+//!
+//!                 // continue fetching
+//!                 false
+//!             }).unwrap();
 //!         },
 //!         Err(error) => println!("Unable to create Redis client: {}", error)
 //!     }

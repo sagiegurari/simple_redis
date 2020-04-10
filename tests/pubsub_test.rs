@@ -1,4 +1,5 @@
-extern crate simple_redis;
+use simple_redis;
+use simple_redis::Message;
 use std::{thread, time};
 
 #[test]
@@ -26,13 +27,13 @@ fn pub_sub() {
                 };
             });
 
-            match subscriber.get_message(10000) {
-                Ok(message) => {
+            subscriber
+                .fetch_messages(&|message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
-                    assert_eq!(payload, "test pub_sub message")
-                }
-                _ => panic!("test error"),
-            }
+                    assert_eq!(payload, "test pub_sub message");
+                    true
+                })
+                .unwrap();
 
             result = subscriber.subscribe("int_pub_sub2");
             assert!(result.is_ok());
@@ -61,13 +62,13 @@ fn pub_sub() {
                 };
             });
 
-            match subscriber.get_message(10000) {
-                Ok(message) => {
+            subscriber
+                .fetch_messages(&|message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
-                    assert_eq!(payload, "good")
-                }
-                _ => panic!("test error"),
-            }
+                    assert_eq!(payload, "good");
+                    true
+                })
+                .unwrap();
         }
         _ => panic!("test error"),
     };
@@ -98,13 +99,13 @@ fn pub_psub() {
                 };
             });
 
-            match subscriber.get_message(10000) {
-                Ok(message) => {
+            subscriber
+                .fetch_messages(&|message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
-                    assert_eq!(payload, "test pub_sub message")
-                }
-                _ => panic!("test error"),
-            }
+                    assert_eq!(payload, "test pub_sub message");
+                    true
+                })
+                .unwrap();
 
             result = subscriber.psubscribe("int_pub_psub2::*");
             assert!(result.is_ok());
@@ -133,13 +134,13 @@ fn pub_psub() {
                 };
             });
 
-            match subscriber.get_message(10000) {
-                Ok(message) => {
+            subscriber
+                .fetch_messages(&|message: Message| -> bool {
                     let payload: String = message.get_payload().unwrap();
-                    assert_eq!(payload, "good")
-                }
-                _ => panic!("test error"),
-            }
+                    assert_eq!(payload, "good");
+                    true
+                })
+                .unwrap();
         }
         _ => panic!("test error"),
     };

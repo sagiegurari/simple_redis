@@ -1,5 +1,5 @@
-extern crate simple_redis;
-use simple_redis::types::ErrorInfo::TimeoutError;
+use simple_redis;
+use simple_redis::Message;
 use std::{thread, time};
 
 #[test]
@@ -80,13 +80,13 @@ fn pub_sub() {
         };
     });
 
-    match subscriber.get_message(0) {
-        Ok(message) => {
+    subscriber
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message")
-        }
-        _ => panic!("test error"),
-    }
+            assert_eq!(payload, "test pub_sub message");
+            true
+        })
+        .unwrap();
 
     result = subscriber.subscribe("pub_sub2");
     assert!(result.is_ok());
@@ -115,13 +115,13 @@ fn pub_sub() {
         };
     });
 
-    match subscriber.get_message(0) {
-        Ok(message) => {
+    subscriber
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "good")
-        }
-        _ => panic!("test error"),
-    }
+            assert_eq!(payload, "good");
+            true
+        })
+        .unwrap();
 }
 
 #[test]
@@ -149,13 +149,13 @@ fn pub_psub_simple() {
         };
     });
 
-    match subscriber.get_message(0) {
-        Ok(message) => {
+    subscriber
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message")
-        }
-        _ => panic!("test error"),
-    }
+            assert_eq!(payload, "test pub_sub message");
+            true
+        })
+        .unwrap();
 }
 
 #[test]
@@ -183,13 +183,13 @@ fn pub_psub_pattern() {
         };
     });
 
-    match subscriber.get_message(0) {
-        Ok(message) => {
+    subscriber
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message")
-        }
-        _ => panic!("test error"),
-    }
+            assert_eq!(payload, "test pub_sub message");
+            true
+        })
+        .unwrap();
 
     result = subscriber.psubscribe("pub_psub_pattern2::*");
     assert!(result.is_ok());
@@ -218,38 +218,13 @@ fn pub_psub_pattern() {
         };
     });
 
-    match subscriber.get_message(0) {
-        Ok(message) => {
+    subscriber
+        .fetch_messages(&|message: Message| -> bool {
             let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "good")
-        }
-        _ => panic!("test error"),
-    }
-}
-
-#[test]
-fn pub_sub_timeout() {
-    let mut subscriber = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
-
-    assert!(!subscriber.is_connection_open());
-
-    let result = subscriber.subscribe("pub_sub_timeout");
-    assert!(result.is_ok());
-
-    let message_result = subscriber.get_message(50);
-
-    assert!(message_result.is_err());
-
-    match message_result {
-        Err(error) => match error.info {
-            TimeoutError(description) => {
-                println!("Got timeout error: {}", description);
-                ()
-            }
-            _ => panic!("Invalid Error Type: {}", error),
-        },
-        _ => panic!("Invalid Result"),
-    }
+            assert_eq!(payload, "good");
+            true
+        })
+        .unwrap();
 }
 
 #[test]

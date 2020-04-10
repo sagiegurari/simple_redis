@@ -17,8 +17,6 @@ pub enum ErrorInfo {
     RedisError(redis::RedisError),
     /// Description text of the error reason
     Description(&'static str),
-    /// TimeoutError error
-    TimeoutError(&'static str),
 }
 
 #[derive(Debug)]
@@ -34,7 +32,6 @@ impl Display for RedisError {
         match self.info {
             ErrorInfo::RedisError(ref cause) => cause.fmt(format),
             ErrorInfo::Description(description) => description.fmt(format),
-            ErrorInfo::TimeoutError(description) => description.fmt(format),
         }
     }
 }
@@ -71,9 +68,6 @@ pub type RedisResult<T> = Result<T, RedisError>;
 
 /// Holds empty result or error
 pub type RedisEmptyResult = RedisResult<()>;
-
-/// Holds pubsub message result or error
-pub type RedisMessageResult = RedisResult<Message>;
 
 /// Holds string result or error
 pub type RedisStringResult = RedisResult<String>;

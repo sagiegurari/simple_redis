@@ -1,4 +1,4 @@
-extern crate simple_redis;
+use simple_redis;
 use std::{thread, time};
 
 fn main() {

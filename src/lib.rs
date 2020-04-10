@@ -154,6 +154,9 @@
 #[path = "./lib_test.rs"]
 mod lib_test;
 
+#[cfg(doctest)]
+doc_comment::doctest!("../README.md");
+
 pub mod client;
 mod commands;
 mod connection;

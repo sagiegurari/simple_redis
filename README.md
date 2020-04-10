@@ -31,6 +31,7 @@ In case of any connection issue, a new connection will be allocated to ensure th
 connection only.<br>
 However, this comes at a small performance cost of PING operation to the redis server.<br>
 <br>
+//!
 *In [redis-rs](https://crates.io/crates/redis), connections are no longer usable in case the connection is broken and if operations are invoked
 on the client directly, it will basically open a new connection for every operation which is very costly.*
 
@@ -43,88 +44,108 @@ automatically in case of any error while fetching a message from the subscribed 
 
 <a name="usage"></a>
 ## Usage
-In order to use this library, you need to first include the crate as follows:
 
+### Initialization and Simple Operations
 ```rust
-extern crate simple_redis;
-```
+fn main() {
+    match simple_redis::create("redis://127.0.0.1:6379/") {
+        Ok(mut client) =>  {
+            println!("Created Redis Client");
 
-Afterwards create a redis client using a connection string:
+            match client.set("my_key", "my_value") {
+                Err(error) => println!("Unable to set value in Redis: {}", error),
+                _ => println!("Value set in Redis")
+            };
 
-```rust
-match simple_redis::create("redis://127.0.0.1:6379/") {
-    Ok(mut client) =>  println!("Created Redis Client"),
-    Err(error) => println!("Unable to create Redis client: {}", error)
-}
-```
+            match client.get_string("my_key") {
+                Ok(value) => println!("Read value from Redis: {}", value),
+                Err(error) => println!("Unable to get value from Redis: {}", error)
+            };
 
-Once you have a redis client, you can invoke any of the available commands directly or use the run_command function to invoke operations that were not implemented by the library.
+            match client.set("my_numeric_key", 255.5) {
+                Err(error) => println!("Unable to set value in Redis: {}", error),
+                _ => println!("Value set in Redis")
+            };
 
-```rust
-match client.set("my_key", "my_value") {
-    Err(error) => println!("Unable to set value in Redis: {}", error),
-    _ => println!("Value set in Redis")
-};
+            match client.get::<f32>("my_numeric_key") {
+                Ok(value) => println!("Read value from Redis: {}", value),
+                Err(error) => println!("Unable to get value from Redis: {}", error)
+            };
 
-match client.get_string("my_key") {
-    Ok(value) => println!("Read value from Redis: {}", value),
-    Err(error) => println!("Unable to get value from Redis: {}", error)
-};
+            match client.hgetall("my_map") {
+                Ok(map) => {
+                    match map.get("my_field") {
+                        Some(value) => println!("Got field value from map: {}", value),
+                        None => println!("Map field is emtpy"),
+                    }
+                },
+                Err(error) => println!("Unable to read map from Redis: {}", error),
+            };
 
-match client.set("my_numeric_key", 255.5) {
-    Err(error) => println!("Unable to set value in Redis: {}", error),
-    _ => println!("Value set in Redis")
-};
+            /// run some command that is not built in the library
+            match client.run_command::<String>("ECHO", vec!["testing"]) {
+                Ok(value) => assert_eq!(value, "testing"),
+                _ => panic!("test error"),
+            };
 
-match client.get::<f32>("my_numeric_key") {
-    Ok(value) => println!("Read value from Redis: {}", value),
-    Err(error) => println!("Unable to get value from Redis: {}", error)
-};
-
-match client.hgetall("my_map") {
-    Ok(map) => {
-        match map.get("my_field") {
-            Some(value) => println!("Got field value from map: {}", value),
-            None => println!("Map field is emtpy"),
-        }
-    },
-    Err(error) => println!("Unable to read map from Redis: {}", error),
-};
-
-/// run some command that is not built in the library
-match client.run_command::<String>("ECHO", vec!["testing"]) {
-    Ok(value) => assert_eq!(value, "testing"),
-    _ => panic!("test error"),
-};
-
-/// publish messages
-let mut result = client.publish("news_channel", "test message");
-assert!(result.is_ok());
-
-/// subscribe to channels
-result = client.subscribe("important_notifications");
-assert!(result.is_ok());
-result = client.psubscribe("*_notifications");
-assert!(result.is_ok());
-
-loop {
-    // fetch next message (wait up to 5 seconds, 0 for no timeout)
-    match client.get_message(5000) {
-        Ok(message) => {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "my important message")
+            /// publish messages
+            let result = client.publish("news_channel", "test message");
+            assert!(result.is_ok());
         },
-        Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
+        Err(error) => println!("Unable to create Redis client: {}", error)
     }
 }
 ```
 
-Once finished with the redis client, you can close the connection using the redis QUIT command:
+### Subscription Flow
+
+```rust,no_run
+use simple_redis::Message;
+
+fn main() {
+    match simple_redis::create("redis://127.0.0.1:6379/") {
+        Ok(mut client) =>  {
+           println!("Created Redis Client");
+
+           let mut result = client.subscribe("important_notifications");
+           assert!(result.is_ok());
+            result = client.psubscribe("*_notifications");
+            assert!(result.is_ok());
+
+            // fetch messages from all subscriptions
+            client.fetch_messages(&|message: Message| -> bool {
+                let payload : String = message.get_payload().unwrap();
+                println!("Got message: {}", payload);
+
+                // continue fetching
+                false
+            }).unwrap();
+        },
+        Err(error) => println!("Unable to create Redis client: {}", error)
+    }
+}
+```
+
+### Closing Connection
 
 ```rust
-match client.quit() {
-    Err(error) => println!("Error: {}", error),
-    _ => println!("Connection Closed.")
+fn main() {
+    match simple_redis::create("redis://127.0.0.1:6379/") {
+        Ok(mut client) =>  {
+            println!("Created Redis Client");
+
+            match client.set("my_key", "my_value") {
+                Err(error) => println!("Unable to set value in Redis: {}", error),
+                _ => println!("Value set in Redis")
+            };
+
+            match client.quit() {
+                Err(error) => println!("Error: {}", error),
+                _ => println!("Connection Closed.")
+            }
+        },
+        Err(error) => println!("Unable to create Redis client: {}", error)
+    }
 }
 ```
 

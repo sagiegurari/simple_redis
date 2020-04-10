@@ -10,7 +10,7 @@ mod client_test;
 use crate::connection;
 use crate::subscriber;
 use crate::types::{
-    ErrorInfo, Message, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult,
+    ErrorInfo, Interrupts, Message, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult,
     RedisStringResult,
 };
 use std::str::FromStr;
@@ -226,27 +226,34 @@ impl Client {
     /// # Arguments
     ///
     /// * `on_message` - Invoked on each read message. If returns true, the fetching will stop.
+    /// * `poll_interrupts` - Returns the interrupts struct, enabling to modify the fetching.
     ///
     /// # Example
     ///
     /// ```rust,no_run
+    /// # use simple_redis::Interrupts;
     /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
     /// client.subscribe("important_notifications");
     ///
     /// // fetch messages from all subscriptions
-    /// client.fetch_messages(&mut |message: simple_redis::Message| -> bool {
-    ///     let payload : String = message.get_payload().unwrap();
-    ///     println!("Got message: {}", payload);
+    /// client.fetch_messages(
+    ///     &mut |message: simple_redis::Message| -> bool {
+    ///         let payload : String = message.get_payload().unwrap();
+    ///         println!("Got message: {}", payload);
     ///
-    ///     // continue fetching
-    ///     false
-    /// }).unwrap();
+    ///         // continue fetching
+    ///         false
+    ///     },
+    ///     &mut || -> Interrupts { Interrupts::new() },
+    /// ).unwrap();
     /// ```
     pub fn fetch_messages(
         self: &mut Client,
         on_message: &mut dyn FnMut(Message) -> bool,
+        poll_interrupts: &mut dyn FnMut() -> Interrupts,
     ) -> RedisEmptyResult {
-        self.subscriber.fetch_messages(&self.client, on_message)
+        self.subscriber
+            .fetch_messages(&self.client, on_message, poll_interrupts)
     }
 }
 

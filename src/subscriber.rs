@@ -7,8 +7,9 @@
 #[path = "./subscriber_test.rs"]
 mod subscriber_test;
 
-use crate::types::{ErrorInfo, Message, RedisEmptyResult, RedisError};
+use crate::types::{ErrorInfo, Interrupts, Message, RedisEmptyResult, RedisError};
 use std::option::Option;
+use std::time::Duration;
 
 /// The redis pubsub wrapper.
 pub(crate) struct Subscriber {
@@ -72,20 +73,41 @@ fn subscribe_all<'a>(
 fn fetch_messages(
     mut redis_pubsub: redis::PubSub,
     on_message: &mut dyn FnMut(Message) -> bool,
+    poll_interrupts: &mut dyn FnMut() -> Interrupts,
 ) -> RedisEmptyResult {
     loop {
-        let message_result = redis_pubsub.get_message();
+        let interrupts = poll_interrupts();
+        if interrupts.stop {
+            return Ok(());
+        } else {
+            let duration_millis = interrupts.next_polling_time.unwrap_or(5000);
 
-        match message_result {
-            Ok(message) => {
-                if on_message(message) {
-                    return Ok(());
-                }
-            }
-            Err(error) => {
+            let read_timeout = if duration_millis == 0 {
+                None
+            } else {
+                Some(Duration::from_millis(duration_millis))
+            };
+            if let Err(error) = redis_pubsub.set_read_timeout(read_timeout) {
                 return Err(RedisError {
                     info: ErrorInfo::RedisError(error),
                 });
+            };
+
+            let message_result = redis_pubsub.get_message();
+
+            match message_result {
+                Ok(message) => {
+                    if on_message(message) {
+                        return Ok(());
+                    }
+                }
+                Err(error) => {
+                    if !error.is_timeout() {
+                        return Err(RedisError {
+                            info: ErrorInfo::RedisError(error),
+                        });
+                    }
+                }
             }
         }
     }
@@ -95,10 +117,11 @@ fn subscribe_and_fetch(
     subscriber: &mut Subscriber,
     client: &redis::Client,
     on_message: &mut dyn FnMut(Message) -> bool,
+    poll_interrupts: &mut dyn FnMut() -> Interrupts,
 ) -> RedisEmptyResult {
     match subscribe_all(subscriber, client) {
         Err(error) => Err(error),
-        Ok(pubsub) => fetch_messages(pubsub, on_message),
+        Ok(pubsub) => fetch_messages(pubsub, on_message, poll_interrupts),
     }
 }
 
@@ -183,13 +206,14 @@ impl Subscriber {
         self: &mut Subscriber,
         client: &redis::Client,
         on_message: &mut dyn FnMut(Message) -> bool,
+        poll_interrupts: &mut dyn FnMut() -> Interrupts,
     ) -> RedisEmptyResult {
         if !self.has_subscriptions() {
             Err(RedisError {
                 info: ErrorInfo::Description("No subscriptions defined."),
             })
         } else {
-            subscribe_and_fetch(self, client, on_message)
+            subscribe_and_fetch(self, client, on_message, poll_interrupts)
         }
     }
 }

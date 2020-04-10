@@ -100,7 +100,7 @@ fn main() {
 ### Subscription Flow
 
 ```rust,no_run
-use simple_redis::Message;
+use simple_redis::{Interrupts, Message};
 
 fn main() {
     match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -113,13 +113,16 @@ fn main() {
             assert!(result.is_ok());
 
             // fetch messages from all subscriptions
-            client.fetch_messages(&mut |message: Message| -> bool {
-                let payload : String = message.get_payload().unwrap();
-                println!("Got message: {}", payload);
+            client.fetch_messages(
+                &mut |message: Message| -> bool {
+                    let payload : String = message.get_payload().unwrap();
+                    println!("Got message: {}", payload);
 
-                // continue fetching
-                false
-            }).unwrap();
+                    // continue fetching
+                    false
+                },
+                &mut || -> Interrupts { Interrupts::new() },
+            ).unwrap();
         },
         Err(error) => println!("Unable to create Redis client: {}", error)
     }

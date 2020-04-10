@@ -1,5 +1,5 @@
 use simple_redis;
-use simple_redis::Message;
+use simple_redis::{Interrupts, Message};
 use std::{thread, time};
 
 #[test]
@@ -172,11 +172,14 @@ fn quit_live_subscriptions() {
     });
 
     client
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 
     client.quit().unwrap();

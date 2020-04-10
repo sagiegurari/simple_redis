@@ -74,3 +74,21 @@ pub type RedisStringResult = RedisResult<String>;
 
 /// Holds bool result or error
 pub type RedisBoolResult = RedisResult<bool>;
+
+#[derive(Debug)]
+/// Enable to modify blocking operations.
+pub struct Interrupts {
+    /// Notify blocking operation to stop
+    pub stop: bool,
+    /// Next polling time in millies
+    pub next_polling_time: Option<u64>,
+}
+
+impl Interrupts {
+    pub fn new() -> Interrupts {
+        Interrupts {
+            stop: false,
+            next_polling_time: None,
+        }
+    }
+}

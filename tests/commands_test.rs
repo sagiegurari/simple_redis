@@ -1,5 +1,5 @@
 use simple_redis;
-use simple_redis::Message;
+use simple_redis::{Interrupts, Message};
 use std::{thread, time};
 
 #[test]
@@ -81,11 +81,14 @@ fn pub_sub() {
     });
 
     subscriber
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 
     result = subscriber.subscribe("pub_sub2");
@@ -116,11 +119,14 @@ fn pub_sub() {
     });
 
     subscriber
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "good");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "good");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 }
 
@@ -150,11 +156,14 @@ fn pub_psub_simple() {
     });
 
     subscriber
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 }
 
@@ -184,11 +193,14 @@ fn pub_psub_pattern() {
     });
 
     subscriber
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "test pub_sub message");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "test pub_sub message");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 
     result = subscriber.psubscribe("pub_psub_pattern2::*");
@@ -219,11 +231,14 @@ fn pub_psub_pattern() {
     });
 
     subscriber
-        .fetch_messages(&mut |message: Message| -> bool {
-            let payload: String = message.get_payload().unwrap();
-            assert_eq!(payload, "good");
-            true
-        })
+        .fetch_messages(
+            &mut |message: Message| -> bool {
+                let payload: String = message.get_payload().unwrap();
+                assert_eq!(payload, "good");
+                true
+            },
+            &mut || -> Interrupts { Interrupts::new() },
+        )
         .unwrap();
 }
 

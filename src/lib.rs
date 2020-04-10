@@ -83,7 +83,7 @@
 //! ## Subscription Flow
 //!
 //! ```rust,no_run
-//! use simple_redis::Message;
+//! use simple_redis::{Interrupts, Message};
 //!
 //! fn main() {
 //!     match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -96,13 +96,16 @@
 //!             assert!(result.is_ok());
 //!
 //!             // fetch messages from all subscriptions
-//!             client.fetch_messages(&mut |message: Message| -> bool {
-//!                 let payload : String = message.get_payload().unwrap();
-//!                 println!("Got message: {}", payload);
+//!             client.fetch_messages(
+//!                 &mut |message: Message| -> bool {
+//!                     let payload : String = message.get_payload().unwrap();
+//!                     println!("Got message: {}", payload);
 //!
-//!                 // continue fetching
-//!                 false
-//!             }).unwrap();
+//!                     // continue fetching
+//!                     false
+//!                 },
+//!                 &mut || -> Interrupts { Interrupts::new() },
+//!             ).unwrap();
 //!         },
 //!         Err(error) => println!("Unable to create Redis client: {}", error)
 //!     }
@@ -171,6 +174,9 @@ pub type ErrorInfo = types::ErrorInfo;
 
 /// PubSub message
 pub type Message = types::Message;
+
+/// Blocking operations interrupts
+pub type Interrupts = types::Interrupts;
 
 /// Redis result which either holds a value or a Redis error
 pub type RedisResult<T> = types::RedisResult<T>;

@@ -221,7 +221,7 @@ impl Client {
     /// on_message handler.<br>
     /// This function will return an error in case no subscriptions are defined.<br>
     /// This function will block and continue to listen to all messages, until either the
-    /// on_message returns true or the stop_fetching function is called.
+    /// on_message returns true.
     ///
     /// # Arguments
     ///

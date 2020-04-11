@@ -47,6 +47,7 @@ macro_rules! as_redis_arg {
 
 impl<'a> RedisArg for &'a str {}
 
+as_redis_arg!(u8);
 as_redis_arg!(i8);
 as_redis_arg!(i16);
 as_redis_arg!(u16);
@@ -54,6 +55,8 @@ as_redis_arg!(i32);
 as_redis_arg!(u32);
 as_redis_arg!(i64);
 as_redis_arg!(u64);
+as_redis_arg!(i128);
+as_redis_arg!(u128);
 as_redis_arg!(f32);
 as_redis_arg!(f64);
 as_redis_arg!(isize);

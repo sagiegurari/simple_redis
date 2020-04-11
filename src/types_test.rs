@@ -13,16 +13,3 @@ fn redis_error_description() {
     write!(&mut writer, "formatted {}", redis_error).unwrap();
     assert_eq!(writer, b"formatted test");
 }
-
-#[test]
-fn redis_error_timeout_error() {
-    let redis_error = RedisError {
-        info: ErrorInfo::TimeoutError("timeout"),
-    };
-
-    assert_eq!(redis_error.to_string(), "timeout");
-
-    let mut writer = Vec::new();
-    write!(&mut writer, "formatted {}", redis_error).unwrap();
-    assert_eq!(writer, b"formatted timeout");
-}

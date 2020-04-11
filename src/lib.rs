@@ -83,7 +83,7 @@
 //! ## Subscription Flow
 //!
 //! ```rust,no_run
-//! extern crate simple_redis;
+//! use simple_redis::{Interrupts, Message};
 //!
 //! fn main() {
 //!     match simple_redis::create("redis://127.0.0.1:6379/") {
@@ -95,16 +95,17 @@
 //!             result = client.psubscribe("*_notifications");
 //!             assert!(result.is_ok());
 //!
-//!             loop {
-//!                 // fetch next message (wait up to 5 seconds, 0 for no timeout)
-//!                 match client.get_message(5000) {
-//!                     Ok(message) => {
-//!                         let payload: String = message.get_payload().unwrap();
-//!                         assert_eq!(payload, "my important message")
-//!                     },
-//!                     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
-//!                 }
-//!             }
+//!             // fetch messages from all subscriptions
+//!             client.fetch_messages(
+//!                 &mut |message: Message| -> bool {
+//!                     let payload : String = message.get_payload().unwrap();
+//!                     println!("Got message: {}", payload);
+//!
+//!                     // continue fetching
+//!                     false
+//!                 },
+//!                 &mut || -> Interrupts { Interrupts::new() },
+//!             ).unwrap();
 //!         },
 //!         Err(error) => println!("Unable to create Redis client: {}", error)
 //!     }
@@ -156,6 +157,9 @@
 #[path = "./lib_test.rs"]
 mod lib_test;
 
+#[cfg(doctest)]
+doc_comment::doctest!("../README.md");
+
 pub mod client;
 mod commands;
 mod connection;
@@ -170,6 +174,9 @@ pub type ErrorInfo = types::ErrorInfo;
 
 /// PubSub message
 pub type Message = types::Message;
+
+/// Blocking operations interrupts
+pub type Interrupts = types::Interrupts;
 
 /// Redis result which either holds a value or a Redis error
 pub type RedisResult<T> = types::RedisResult<T>;

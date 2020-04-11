@@ -17,8 +17,6 @@ pub enum ErrorInfo {
     RedisError(redis::RedisError),
     /// Description text of the error reason
     Description(&'static str),
-    /// TimeoutError error
-    TimeoutError(&'static str),
 }
 
 #[derive(Debug)]
@@ -34,7 +32,6 @@ impl Display for RedisError {
         match self.info {
             ErrorInfo::RedisError(ref cause) => cause.fmt(format),
             ErrorInfo::Description(description) => description.fmt(format),
-            ErrorInfo::TimeoutError(description) => description.fmt(format),
         }
     }
 }
@@ -50,6 +47,7 @@ macro_rules! as_redis_arg {
 
 impl<'a> RedisArg for &'a str {}
 
+as_redis_arg!(u8);
 as_redis_arg!(i8);
 as_redis_arg!(i16);
 as_redis_arg!(u16);
@@ -57,6 +55,8 @@ as_redis_arg!(i32);
 as_redis_arg!(u32);
 as_redis_arg!(i64);
 as_redis_arg!(u64);
+as_redis_arg!(i128);
+as_redis_arg!(u128);
 as_redis_arg!(f32);
 as_redis_arg!(f64);
 as_redis_arg!(isize);
@@ -72,11 +72,26 @@ pub type RedisResult<T> = Result<T, RedisError>;
 /// Holds empty result or error
 pub type RedisEmptyResult = RedisResult<()>;
 
-/// Holds pubsub message result or error
-pub type RedisMessageResult = RedisResult<Message>;
-
 /// Holds string result or error
 pub type RedisStringResult = RedisResult<String>;
 
 /// Holds bool result or error
 pub type RedisBoolResult = RedisResult<bool>;
+
+#[derive(Debug)]
+/// Enable to modify blocking operations.
+pub struct Interrupts {
+    /// Notify blocking operation to stop
+    pub stop: bool,
+    /// Next polling time in millies
+    pub next_polling_time: Option<u64>,
+}
+
+impl Interrupts {
+    pub fn new() -> Interrupts {
+        Interrupts {
+            stop: false,
+            next_polling_time: None,
+        }
+    }
+}

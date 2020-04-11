@@ -10,7 +10,7 @@ mod client_test;
 use crate::connection;
 use crate::subscriber;
 use crate::types::{
-    ErrorInfo, RedisBoolResult, RedisEmptyResult, RedisError, RedisMessageResult, RedisResult,
+    ErrorInfo, Interrupts, Message, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult,
     RedisStringResult,
 };
 use std::str::FromStr;
@@ -217,33 +217,43 @@ impl Client {
         self.subscriber.unsubscribe_all()
     }
 
-    /// Fetches the next message from any of the subscribed channels.<br>
-    /// This function will return a TimeoutError in case no message was read in the provided timeout value (defined in
-    /// millies).<br>
-    /// If the provided timeout value is 0, there will be no timeout and the call will block until a message is read or
-    /// a connection error happens.
+    /// Fetches the messages from any of the subscribed channels and invokes the provided
+    /// on_message handler.<br>
+    /// This function will return an error in case no subscriptions are defined.<br>
+    /// This function will block and continue to listen to all messages, until either the
+    /// on_message returns true.
     ///
     /// # Arguments
     ///
-    /// * `timeout` - The timeout value in millies or 0 for no timeout
+    /// * `on_message` - Invoked on each read message. If returns true, the fetching will stop.
+    /// * `poll_interrupts` - Returns the interrupts struct, enabling to modify the fetching.
     ///
     /// # Example
     ///
     /// ```rust,no_run
+    /// # use simple_redis::Interrupts;
     /// # let mut client = simple_redis::create("redis://127.0.0.1:6379/").unwrap();
     /// client.subscribe("important_notifications");
     ///
-    /// // get next message (wait up to 5 seconds, 0 for no timeout)
-    /// match client.get_message(5000) {
-    ///     Ok(message) => {
+    /// // fetch messages from all subscriptions
+    /// client.fetch_messages(
+    ///     &mut |message: simple_redis::Message| -> bool {
     ///         let payload : String = message.get_payload().unwrap();
     ///         println!("Got message: {}", payload);
+    ///
+    ///         // continue fetching
+    ///         false
     ///     },
-    ///     Err(error) => println!("Error while fetching message, should retry again, info: {}", error),
-    /// }
+    ///     &mut || -> Interrupts { Interrupts::new() },
+    /// ).unwrap();
     /// ```
-    pub fn get_message(self: &mut Client, timeout: u64) -> RedisMessageResult {
-        self.subscriber.get_message(&self.client, timeout)
+    pub fn fetch_messages(
+        self: &mut Client,
+        on_message: &mut dyn FnMut(Message) -> bool,
+        poll_interrupts: &mut dyn FnMut() -> Interrupts,
+    ) -> RedisEmptyResult {
+        self.subscriber
+            .fetch_messages(&self.client, on_message, poll_interrupts)
     }
 }
 

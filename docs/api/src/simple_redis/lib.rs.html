@@ -196,6 +196,13 @@
 <span id="196">196</span>
 <span id="197">197</span>
 <span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # simple_redis</span>
 <span class="doccomment">//!</span>
@@ -282,7 +289,7 @@
 <span class="doccomment">//! ## Subscription Flow</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```rust,no_run</span>
-<span class="doccomment">//! extern crate simple_redis;</span>
+<span class="doccomment">//! use simple_redis::{Interrupts, Message};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! fn main() {</span>
 <span class="doccomment">//!     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {</span>
@@ -294,16 +301,17 @@
 <span class="doccomment">//!             result = client.psubscribe(&quot;*_notifications&quot;);</span>
 <span class="doccomment">//!             assert!(result.is_ok());</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!             loop {</span>
-<span class="doccomment">//!                 // fetch next message (wait up to 5 seconds, 0 for no timeout)</span>
-<span class="doccomment">//!                 match client.get_message(5000) {</span>
-<span class="doccomment">//!                     Ok(message) =&gt; {</span>
-<span class="doccomment">//!                         let payload: String = message.get_payload().unwrap();</span>
-<span class="doccomment">//!                         assert_eq!(payload, &quot;my important message&quot;)</span>
-<span class="doccomment">//!                     },</span>
-<span class="doccomment">//!                     Err(error) =&gt; println!(&quot;Error while fetching message, should retry again, info: {}&quot;, error),</span>
-<span class="doccomment">//!                 }</span>
-<span class="doccomment">//!             }</span>
+<span class="doccomment">//!             // fetch messages from all subscriptions</span>
+<span class="doccomment">//!             client.fetch_messages(</span>
+<span class="doccomment">//!                 &amp;mut |message: Message| -&gt; bool {</span>
+<span class="doccomment">//!                     let payload : String = message.get_payload().unwrap();</span>
+<span class="doccomment">//!                     println!(&quot;Got message: {}&quot;, payload);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!                     // continue fetching</span>
+<span class="doccomment">//!                     false</span>
+<span class="doccomment">//!                 },</span>
+<span class="doccomment">//!                 &amp;mut || -&gt; Interrupts { Interrupts::new() },</span>
+<span class="doccomment">//!             ).unwrap();</span>
 <span class="doccomment">//!         },</span>
 <span class="doccomment">//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)</span>
 <span class="doccomment">//!     }</span>
@@ -355,6 +363,9 @@
 <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;./lib_test.rs&quot;</span>]</span>
 <span class="kw">mod</span> <span class="ident">lib_test</span>;
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">doctest</span>)]</span>
+<span class="ident">doc_comment</span>::<span class="macro">doctest</span><span class="macro">!</span>(<span class="string">&quot;../README.md&quot;</span>);
+
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">client</span>;
 <span class="kw">mod</span> <span class="ident">commands</span>;
 <span class="kw">mod</span> <span class="ident">connection</span>;
@@ -369,6 +380,9 @@
 
 <span class="doccomment">/// PubSub message</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Message</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">Message</span>;
+
+<span class="doccomment">/// Blocking operations interrupts</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Interrupts</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">Interrupts</span>;
 
 <span class="doccomment">/// Redis result which either holds a value or a Redis error</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">types</span>::<span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;

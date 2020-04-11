@@ -284,6 +284,16 @@
 <span id="284">284</span>
 <span id="285">285</span>
 <span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # client</span>
 <span class="doccomment">//!</span>
@@ -297,7 +307,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">connection</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">subscriber</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{
-    <span class="ident">ErrorInfo</span>, <span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisError</span>, <span class="ident">RedisMessageResult</span>, <span class="ident">RedisResult</span>,
+    <span class="ident">ErrorInfo</span>, <span class="ident">Interrupts</span>, <span class="ident">Message</span>, <span class="ident">RedisBoolResult</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisError</span>, <span class="ident">RedisResult</span>,
     <span class="ident">RedisStringResult</span>,
 };
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
@@ -504,33 +514,43 @@
         <span class="self">self</span>.<span class="ident">subscriber</span>.<span class="ident">unsubscribe_all</span>()
     }
 
-    <span class="doccomment">/// Fetches the next message from any of the subscribed channels.&lt;br&gt;</span>
-    <span class="doccomment">/// This function will return a TimeoutError in case no message was read in the provided timeout value (defined in</span>
-    <span class="doccomment">/// millies).&lt;br&gt;</span>
-    <span class="doccomment">/// If the provided timeout value is 0, there will be no timeout and the call will block until a message is read or</span>
-    <span class="doccomment">/// a connection error happens.</span>
+    <span class="doccomment">/// Fetches the messages from any of the subscribed channels and invokes the provided</span>
+    <span class="doccomment">/// on_message handler.&lt;br&gt;</span>
+    <span class="doccomment">/// This function will return an error in case no subscriptions are defined.&lt;br&gt;</span>
+    <span class="doccomment">/// This function will block and continue to listen to all messages, until either the</span>
+    <span class="doccomment">/// on_message returns true.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Arguments</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// * `timeout` - The timeout value in millies or 0 for no timeout</span>
+    <span class="doccomment">/// * `on_message` - Invoked on each read message. If returns true, the fetching will stop.</span>
+    <span class="doccomment">/// * `poll_interrupts` - Returns the interrupts struct, enabling to modify the fetching.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust,no_run</span>
+    <span class="doccomment">/// # use simple_redis::Interrupts;</span>
     <span class="doccomment">/// # let mut client = simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;).unwrap();</span>
     <span class="doccomment">/// client.subscribe(&quot;important_notifications&quot;);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// // get next message (wait up to 5 seconds, 0 for no timeout)</span>
-    <span class="doccomment">/// match client.get_message(5000) {</span>
-    <span class="doccomment">///     Ok(message) =&gt; {</span>
+    <span class="doccomment">/// // fetch messages from all subscriptions</span>
+    <span class="doccomment">/// client.fetch_messages(</span>
+    <span class="doccomment">///     &amp;mut |message: simple_redis::Message| -&gt; bool {</span>
     <span class="doccomment">///         let payload : String = message.get_payload().unwrap();</span>
     <span class="doccomment">///         println!(&quot;Got message: {}&quot;, payload);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         // continue fetching</span>
+    <span class="doccomment">///         false</span>
     <span class="doccomment">///     },</span>
-    <span class="doccomment">///     Err(error) =&gt; println!(&quot;Error while fetching message, should retry again, info: {}&quot;, error),</span>
-    <span class="doccomment">/// }</span>
+    <span class="doccomment">///     &amp;mut || -&gt; Interrupts { Interrupts::new() },</span>
+    <span class="doccomment">/// ).unwrap();</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_message</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>, <span class="ident">timeout</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisMessageResult</span> {
-        <span class="self">self</span>.<span class="ident">subscriber</span>.<span class="ident">get_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="ident">timeout</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fetch_messages</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Client</span>,
+        <span class="ident">on_message</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+        <span class="ident">poll_interrupts</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Interrupts</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="self">self</span>.<span class="ident">subscriber</span>
+            .<span class="ident">fetch_messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="ident">on_message</span>, <span class="ident">poll_interrupts</span>)
     }
 }
 

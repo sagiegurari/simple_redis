@@ -226,10 +226,6 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # commands</span>
 <span class="doccomment">//!</span>
@@ -240,11 +236,9 @@
 <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;./subscriber_test.rs&quot;</span>]</span>
 <span class="kw">mod</span> <span class="ident">subscriber_test</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">ErrorInfo</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisError</span>, <span class="ident">RedisMessageResult</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">ErrorInfo</span>, <span class="ident">Interrupts</span>, <span class="ident">Message</span>, <span class="ident">RedisEmptyResult</span>, <span class="ident">RedisError</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">option</span>::<span class="prelude-ty">Option</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">SystemTime</span>;
 
 <span class="doccomment">/// The redis pubsub wrapper.</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Subscriber</span> {
@@ -305,71 +299,58 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_message</span>(<span class="ident">timeout</span>: <span class="ident">u64</span>, <span class="kw-2">mut</span> <span class="ident">redis_pubsub</span>: <span class="ident">redis</span>::<span class="ident">PubSub</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisMessageResult</span> {
-    <span class="kw">let</span> <span class="ident">duration</span>;
-    <span class="kw">let</span> <span class="ident">timeout_duration</span>;
-    <span class="kw">if</span> <span class="ident">timeout</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">timeout_duration</span> <span class="op">=</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">timeout</span>);
-        <span class="ident">duration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">timeout_duration</span>);
-    } <span class="kw">else</span> {
-        <span class="ident">timeout_duration</span> <span class="op">=</span> <span class="ident">Duration</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>);
-        <span class="ident">duration</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    }
-
-    <span class="kw">let</span> <span class="ident">output</span>;
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timeout_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">set_read_timeout</span>(<span class="ident">duration</span>);
-
-    <span class="kw">if</span> <span class="ident">timeout_result</span>.<span class="ident">is_err</span>() {
-        <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
-            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>),
-        })
-    } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">SystemTime</span>::<span class="ident">now</span>();
-
-        <span class="kw">let</span> <span class="ident">message_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">get_message</span>();
-
-        <span class="ident">timeout_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">set_read_timeout</span>(<span class="prelude-val">None</span>);
-        <span class="kw">if</span> <span class="ident">timeout_result</span>.<span class="ident">is_err</span>() {
-            <span class="ident">output</span> <span class="op">=</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
-                <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;Unable to set read timeout.&quot;</span>),
-            })
+<span class="kw">fn</span> <span class="ident">fetch_messages</span>(
+    <span class="kw-2">mut</span> <span class="ident">redis_pubsub</span>: <span class="ident">redis</span>::<span class="ident">PubSub</span>,
+    <span class="ident">on_message</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+    <span class="ident">poll_interrupts</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Interrupts</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisEmptyResult</span> {
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> <span class="ident">interrupts</span> <span class="op">=</span> <span class="ident">poll_interrupts</span>();
+        <span class="kw">if</span> <span class="ident">interrupts</span>.<span class="ident">stop</span> {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         } <span class="kw">else</span> {
-            <span class="ident">output</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">message_result</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">max_end</span> <span class="op">=</span> <span class="ident">start</span>.<span class="ident">add</span>(<span class="ident">timeout_duration</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_end</span> <span class="op">=</span> <span class="ident">SystemTime</span>::<span class="ident">now</span>();
-                    <span class="ident">actual_end</span> <span class="op">=</span> <span class="ident">actual_end</span>.<span class="ident">add</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>)); <span class="comment">// possible miscalculation</span>
+            <span class="kw">let</span> <span class="ident">duration_millis</span> <span class="op">=</span> <span class="ident">interrupts</span>.<span class="ident">next_polling_time</span>.<span class="ident">unwrap_or</span>(<span class="number">5000</span>);
 
-                    <span class="kw">if</span> <span class="ident">timeout</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">actual_end</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">max_end</span> {
-                        <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
-                            <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">TimeoutError</span>(<span class="string">&quot;Timeout&quot;</span>),
-                        })
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+            <span class="kw">let</span> <span class="ident">read_timeout</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">duration_millis</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="prelude-val">None</span>
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">duration_millis</span>))
+            };
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">set_read_timeout</span>(<span class="ident">read_timeout</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                    <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
+                });
+            };
+
+            <span class="kw">let</span> <span class="ident">message_result</span> <span class="op">=</span> <span class="ident">redis_pubsub</span>.<span class="ident">get_message</span>();
+
+            <span class="kw">match</span> <span class="ident">message_result</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">on_message</span>(<span class="ident">message</span>) {
+                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                    }
+                }
+                <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">if</span> <span class="op">!</span><span class="ident">error</span>.<span class="ident">is_timeout</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
                             <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">RedisError</span>(<span class="ident">error</span>),
-                        })
+                        });
                     }
                 }
             }
         }
     }
-
-    <span class="ident">output</span>
 }
 
-<span class="kw">fn</span> <span class="ident">subscribe_and_get</span>(
+<span class="kw">fn</span> <span class="ident">subscribe_and_fetch</span>(
     <span class="ident">subscriber</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
     <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>,
-    <span class="ident">timeout</span>: <span class="ident">u64</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisMessageResult</span> {
+    <span class="ident">on_message</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+    <span class="ident">poll_interrupts</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Interrupts</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisEmptyResult</span> {
     <span class="kw">match</span> <span class="ident">subscribe_all</span>(<span class="ident">subscriber</span>, <span class="ident">client</span>) {
         <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
-        <span class="prelude-val">Ok</span>(<span class="ident">pubsub</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">get_message</span>(<span class="ident">timeout</span>, <span class="ident">pubsub</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
-        },
+        <span class="prelude-val">Ok</span>(<span class="ident">pubsub</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">fetch_messages</span>(<span class="ident">pubsub</span>, <span class="ident">on_message</span>, <span class="ident">poll_interrupts</span>),
     }
 }
 
@@ -439,19 +420,30 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get_message</span>(
-        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
-        <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>,
-        <span class="ident">timeout</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisMessageResult</span> {
-        <span class="ident">subscribe_and_get</span>(<span class="self">self</span>, <span class="ident">client</span>, <span class="ident">timeout</span>)
-    }
-
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">unsubscribe_all</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisEmptyResult</span> {
         <span class="self">self</span>.<span class="ident">subscriptions</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="ident">psubscriptions</span>.<span class="ident">clear</span>();
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn</span> <span class="ident">has_subscriptions</span>(<span class="self">self</span>: <span class="kw-2">&amp;</span><span class="ident">Subscriber</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="op">!</span><span class="self">self</span>.<span class="ident">subscriptions</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">psubscriptions</span>.<span class="ident">is_empty</span>()
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">fetch_messages</span>(
+        <span class="self">self</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Subscriber</span>,
+        <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">redis</span>::<span class="ident">Client</span>,
+        <span class="ident">on_message</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>,
+        <span class="ident">poll_interrupts</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Interrupts</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RedisEmptyResult</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">has_subscriptions</span>() {
+            <span class="prelude-val">Err</span>(<span class="ident">RedisError</span> {
+                <span class="ident">info</span>: <span class="ident">ErrorInfo</span>::<span class="ident">Description</span>(<span class="string">&quot;No subscriptions defined.&quot;</span>),
+            })
+        } <span class="kw">else</span> {
+            <span class="ident">subscribe_and_fetch</span>(<span class="self">self</span>, <span class="ident">client</span>, <span class="ident">on_message</span>, <span class="ident">poll_interrupts</span>)
+        }
     }
 }
 

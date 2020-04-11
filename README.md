@@ -173,6 +173,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 
 | Date        | Version | Description |
 | ----------- | ------- | ----------- |
+| 2020-04-11  | v0.5.0  | Redesigned pubsub api |
 | 2020-04-10  | v0.4.0  | Upgrade redis-rs to 0.15 |
 | 2017-06-16  | v0.3.9  | More commands added |
 | 2017-06-10  | v0.3.1  | Added timeout support for get_message |

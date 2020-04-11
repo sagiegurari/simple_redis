@@ -22,7 +22,7 @@ This library provides a very basic, simple API for the most common redis operati
 While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
 it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal connection
 and subscription (pubsub) handling.<br>
-In addition, the entire API is accessible via redis client and there is no need to manage connection or pubsub instances in parallel.<br>
+In addition, the entire API is accessible via simple client interface and there is no need to manage multiple entities such as connection or pubsub in parallel.<br>
 
 <a name="overview-connection"></a>
 ### Connection Resiliency
@@ -121,6 +121,7 @@ fn main() {
                     // continue fetching
                     false
                 },
+                // interrupts enable you to break the fetching blocking call
                 &mut || -> Interrupts { Interrupts::new() },
             ).unwrap();
         },

@@ -28,8 +28,6 @@
 //! ## Initialization and Simple Operations
 //!
 //! ```
-//! extern crate simple_redis;
-//!
 //! fn main() {
 //!     match simple_redis::create("redis://127.0.0.1:6379/") {
 //!         Ok(mut client) =>  {
@@ -115,8 +113,6 @@
 //! ## Closing Connection
 //!
 //! ```rust
-//! extern crate simple_redis;
-//!
 //! fn main() {
 //!     match simple_redis::create("redis://127.0.0.1:6379/") {
 //!         Ok(mut client) =>  {

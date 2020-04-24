@@ -10,9 +10,6 @@ additional_profiles = [
     "publish-pre-cleanup"
 ]
 
-[tasks.outdated]
-force = true
-
 [tasks.start-redis]
 dependencies = [ "stop-redis" ]
 script = [

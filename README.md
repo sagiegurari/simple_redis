@@ -1,6 +1,6 @@
 # simple_redis
 
-[![crates.io](https://img.shields.io/crates/v/simple_redis.svg)](https://crates.io/crates/simple_redis) [![Continuous Integration](https://github.com/sagiegurari/simple_redis/workflows/Continuous%20Integration/badge.svg?branch=master)](https://github.com/sagiegurari/simple_redis/actions) [![codecov](https://codecov.io/gh/sagiegurari/simple_redis/branch/master/graph/badge.svg)](https://codecov.io/gh/sagiegurari/simple_redis)<br>
+[![crates.io](https://img.shields.io/crates/v/simple_redis.svg)](https://crates.io/crates/simple_redis) [![CI](https://github.com/sagiegurari/simple_redis/workflows/CI/badge.svg?branch=master)](https://github.com/sagiegurari/simple_redis/actions) [![codecov](https://codecov.io/gh/sagiegurari/simple_redis/branch/master/graph/badge.svg)](https://codecov.io/gh/sagiegurari/simple_redis)<br>
 [![license](https://img.shields.io/crates/l/simple_redis.svg)](https://github.com/sagiegurari/simple_redis/blob/master/LICENSE) [![Libraries.io for GitHub](https://img.shields.io/librariesio/github/sagiegurari/simple_redis.svg)](https://libraries.io/cargo/simple_redis) [![Documentation](https://docs.rs/simple_redis/badge.svg)](https://docs.rs/crate/simple_redis/) [![downloads](https://img.shields.io/crates/d/simple_redis.svg)](https://crates.io/crates/simple_redis)<br>
 [![Built with cargo-make](https://sagiegurari.github.io/cargo-make/assets/badges/cargo-make.svg)](https://sagiegurari.github.io/cargo-make)
 

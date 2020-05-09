@@ -19,7 +19,7 @@
 <a name="overview"></a>
 ## Overview
 This library provides a very basic, simple API for the most common redis operations.<br>
-While not as comprehensive or flexiable as [redis-rs](https://crates.io/crates/redis),
+While not as comprehensive or flexible as [redis-rs](https://crates.io/crates/redis),
 it does provide a simpler api for most common use cases and operations as well as automatic and resilient internal connection
 and subscription (pubsub) handling.<br>
 In addition, the entire API is accessible via simple client interface and there is no need to manage multiple entities such as connection or pubsub in parallel.<br>
@@ -40,7 +40,8 @@ on the client directly, it will basically open a new connection for every operat
 Subscription resiliency is ensured by recreating the internal pubsub and issuing new subscription requests
 automatically in case of any error while fetching a message from the subscribed channels.<br>
 <br>
-*[redis-rs](https://crates.io/crates/redis) doesn't provide any such automatic resiliency and resubscription capabilities.*
+*[redis-rs](https://crates.io/crates/redis) doesn't provide any such automatic resiliency and re-subscription capabilities.*
+
 
 <a name="usage"></a>
 ## Usage
@@ -76,7 +77,7 @@ fn main() {
                 Ok(map) => {
                     match map.get("my_field") {
                         Some(value) => println!("Got field value from map: {}", value),
-                        None => println!("Map field is emtpy"),
+                        None => println!("Map field is empty"),
                     }
                 },
                 Err(error) => println!("Unable to read map from Redis: {}", error),

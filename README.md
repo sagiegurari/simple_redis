@@ -13,7 +13,7 @@
 * [Installation](#installation)
 * [API Documentation](https://sagiegurari.github.io/simple_redis/)
 * [Contributing](.github/CONTRIBUTING.md)
-* [Release History](#history)
+* [Release History](CHANGELOG.md)
 * [License](#license)
 
 <a name="overview"></a>
@@ -172,15 +172,7 @@ See [contributing guide](.github/CONTRIBUTING.md)
 <a name="history"></a>
 ## Release History
 
-| Date        | Version | Description |
-| ----------- | ------- | ----------- |
-| 2020-04-11  | v0.5.0  | Redesigned pubsub api |
-| 2020-04-10  | v0.4.0  | Upgrade redis-rs to 0.15 |
-| 2017-06-16  | v0.3.9  | More commands added |
-| 2017-06-10  | v0.3.1  | Added timeout support for get_message |
-| 2017-06-08  | v0.2.8  | More commands added |
-| 2017-06-03  | v0.1.7  | pubsub support added |
-| 2017-06-02  | v0.1.6  | Initial release. |
+See [Changelog](CHANGELOG.md)
 
 <a name="license"></a>
 ## License

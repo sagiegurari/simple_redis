@@ -93,8 +93,6 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
-<span id="97">97</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # types</span>
 <span class="doccomment">//!</span>
@@ -176,7 +174,7 @@
 <span class="doccomment">/// Holds bool result or error</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RedisBoolResult</span> <span class="op">=</span> <span class="ident">RedisResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Default</span>)]</span>
 <span class="doccomment">/// Enable to modify blocking operations.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Interrupts</span> {
     <span class="doccomment">/// Notify blocking operation to stop</span>
@@ -186,11 +184,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Interrupts</span> {
+    <span class="doccomment">/// Returns a new instance.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Interrupts</span> {
-        <span class="ident">Interrupts</span> {
-            <span class="ident">stop</span>: <span class="bool-val">false</span>,
-            <span class="ident">next_polling_time</span>: <span class="prelude-val">None</span>,
-        }
+        <span class="ident">Default</span>::<span class="ident">default</span>()
     }
 }
 </pre></div>

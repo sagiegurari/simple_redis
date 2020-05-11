@@ -160,7 +160,7 @@ In order to use this library, just add it as a dependency:
 
 ```ini
 [dependencies]
-simple_redis = "^0.5.0"
+simple_redis = "^0.5.1"
 ```
 
 ## API Documentation

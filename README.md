@@ -47,89 +47,105 @@ automatically in case of any error while fetching a message from the subscribed 
 ## Usage
 
 ### Initialization and Simple Operations
+
+<!--{ "examples/init_and_simple_operations.rs" | lines: 3 | code: rust }-->
 ```rust
 fn main() {
     match simple_redis::create("redis://127.0.0.1:6379/") {
-        Ok(mut client) =>  {
+        Ok(mut client) => {
             println!("Created Redis Client");
 
             match client.set("my_key", "my_value") {
                 Err(error) => println!("Unable to set value in Redis: {}", error),
-                _ => println!("Value set in Redis")
+                _ => println!("Value set in Redis"),
             };
 
             match client.get_string("my_key") {
                 Ok(value) => println!("Read value from Redis: {}", value),
-                Err(error) => println!("Unable to get value from Redis: {}", error)
+                Err(error) => println!("Unable to get value from Redis: {}", error),
             };
 
             match client.set("my_numeric_key", 255.5) {
                 Err(error) => println!("Unable to set value in Redis: {}", error),
-                _ => println!("Value set in Redis")
+                _ => println!("Value set in Redis"),
             };
 
             match client.get::<f32>("my_numeric_key") {
                 Ok(value) => println!("Read value from Redis: {}", value),
-                Err(error) => println!("Unable to get value from Redis: {}", error)
+                Err(error) => println!("Unable to get value from Redis: {}", error),
             };
 
             match client.hgetall("my_map") {
-                Ok(map) => {
-                    match map.get("my_field") {
-                        Some(value) => println!("Got field value from map: {}", value),
-                        None => println!("Map field is empty"),
-                    }
+                Ok(map) => match map.get("my_field") {
+                    Some(value) => println!("Got field value from map: {}", value),
+                    None => println!("Map field is empty"),
                 },
                 Err(error) => println!("Unable to read map from Redis: {}", error),
             };
 
-            /// run some command that is not built in the library
+            // run some command that is not built in the library
             match client.run_command::<String>("ECHO", vec!["testing"]) {
                 Ok(value) => assert_eq!(value, "testing"),
                 _ => panic!("test error"),
             };
 
-            /// publish messages
+            // publish messages
             let result = client.publish("news_channel", "test message");
             assert!(result.is_ok());
-        },
-        Err(error) => println!("Unable to create Redis client: {}", error)
+        }
+        Err(error) => println!("Unable to create Redis client: {}", error),
     }
 }
 ```
+<!--{ end }-->
 
 ### Subscription Flow
 
-```rust,no_run
+<!--{ "examples/subscription_flow.rs" | lines: 2 | code: rust }-->
+```rust
 use simple_redis::{Interrupts, Message};
 
 fn main() {
     match simple_redis::create("redis://127.0.0.1:6379/") {
-        Ok(mut client) =>  {
-           println!("Created Redis Client");
+        Ok(mut client) => {
+            println!("Created Redis Client");
 
-           let mut result = client.subscribe("important_notifications");
-           assert!(result.is_ok());
+            let mut result = client.subscribe("important_notifications");
+            assert!(result.is_ok());
             result = client.psubscribe("*_notifications");
             assert!(result.is_ok());
 
             // fetch messages from all subscriptions
-            client.fetch_messages(
-                &mut |message: Message| -> bool {
-                    let payload : String = message.get_payload().unwrap();
-                    println!("Got message: {}", payload);
+            let mut polling_counter: usize = 0;
+            client
+                .fetch_messages(
+                    &mut |message: Message| -> bool {
+                        let payload: String = message.get_payload().unwrap();
+                        println!("Got message: {}", payload);
 
-                    // continue fetching
-                    false
-                },
-                // interrupts enable you to break the fetching blocking call
-                &mut || -> Interrupts { Interrupts::new() },
-            ).unwrap();
-        },
-        Err(error) => println!("Unable to create Redis client: {}", error)
+                        // continue fetching
+                        false
+                    },
+                    // interrupts enable you to break the fetching blocking call
+                    &mut || -> Interrupts {
+                        let mut interrupts = Interrupts::new();
+                        interrupts.next_polling_time = Some(150);
+
+                        polling_counter = polling_counter + 1;
+                        if polling_counter > 3 {
+                            interrupts.stop = true;
+                        }
+
+                        interrupts
+                    },
+                )
+                .unwrap();
+        }
+        Err(error) => println!("Unable to create Redis client: {}", error),
     }
 }
 ```
+<!--{ end }-->
 
 ### Closing Connection
 

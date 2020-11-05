@@ -10,17 +10,17 @@ additional_profiles = [
 
 [tasks.start-redis]
 dependencies = [ "stop-redis" ]
-script = [
-  "echo \"Starting Redis\"",
-  "redis-server --loglevel warning &",
-  "sleep 1"
-]
+script = '''
+echo "Starting Redis"
+redis-server --loglevel warning &
+sleep 1
+'''
 
 [tasks.stop-redis]
-script = [
-  "echo \"Stopping any running Redis\"",
-  "ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9 || true",
-]
+script = '''
+echo "Stopping any running Redis"
+ps -ef | grep [r]edis-server | awk '{print $2}' | xargs kill -9 || true
+'''
 
 [tasks.pre-test]
 condition = { env_false = [ 'CARGO_MAKE_CI' ] }

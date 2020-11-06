@@ -12,15 +12,15 @@ readme = "README.md"
 keywords = ["redis", "cache", "pubsub", "database"]
 categories = ["caching", "database"]
 include = [
-    "/benches/*",
-    "/docs/*",
-    "/examples/*",
-    "/src/*",
-    "/tests/*",
-    "/Cargo.toml",
-    "/LICENSE",
-    "/README.md",
-    "/Makefile.toml"
+  "/benches/*",
+  "/docs/*",
+  "/examples/*",
+  "/src/*",
+  "/tests/*",
+  "/Cargo.toml",
+  "/LICENSE",
+  "/README.md",
+  "/Makefile.toml",
 ]
 
 [dependencies]

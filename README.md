@@ -178,7 +178,7 @@ In order to use this library, just add it as a dependency:
 
 ```ini
 [dependencies]
-simple_redis = "^0.5.2"
+simple_redis = "^0.5.3"
 ```
 
 ## API Documentation

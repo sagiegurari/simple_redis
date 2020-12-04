@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### v0.5.3 (2020-12-04)
+
+* Upgrade redis-rs to 0.18
+
 ### v0.5.2 (2020-07-30)
 
 * Upgrade redis-rs to 0.17

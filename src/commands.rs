@@ -393,4 +393,19 @@ impl Client {
     pub fn srem(self: &mut Client, key: &str, member: &str) -> RedisEmptyResult {
         self.run_command("SREM", vec![key, member])
     }
+
+    /// See redis [ZADD](https://redis.io/commands/zadd) command.
+    pub fn zadd(self: &mut Client, key: &str, score: isize, member: &str) -> RedisResult<i32> {
+        self.run_command("ZADD", vec![key, &score.to_string(), member])
+    }
+
+    /// See redis [ZRANGE](https://redis.io/commands/zrange) command.
+    pub fn zrange(
+        self: &mut Client,
+        key: &str,
+        start: isize,
+        stop: isize,
+    ) -> RedisResult<Vec<String>> {
+        self.run_command::<Vec<String>>("ZRANGE", vec![key, &start.to_string(), &stop.to_string()])
+    }
 }

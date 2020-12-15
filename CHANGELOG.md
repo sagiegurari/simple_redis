@@ -1,6 +1,6 @@
 ## CHANGELOG
 
-### v0.5.4
+### v0.5.4 (2020-12-15)
 
 * Add zadd and zrange commands #18
 

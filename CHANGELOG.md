@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### v0.5.4
+
+* Add zadd and zrange commands #18
+
 ### v0.5.3 (2020-12-04)
 
 * Upgrade redis-rs to 0.18

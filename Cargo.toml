@@ -1,6 +1,6 @@
 [package]
 name = "simple_redis"
-version = "0.5.4"
+version = "0.5.5"
 authors = ["Sagie Gur-Ari <sagiegurari@gmail.com>"]
 description = "Simple and resilient redis client."
 license = "Apache-2.0"
@@ -24,7 +24,7 @@ include = [
 ]
 
 [dependencies]
-redis = { version = "^0.18", default-features = false }
+redis = { version = "^0.19", default-features = false }
 
 [dev-dependencies]
 doc-comment = "^0.3"

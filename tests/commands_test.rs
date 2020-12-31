@@ -19,7 +19,7 @@ fn auth() {
     // we are running with redis without auth, so we should be getting an error
     assert!(result.is_err());
 
-    assert!(!client.is_connection_open());
+    assert!(client.is_connection_open());
 
     match client.echo("testing") {
         Ok(value) => assert_eq!(value, "testing"),

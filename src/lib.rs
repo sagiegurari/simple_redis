@@ -298,9 +298,6 @@ pub mod types;
 /// Error Type
 pub type RedisError = types::RedisError;
 
-/// Error Info
-pub type ErrorInfo = types::ErrorInfo;
-
 /// PubSub message
 pub type Message = types::Message;
 

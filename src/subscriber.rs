@@ -7,7 +7,7 @@
 #[path = "./subscriber_test.rs"]
 mod subscriber_test;
 
-use crate::types::{ErrorInfo, Interrupts, Message, RedisEmptyResult, RedisError};
+use crate::types::{Interrupts, Message, RedisEmptyResult, RedisError};
 use std::option::Option;
 use std::time::Duration;
 
@@ -33,12 +33,8 @@ fn subscribe_all<'a>(
 
                 if result.is_err() {
                     let subscription_error = match result.err() {
-                        Some(error) => Err(RedisError {
-                            info: ErrorInfo::RedisError(error),
-                        }),
-                        None => Err(RedisError {
-                            info: ErrorInfo::Description("Error while subscribing."),
-                        }),
+                        Some(error) => Err(RedisError::RedisError(error)),
+                        None => Err(RedisError::Description("Error while subscribing.")),
                     };
 
                     return subscription_error;
@@ -50,12 +46,8 @@ fn subscribe_all<'a>(
 
                 if result.is_err() {
                     let subscription_error = match result.err() {
-                        Some(error) => Err(RedisError {
-                            info: ErrorInfo::RedisError(error),
-                        }),
-                        None => Err(RedisError {
-                            info: ErrorInfo::Description("Error while subscribing."),
-                        }),
+                        Some(error) => Err(RedisError::RedisError(error)),
+                        None => Err(RedisError::Description("Error while subscribing.")),
                     };
 
                     return subscription_error;
@@ -64,9 +56,7 @@ fn subscribe_all<'a>(
 
             Ok(redis_pubsub)
         }
-        Err(error) => Err(RedisError {
-            info: ErrorInfo::RedisError(error),
-        }),
+        Err(error) => Err(RedisError::RedisError(error)),
     }
 }
 
@@ -88,9 +78,7 @@ fn fetch_messages(
                 Some(Duration::from_millis(duration_millis))
             };
             if let Err(error) = redis_pubsub.set_read_timeout(read_timeout) {
-                return Err(RedisError {
-                    info: ErrorInfo::RedisError(error),
-                });
+                return Err(RedisError::RedisError(error));
             };
 
             let message_result = redis_pubsub.get_message();
@@ -103,9 +91,7 @@ fn fetch_messages(
                 }
                 Err(error) => {
                     if !error.is_timeout() {
-                        return Err(RedisError {
-                            info: ErrorInfo::RedisError(error),
-                        });
+                        return Err(RedisError::RedisError(error));
                     }
                 }
             }
@@ -209,9 +195,7 @@ impl Subscriber {
         poll_interrupts: &mut dyn FnMut() -> Interrupts,
     ) -> RedisEmptyResult {
         if !self.has_subscriptions() {
-            Err(RedisError {
-                info: ErrorInfo::Description("No subscriptions defined."),
-            })
+            Err(RedisError::Description("No subscriptions defined."))
         } else {
             subscribe_and_fetch(self, client, on_message, poll_interrupts)
         }

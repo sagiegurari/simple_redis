@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["simple_redis"] = [{"text":"impl !UnwindSafe for Client","synthetic":true,"types":[]},{"text":"impl !UnwindSafe for RedisError","synthetic":true,"types":[]},{"text":"impl UnwindSafe for Interrupts","synthetic":true,"types":[]},{"text":"impl !UnwindSafe for ErrorInfo","synthetic":true,"types":[]}];
+implementors["simple_redis"] = [{"text":"impl !UnwindSafe for Client","synthetic":true,"types":[]},{"text":"impl !UnwindSafe for RedisError","synthetic":true,"types":[]},{"text":"impl UnwindSafe for Interrupts","synthetic":true,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

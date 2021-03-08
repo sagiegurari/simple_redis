@@ -10,7 +10,7 @@ mod client_test;
 use crate::connection;
 use crate::subscriber;
 use crate::types::{
-    ErrorInfo, Interrupts, Message, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult,
+    Interrupts, Message, RedisBoolResult, RedisEmptyResult, RedisError, RedisResult,
     RedisStringResult,
 };
 use std::str::FromStr;
@@ -39,9 +39,7 @@ fn run_command_on_connection<T: redis::FromRedisValue>(
     let result: redis::RedisResult<T> = cmd.query(connection);
 
     match result {
-        Err(error) => Err(RedisError {
-            info: ErrorInfo::RedisError(error),
-        }),
+        Err(error) => Err(RedisError::RedisError(error)),
         Ok(output) => Ok(output),
     }
 }
@@ -123,9 +121,7 @@ impl Client {
         match self.run_command::<String>(command, args) {
             Ok(value) => match T::from_str(&value) {
                 Ok(typed_value) => Ok(typed_value),
-                _ => Err(RedisError {
-                    info: ErrorInfo::Description("Unable to parse output value."),
-                }),
+                _ => Err(RedisError::Description("Unable to parse output value.")),
             },
             Err(error) => Err(error),
         }
@@ -289,8 +285,6 @@ pub fn create(connection_string: &str) -> Result<Client, RedisError> {
 
             Ok(client)
         }
-        Err(error) => Err(RedisError {
-            info: ErrorInfo::RedisError(error),
-        }),
+        Err(error) => Err(RedisError::RedisError(error)),
     }
 }

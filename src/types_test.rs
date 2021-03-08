@@ -3,9 +3,7 @@ use std::io::Write;
 
 #[test]
 fn redis_error_description() {
-    let redis_error = RedisError {
-        info: ErrorInfo::Description("test"),
-    };
+    let redis_error = RedisError::Description("test");
 
     assert_eq!(redis_error.to_string(), "test");
 

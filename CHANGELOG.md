@@ -1,5 +1,10 @@
 ## CHANGELOG
 
+### v0.6.0 (2021-03-09)
+
+* Make errors chainable.
+* Upgrade redis-rs to 0.20
+
 ### v0.5.5 (2020-12-31)
 
 * Upgrade redis-rs to 0.19

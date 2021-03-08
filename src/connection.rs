@@ -7,7 +7,7 @@
 #[path = "./connection_test.rs"]
 mod connection_test;
 
-use crate::types::{ErrorInfo, RedisEmptyResult, RedisError, RedisResult};
+use crate::types::{RedisEmptyResult, RedisError, RedisResult};
 use std::option::Option;
 
 /// The redis client which enables to invoke redis operations.
@@ -27,9 +27,7 @@ fn open_connection(connection: &mut Connection, client: &redis::Client) -> Redis
                 connection.connection = Some(redis_connection);
                 Ok(())
             }
-            Err(error) => Err(RedisError {
-                info: ErrorInfo::RedisError(error),
-            }),
+            Err(error) => Err(RedisError::RedisError(error)),
         }
     } else {
         output = Ok(());
@@ -65,9 +63,7 @@ impl Connection {
             Err(error) => Err(error),
             _ => match self.connection {
                 Some(ref mut redis_connection) => Ok(redis_connection),
-                None => Err(RedisError {
-                    info: ErrorInfo::Description("Redis connection not available."),
-                }),
+                None => Err(RedisError::Description("Redis connection not available.")),
             },
         }
     }

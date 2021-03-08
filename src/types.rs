@@ -7,31 +7,34 @@
 #[path = "./types_test.rs"]
 mod types_test;
 
+use std::error::Error;
 use std::fmt;
 use std::fmt::Display;
 
 #[derive(Debug)]
 /// Holds the error information
-pub enum ErrorInfo {
+pub enum RedisError {
     /// Root redis error
     RedisError(redis::RedisError),
     /// Description text of the error reason
     Description(&'static str),
 }
 
-#[derive(Debug)]
-/// Redis Error struct
-pub struct RedisError {
-    /// Holds the error information
-    pub info: ErrorInfo,
-}
-
 impl Display for RedisError {
     /// Formats the value using the given formatter.
     fn fmt(&self, format: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        match self.info {
-            ErrorInfo::RedisError(ref cause) => cause.fmt(format),
-            ErrorInfo::Description(description) => description.fmt(format),
+        match self {
+            Self::RedisError(ref cause) => cause.fmt(format),
+            Self::Description(description) => description.fmt(format),
+        }
+    }
+}
+
+impl Error for RedisError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::RedisError(error) => Some(error),
+            Self::Description(_) => None,
         }
     }
 }

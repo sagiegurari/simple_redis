@@ -946,14 +946,14 @@ fn set_all() {
     bool_result = client.sismember("set_all_1", "member100").unwrap();
     assert!(!bool_result);
 
-    int_result = client.zadd("myzset", 1, "one").unwrap();
+    int_result = client.zadd("zset_test_key", 1, "one").unwrap();
     assert_eq!(int_result, 1);
-    int_result = client.zadd("myzset", 2, "two").unwrap();
+    int_result = client.zadd("zset_test_key", 2, "two").unwrap();
     assert_eq!(int_result, 1);
-    int_result = client.zadd("myzset", 3, "three").unwrap();
+    int_result = client.zadd("zset_test_key", 3, "three").unwrap();
     assert_eq!(int_result, 1);
-    vec_result = client.zrange("myzset", 0, -1).unwrap();
+    vec_result = client.zrange("zset_test_key", 0, -1).unwrap();
     assert_eq!(vec_result, vec!["one", "two", "three"]);
-    vec_result = client.zrange("myzset", -2, -1).unwrap();
+    vec_result = client.zrange("zset_test_key", -2, -1).unwrap();
     assert_eq!(vec_result, vec!["two", "three"]);
 }

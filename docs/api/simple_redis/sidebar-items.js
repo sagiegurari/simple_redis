@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["create","Constructs a new redis client. The redis connection string must be in the following format: `redis://[:<passwd>@]<hostname>[:port][/<db>]`"]],"mod":[["client","client"],["types","types"]],"type":[["Interrupts","Blocking operations interrupts"],["Message","PubSub message"],["RedisError","Error Type"],["RedisResult","Redis result which either holds a value or a Redis error"]]});
+window.SIDEBAR_ITEMS = {"fn":["create"],"mod":["client","types"],"type":["Interrupts","Message","RedisError","RedisResult"]};

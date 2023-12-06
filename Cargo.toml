@@ -24,7 +24,7 @@ include = [
 ]
 
 [dependencies]
-redis = { version = "^0.23", default-features = false }
+redis = { version = "^0.24", default-features = false }
 
 [dev-dependencies]
 doc-comment = "^0.3"

@@ -8,7 +8,6 @@
 mod connection_test;
 
 use crate::types::{RedisEmptyResult, RedisError, RedisResult};
-use std::option::Option;
 
 /// The redis client which enables to invoke redis operations.
 pub(crate) struct Connection {

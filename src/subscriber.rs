@@ -8,7 +8,6 @@
 mod subscriber_test;
 
 use crate::types::{Interrupts, Message, RedisEmptyResult, RedisError};
-use std::option::Option;
 use std::time::Duration;
 
 /// The redis pubsub wrapper.

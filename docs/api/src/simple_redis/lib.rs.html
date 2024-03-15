@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-0000000007da4a04.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-0000000084b1ad12.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-0000000066e2bc86.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-0000000004ddb02d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-00000000ad926a49.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-00000000f27a569e.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-0000000091fda82d.css"><link rel="stylesheet" href="../../static.files/rustdoc-000000003c917dd8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-000000002350f6a9.css"><link rel="stylesheet" disabled href="../../static.files/dark-00000000691478b8.css"><link rel="stylesheet" disabled href="../../static.files/ayu-00000000ae54050d.css"><script src="../../static.files/storage-000000001db72db6.js"></script><script defer src="../../static.files/source-script-00000000478a5402.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-000000000682f2dc.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-00000000e18db8d9.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-000000008fbf5349.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-00000000d9d8501d.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-00000000a292be17.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../simple_redis/index.html"><img class="rust-logo" src="../../static.files/rust-logo-00000000a653c8a4.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-00000000304d111d.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-0000000007da4a04.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-0000000084b1ad12.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-0000000066e2bc86.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-0000000004ddb02d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-00000000f27a569e.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-0000000091fda82d.css"><link rel="stylesheet" href="../../static.files/rustdoc-000000005f7541b6.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="simple_redis" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (2319be8e2 2024-01-12)" data-channel="nightly" data-search-js="search-000000006d902bd2.js" data-settings-js="settings-000000000a4e6193.js" ><script src="../../static.files/storage-00000000b6b6e7c2.js"></script><script defer src="../../static.files/src-script-00000000e6115c00.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0000000015700b57.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-00000000c3ec0cbe.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-000000008fbf5349.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-00000000d9d8501d.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-00000000a292be17.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../simple_redis/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-00000000304d111d.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -359,13 +361,45 @@
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
 <a href="#361" id="361">361</a>
-</pre><pre class="rust"><code><span class="attr">#![deny(
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+</pre></div><pre class="rust"><code><span class="attr">#![deny(
     absolute_paths_not_starting_with_crate,
     ambiguous_associated_items,
+    ambiguous_glob_imports,
+    ambiguous_glob_reexports,
+    ambiguous_wide_pointer_comparisons,
     anonymous_parameters,
     arithmetic_overflow,
     array_into_iter,
     asm_sub_register,
+    async_fn_in_trait,
     bad_asm_style,
     bindings_with_variant_name,
     break_with_label_and_loop,
@@ -377,6 +411,7 @@
     confusable_idents,
     const_evaluatable_unchecked,
     const_item_mutation,
+    const_patterns_without_partial_eq,
     dead_code,
     deprecated,
     deprecated_cfg_attr_crate_type_name,
@@ -385,18 +420,24 @@
     deref_into_dyn_supertrait,
     deref_nullptr,
     drop_bounds,
+    dropping_copy_types,
+    dropping_references,
     duplicate_macro_attributes,
     dyn_drop,
+    elided_lifetimes_in_associated_constant,
     ellipsis_inclusive_range_patterns,
     enum_intrinsics_non_enums,
     explicit_outlives_requirements,
     exported_private_dependencies,
+    ffi_unwind_calls,
     for_loops_over_fallibles,
     forbidden_lint_groups,
+    forgetting_copy_types,
+    forgetting_references,
     function_item_references,
+    hidden_glob_reexports,
     ill_formed_attribute_input,
     illegal_floating_point_literal_pattern,
-    implied_bounds_entailment,
     improper_ctypes,
     improper_ctypes_definitions,
     incomplete_features,
@@ -404,8 +445,14 @@
     indirect_structural_match,
     ineffective_unstable_trait_impl,
     inline_no_sanitize,
+    internal_features,
     invalid_atomic_ordering,
     invalid_doc_attributes,
+    invalid_from_utf8,
+    invalid_from_utf8_unchecked,
+    invalid_macro_export_arguments,
+    invalid_nan_comparisons,
+    invalid_reference_casting,
     invalid_type_param_default,
     invalid_value,
     irrefutable_let_patterns,
@@ -415,7 +462,9 @@
     legacy_derive_helpers,
     let_underscore_drop,
     let_underscore_lock,
+    long_running_const_eval,
     macro_expanded_macro_exports_accessed_by_absolute_paths,
+    map_unit_fn,
     meta_variable_misuse,
     missing_abi,
     missing_copy_implementations,
@@ -442,11 +491,13 @@
     path_statements,
     patterns_in_fns_without_body,
     pointer_structural_match,
-    private_in_public,
+    private_bounds,
+    private_interfaces,
     proc_macro_back_compat,
     proc_macro_derive_resolution_fallback,
     pub_use_of_private_extern_crate,
     redundant_semicolons,
+    refining_impl_trait,
     repr_transparent_external_private_fields,
     rust_2021_incompatible_closure_captures,
     rust_2021_incompatible_or_patterns,
@@ -456,7 +507,9 @@
     soft_unstable,
     special_module_name,
     stable_features,
+    static_mut_ref,
     suspicious_auto_trait_impls,
+    suspicious_double_ref_op,
     temporary_cstring_as_ptr,
     text_direction_codepoint_in_comment,
     text_direction_codepoint_in_literal,
@@ -468,9 +521,12 @@
     uncommon_codepoints,
     unconditional_panic,
     unconditional_recursion,
+    undefined_naked_function_abi,
+    undropped_manually_drops,
     unexpected_cfgs,
     ungated_async_fn_track_caller,
     uninhabited_static,
+    unit_bindings,
     unknown_crate_types,
     unnameable_test_items,
     unreachable_code,
@@ -485,6 +541,7 @@
     unused_allocation,
     unused_assignments,
     unused_assignments,
+    unused_associated_type_bounds,
     unused_attributes,
     unused_braces,
     unused_comparisons,
@@ -502,12 +559,13 @@
     unused_mut,
     unused_parens,
     unused_qualifications,
-    unused_tuple_struct_fields,
     unused_unsafe,
     unused_variables,
     useless_deprecated,
+    useless_ptr_null_checks,
     where_clauses_object_safety,
-    while_true
+    while_true,
+    writes_through_immutable_pointer
 )]
 #![warn(macro_use_extern_crate, unknown_lints)]
 #![allow(
@@ -553,51 +611,51 @@
 //!
 //! ```
 //! fn main() {
-//!     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {
+//!     match simple_redis::create("redis://127.0.0.1:6379/") {
 //!         Ok(mut client) =&gt;  {
-//!             println!(&quot;Created Redis Client&quot;);
+//!             println!("Created Redis Client");
 //!
-//!             match client.set(&quot;my_key&quot;, &quot;my_value&quot;) {
-//!                 Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),
-//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)
+//!             match client.set("my_key", "my_value") {
+//!                 Err(error) =&gt; println!("Unable to set value in Redis: {}", error),
+//!                 _ =&gt; println!("Value set in Redis")
 //!             };
 //!
-//!             match client.get_string(&quot;my_key&quot;) {
-//!                 Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),
-//!                 Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)
+//!             match client.get_string("my_key") {
+//!                 Ok(value) =&gt; println!("Read value from Redis: {}", value),
+//!                 Err(error) =&gt; println!("Unable to get value from Redis: {}", error)
 //!             };
 //!
-//!             match client.set(&quot;my_numeric_key&quot;, 255.5) {
-//!                 Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),
-//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)
+//!             match client.set("my_numeric_key", 255.5) {
+//!                 Err(error) =&gt; println!("Unable to set value in Redis: {}", error),
+//!                 _ =&gt; println!("Value set in Redis")
 //!             };
 //!
-//!             match client.get::&lt;f32&gt;(&quot;my_numeric_key&quot;) {
-//!                 Ok(value) =&gt; println!(&quot;Read value from Redis: {}&quot;, value),
-//!                 Err(error) =&gt; println!(&quot;Unable to get value from Redis: {}&quot;, error)
+//!             match client.get::&lt;f32&gt;("my_numeric_key") {
+//!                 Ok(value) =&gt; println!("Read value from Redis: {}", value),
+//!                 Err(error) =&gt; println!("Unable to get value from Redis: {}", error)
 //!             };
 //!
-//!             match client.hgetall(&quot;my_map&quot;) {
+//!             match client.hgetall("my_map") {
 //!                 Ok(map) =&gt; {
-//!                     match map.get(&quot;my_field&quot;) {
-//!                         Some(value) =&gt; println!(&quot;Got field value from map: {}&quot;, value),
-//!                         None =&gt; println!(&quot;Map field is emtpy&quot;),
+//!                     match map.get("my_field") {
+//!                         Some(value) =&gt; println!("Got field value from map: {}", value),
+//!                         None =&gt; println!("Map field is emtpy"),
 //!                     }
 //!                 },
-//!                 Err(error) =&gt; println!(&quot;Unable to read map from Redis: {}&quot;, error),
+//!                 Err(error) =&gt; println!("Unable to read map from Redis: {}", error),
 //!             };
 //!
 //!             /// run some command that is not built in the library
-//!             match client.run_command::&lt;String&gt;(&quot;ECHO&quot;, vec![&quot;testing&quot;]) {
-//!                 Ok(value) =&gt; assert_eq!(value, &quot;testing&quot;),
-//!                 _ =&gt; panic!(&quot;test error&quot;),
+//!             match client.run_command::&lt;String&gt;("ECHO", vec!["testing"]) {
+//!                 Ok(value) =&gt; assert_eq!(value, "testing"),
+//!                 _ =&gt; panic!("test error"),
 //!             };
 //!
 //!             /// publish messages
-//!             let result = client.publish(&quot;news_channel&quot;, &quot;test message&quot;);
+//!             let result = client.publish("news_channel", "test message");
 //!             assert!(result.is_ok());
 //!         },
-//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)
+//!         Err(error) =&gt; println!("Unable to create Redis client: {}", error)
 //!     }
 //! }
 //! ```
@@ -608,20 +666,20 @@
 //! use simple_redis::{Interrupts, Message};
 //!
 //! fn main() {
-//!     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {
+//!     match simple_redis::create("redis://127.0.0.1:6379/") {
 //!         Ok(mut client) =&gt;  {
-//!             println!(&quot;Created Redis Client&quot;);
+//!             println!("Created Redis Client");
 //!
-//!             let mut result = client.subscribe(&quot;important_notifications&quot;);
+//!             let mut result = client.subscribe("important_notifications");
 //!             assert!(result.is_ok());
-//!             result = client.psubscribe(&quot;*_notifications&quot;);
+//!             result = client.psubscribe("*_notifications");
 //!             assert!(result.is_ok());
 //!
 //!             // fetch messages from all subscriptions
 //!             client.fetch_messages(
 //!                 &amp;mut |message: Message| -&gt; bool {
 //!                     let payload : String = message.get_payload().unwrap();
-//!                     println!(&quot;Got message: {}&quot;, payload);
+//!                     println!("Got message: {}", payload);
 //!
 //!                     // continue fetching
 //!                     false
@@ -629,7 +687,7 @@
 //!                 &amp;mut || -&gt; Interrupts { Interrupts::new() },
 //!             ).unwrap();
 //!         },
-//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)
+//!         Err(error) =&gt; println!("Unable to create Redis client: {}", error)
 //!     }
 //! }
 //! ```
@@ -638,21 +696,21 @@
 //!
 //! ```rust
 //! fn main() {
-//!     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {
+//!     match simple_redis::create("redis://127.0.0.1:6379/") {
 //!         Ok(mut client) =&gt;  {
-//!             println!(&quot;Created Redis Client&quot;);
+//!             println!("Created Redis Client");
 //!
-//!             match client.set(&quot;my_key&quot;, &quot;my_value&quot;) {
-//!                 Err(error) =&gt; println!(&quot;Unable to set value in Redis: {}&quot;, error),
-//!                 _ =&gt; println!(&quot;Value set in Redis&quot;)
+//!             match client.set("my_key", "my_value") {
+//!                 Err(error) =&gt; println!("Unable to set value in Redis: {}", error),
+//!                 _ =&gt; println!("Value set in Redis")
 //!             };
 //!
 //!             match client.quit() {
-//!                 Err(error) =&gt; println!(&quot;Error: {}&quot;, error),
-//!                 _ =&gt; println!(&quot;Connection Closed.&quot;)
+//!                 Err(error) =&gt; println!("Error: {}", error),
+//!                 _ =&gt; println!("Connection Closed.")
 //!             }
 //!         },
-//!         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)
+//!         Err(error) =&gt; println!("Unable to create Redis client: {}", error)
 //!     }
 //! }
 //! ```
@@ -662,7 +720,7 @@
 //!
 //! ```ini
 //! [dependencies]
-//! simple_redis = &quot;*&quot;
+//! simple_redis = "*"
 //! ```
 //!
 //! # Contributing
@@ -674,11 +732,11 @@
 //!
 
 </span><span class="attr">#[cfg(test)]
-#[path = <span class="string">&quot;./lib_test.rs&quot;</span>]
+#[path = <span class="string">"./lib_test.rs"</span>]
 </span><span class="kw">mod </span>lib_test;
 
 <span class="attr">#[cfg(doctest)]
-</span><span class="macro">doc_comment::doctest!</span>(<span class="string">&quot;../README.md&quot;</span>);
+</span><span class="macro">doc_comment::doctest!</span>(<span class="string">"../README.md"</span>);
 
 <span class="kw">pub mod </span>client;
 <span class="kw">mod </span>commands;
@@ -711,14 +769,13 @@
 /// extern crate simple_redis;
 ///
 /// fn main() {
-///     match simple_redis::create(&quot;redis://127.0.0.1:6379/&quot;) {
-///         Ok(client) =&gt; println!(&quot;Created Redis Client&quot;),
-///         Err(error) =&gt; println!(&quot;Unable to create Redis client: {}&quot;, error)
+///     match simple_redis::create("redis://127.0.0.1:6379/") {
+///         Ok(client) =&gt; println!("Created Redis Client"),
+///         Err(error) =&gt; println!("Unable to create Redis client: {}", error)
 ///     }
 /// }
 /// ```
 </span><span class="kw">pub fn </span>create(connection_string: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;client::Client, RedisError&gt; {
     client::create(connection_string)
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="simple_redis" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (065852def 2023-02-13)" data-search-js="search-00000000a9ae988e.js" data-settings-js="settings-00000000951b6b67.js" data-settings-css="settings-000000009bfc1ad1.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

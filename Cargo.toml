@@ -1,6 +1,6 @@
 [package]
 name = "simple_redis"
-version = "0.6.2"
+version = "0.6.3"
 authors = ["Sagie Gur-Ari <sagiegurari@gmail.com>"]
 description = "Simple and resilient redis client."
 license = "Apache-2.0"
@@ -29,7 +29,3 @@ redis = { version = "^0.25", default-features = false }
 [dev-dependencies]
 doc-comment = "^0.3"
 
-[badges.codecov]
-branch = "master"
-repository = "sagiegurari/simple_redis"
-service = "github"

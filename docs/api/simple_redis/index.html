@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="simple_redis"><title>simple_redis - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-0000000007da4a04.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-0000000084b1ad12.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-0000000066e2bc86.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-0000000004ddb02d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-00000000ad926a49.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-00000000f27a569e.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-0000000091fda82d.css"><link rel="stylesheet" href="../static.files/rustdoc-000000003c917dd8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-000000002350f6a9.css"><link rel="stylesheet" disabled href="../static.files/dark-00000000691478b8.css"><link rel="stylesheet" disabled href="../static.files/ayu-00000000ae54050d.css"><script src="../static.files/storage-000000001db72db6.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-000000000682f2dc.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-00000000e18db8d9.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-000000008fbf5349.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-00000000d9d8501d.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-00000000a292be17.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../simple_redis/index.html"><img class="rust-logo" src="../static.files/rust-logo-00000000a653c8a4.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../simple_redis/index.html"><img class="rust-logo" src="../static.files/rust-logo-00000000a653c8a4.svg" alt="logo"></a><h2 class="location"><a href="#">Crate simple_redis</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.6.2</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-00000000304d111d.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">simple_redis</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-000000002b47d462.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/simple_redis/lib.rs.html#1-361">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="simple_redis"><a href="#simple_redis">simple_redis</a></h2>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="simple_redis"><title>simple_redis - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-0000000007da4a04.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-0000000084b1ad12.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-0000000066e2bc86.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-0000000004ddb02d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-00000000f27a569e.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-0000000091fda82d.css"><link rel="stylesheet" href="../static.files/rustdoc-000000005f7541b6.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="simple_redis" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (2319be8e2 2024-01-12)" data-channel="nightly" data-search-js="search-000000006d902bd2.js" data-settings-js="settings-000000000a4e6193.js" ><script src="../static.files/storage-00000000b6b6e7c2.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-0000000015700b57.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-00000000c3ec0cbe.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-000000008fbf5349.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-00000000d9d8501d.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-00000000a292be17.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../simple_redis/index.html">simple_redis</a><span class="version">0.6.3</span></h2></div><div class="sidebar-elems"><ul class="block">
+            <li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Aliases</a></li></ul></section></div></nav><div class="sidebar-resizer"></div>
+    <main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../simple_redis/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-00000000304d111d.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">simple_redis</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-000000002b47d462.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/simple_redis/lib.rs.html#1-389">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="simple_redis"><a href="#simple_redis">simple_redis</a></h2>
 <p>Simple and resilient <a href="https://redis.io/">redis</a> client based on <a href="https://crates.io/crates/redis">redis-rs</a> with
 internal connection and subscription handling.</p>
 <p>This library provides a very basic, simple API for the most common redis operations.<br>
@@ -18,71 +20,71 @@ However, this comes at a small performance cost of PING operation to the redis s
 automatically in case of any error while fetching a message from the subscribed channels.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2><h3 id="initialization-and-simple-operations"><a href="#initialization-and-simple-operations">Initialization and Simple Operations</a></h3>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>main() {
-    <span class="kw">match </span>simple_redis::create(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+    <span class="kw">match </span>simple_redis::create(<span class="string">"redis://127.0.0.1:6379/"</span>) {
         <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>client) =&gt;  {
-            <span class="macro">println!</span>(<span class="string">&quot;Created Redis Client&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">"Created Redis Client"</span>);
 
-            <span class="kw">match </span>client.set(<span class="string">&quot;my_key&quot;</span>, <span class="string">&quot;my_value&quot;</span>) {
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to set value in Redis: {}&quot;</span>, error),
-                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">&quot;Value set in Redis&quot;</span>)
+            <span class="kw">match </span>client.set(<span class="string">"my_key"</span>, <span class="string">"my_value"</span>) {
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to set value in Redis: {}"</span>, error),
+                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">"Value set in Redis"</span>)
             };
 
-            <span class="kw">match </span>client.get_string(<span class="string">&quot;my_key&quot;</span>) {
-                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Read value from Redis: {}&quot;</span>, value),
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to get value from Redis: {}&quot;</span>, error)
+            <span class="kw">match </span>client.get_string(<span class="string">"my_key"</span>) {
+                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">"Read value from Redis: {}"</span>, value),
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to get value from Redis: {}"</span>, error)
             };
 
-            <span class="kw">match </span>client.set(<span class="string">&quot;my_numeric_key&quot;</span>, <span class="number">255.5</span>) {
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to set value in Redis: {}&quot;</span>, error),
-                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">&quot;Value set in Redis&quot;</span>)
+            <span class="kw">match </span>client.set(<span class="string">"my_numeric_key"</span>, <span class="number">255.5</span>) {
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to set value in Redis: {}"</span>, error),
+                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">"Value set in Redis"</span>)
             };
 
-            <span class="kw">match </span>client.get::&lt;f32&gt;(<span class="string">&quot;my_numeric_key&quot;</span>) {
-                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Read value from Redis: {}&quot;</span>, value),
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to get value from Redis: {}&quot;</span>, error)
+            <span class="kw">match </span>client.get::&lt;f32&gt;(<span class="string">"my_numeric_key"</span>) {
+                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">"Read value from Redis: {}"</span>, value),
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to get value from Redis: {}"</span>, error)
             };
 
-            <span class="kw">match </span>client.hgetall(<span class="string">&quot;my_map&quot;</span>) {
+            <span class="kw">match </span>client.hgetall(<span class="string">"my_map"</span>) {
                 <span class="prelude-val">Ok</span>(map) =&gt; {
-                    <span class="kw">match </span>map.get(<span class="string">&quot;my_field&quot;</span>) {
-                        <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Got field value from map: {}&quot;</span>, value),
-                        <span class="prelude-val">None </span>=&gt; <span class="macro">println!</span>(<span class="string">&quot;Map field is emtpy&quot;</span>),
+                    <span class="kw">match </span>map.get(<span class="string">"my_field"</span>) {
+                        <span class="prelude-val">Some</span>(value) =&gt; <span class="macro">println!</span>(<span class="string">"Got field value from map: {}"</span>, value),
+                        <span class="prelude-val">None </span>=&gt; <span class="macro">println!</span>(<span class="string">"Map field is emtpy"</span>),
                     }
                 },
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to read map from Redis: {}&quot;</span>, error),
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to read map from Redis: {}"</span>, error),
             };
 
             <span class="doccomment">/// run some command that is not built in the library
-            </span><span class="kw">match </span>client.run_command::&lt;String&gt;(<span class="string">&quot;ECHO&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;testing&quot;</span>]) {
-                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">assert_eq!</span>(value, <span class="string">&quot;testing&quot;</span>),
-                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;test error&quot;</span>),
+            </span><span class="kw">match </span>client.run_command::&lt;String&gt;(<span class="string">"ECHO"</span>, <span class="macro">vec!</span>[<span class="string">"testing"</span>]) {
+                <span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">assert_eq!</span>(value, <span class="string">"testing"</span>),
+                <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"test error"</span>),
             };
 
             <span class="doccomment">/// publish messages
-            </span><span class="kw">let </span>result = client.publish(<span class="string">&quot;news_channel&quot;</span>, <span class="string">&quot;test message&quot;</span>);
+            </span><span class="kw">let </span>result = client.publish(<span class="string">"news_channel"</span>, <span class="string">"test message"</span>);
             <span class="macro">assert!</span>(result.is_ok());
         },
-        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, error)
+        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to create Redis client: {}"</span>, error)
     }
 }</code></pre></div>
 <h3 id="subscription-flow"><a href="#subscription-flow">Subscription Flow</a></h3>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>simple_redis::{Interrupts, Message};
 
 <span class="kw">fn </span>main() {
-    <span class="kw">match </span>simple_redis::create(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+    <span class="kw">match </span>simple_redis::create(<span class="string">"redis://127.0.0.1:6379/"</span>) {
         <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>client) =&gt;  {
-            <span class="macro">println!</span>(<span class="string">&quot;Created Redis Client&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">"Created Redis Client"</span>);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>result = client.subscribe(<span class="string">&quot;important_notifications&quot;</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>result = client.subscribe(<span class="string">"important_notifications"</span>);
             <span class="macro">assert!</span>(result.is_ok());
-            result = client.psubscribe(<span class="string">&quot;*_notifications&quot;</span>);
+            result = client.psubscribe(<span class="string">"*_notifications"</span>);
             <span class="macro">assert!</span>(result.is_ok());
 
             <span class="comment">// fetch messages from all subscriptions
             </span>client.fetch_messages(
                 <span class="kw-2">&amp;mut </span>|message: Message| -&gt; bool {
                     <span class="kw">let </span>payload : String = message.get_payload().unwrap();
-                    <span class="macro">println!</span>(<span class="string">&quot;Got message: {}&quot;</span>, payload);
+                    <span class="macro">println!</span>(<span class="string">"Got message: {}"</span>, payload);
 
                     <span class="comment">// continue fetching
                     </span><span class="bool-val">false
@@ -90,26 +92,26 @@ automatically in case of any error while fetching a message from the subscribed 
                 <span class="kw-2">&amp;mut </span>|| -&gt; Interrupts { Interrupts::new() },
             ).unwrap();
         },
-        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, error)
+        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to create Redis client: {}"</span>, error)
     }
 }</code></pre></div>
 <h3 id="closing-connection"><a href="#closing-connection">Closing Connection</a></h3>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>main() {
-    <span class="kw">match </span>simple_redis::create(<span class="string">&quot;redis://127.0.0.1:6379/&quot;</span>) {
+    <span class="kw">match </span>simple_redis::create(<span class="string">"redis://127.0.0.1:6379/"</span>) {
         <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>client) =&gt;  {
-            <span class="macro">println!</span>(<span class="string">&quot;Created Redis Client&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">"Created Redis Client"</span>);
 
-            <span class="kw">match </span>client.set(<span class="string">&quot;my_key&quot;</span>, <span class="string">&quot;my_value&quot;</span>) {
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to set value in Redis: {}&quot;</span>, error),
-                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">&quot;Value set in Redis&quot;</span>)
+            <span class="kw">match </span>client.set(<span class="string">"my_key"</span>, <span class="string">"my_value"</span>) {
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to set value in Redis: {}"</span>, error),
+                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">"Value set in Redis"</span>)
             };
 
             <span class="kw">match </span>client.quit() {
-                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Error: {}&quot;</span>, error),
-                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">&quot;Connection Closed.&quot;</span>)
+                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Error: {}"</span>, error),
+                <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">"Connection Closed."</span>)
             }
         },
-        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Unable to create Redis client: {}&quot;</span>, error)
+        <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">println!</span>(<span class="string">"Unable to create Redis client: {}"</span>, error)
     }
 }</code></pre></div>
 <h2 id="installation"><a href="#installation">Installation</a></h2>
@@ -121,5 +123,5 @@ simple_redis = &quot;*&quot;
 <h2 id="license"><a href="#license">License</a></h2>
 <p>Developed by Sagie Gur-Ari and licensed under the
 <a href="https://github.com/sagiegurari/simple_redis/blob/master/LICENSE">Apache 2</a> open source license.</p>
-</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left"><a class="mod" href="client/index.html" title="mod simple_redis::client">client</a></div><div class="item-right docblock-short">client</div></div><div class="item-row"><div class="item-left"><a class="mod" href="types/index.html" title="mod simple_redis::types">types</a></div><div class="item-right docblock-short">types</div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><div class="item-table"><div class="item-row"><div class="item-left"><a class="fn" href="fn.create.html" title="fn simple_redis::create">create</a></div><div class="item-right docblock-short">Constructs a new redis client.<br>
-The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left"><a class="type" href="type.Interrupts.html" title="type simple_redis::Interrupts">Interrupts</a></div><div class="item-right docblock-short">Blocking operations interrupts</div></div><div class="item-row"><div class="item-left"><a class="type" href="type.Message.html" title="type simple_redis::Message">Message</a></div><div class="item-right docblock-short">PubSub message</div></div><div class="item-row"><div class="item-left"><a class="type" href="type.RedisError.html" title="type simple_redis::RedisError">RedisError</a></div><div class="item-right docblock-short">Error Type</div></div><div class="item-row"><div class="item-left"><a class="type" href="type.RedisResult.html" title="type simple_redis::RedisResult">RedisResult</a></div><div class="item-right docblock-short">Redis result which either holds a value or a Redis error</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="simple_redis" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (065852def 2023-02-13)" data-search-js="search-00000000a9ae988e.js" data-settings-js="settings-00000000951b6b67.js" data-settings-css="settings-000000009bfc1ad1.css" ></div></body></html>
+</div></details><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="client/index.html" title="mod simple_redis::client">client</a></div><div class="desc docblock-short">client</div></li><li><div class="item-name"><a class="mod" href="types/index.html" title="mod simple_redis::types">types</a></div><div class="desc docblock-short">types</div></li></ul><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2><ul class="item-table"><li><div class="item-name"><a class="fn" href="fn.create.html" title="fn simple_redis::create">create</a></div><div class="desc docblock-short">Constructs a new redis client.<br>
+The redis connection string must be in the following format: <code>redis://[:&lt;passwd&gt;@]&lt;hostname&gt;[:port][/&lt;db&gt;]</code></div></li></ul><h2 id="types" class="section-header"><a href="#types">Type Aliases</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.Interrupts.html" title="type simple_redis::Interrupts">Interrupts</a></div><div class="desc docblock-short">Blocking operations interrupts</div></li><li><div class="item-name"><a class="type" href="type.Message.html" title="type simple_redis::Message">Message</a></div><div class="desc docblock-short">PubSub message</div></li><li><div class="item-name"><a class="type" href="type.RedisError.html" title="type simple_redis::RedisError">RedisError</a></div><div class="desc docblock-short">Error Type</div></li><li><div class="item-name"><a class="type" href="type.RedisResult.html" title="type simple_redis::RedisResult">RedisResult</a></div><div class="desc docblock-short">Redis result which either holds a value or a Redis error</div></li></ul></section></div></main></body></html>

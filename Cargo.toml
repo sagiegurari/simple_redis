@@ -28,4 +28,3 @@ redis = { version = "^0.25", default-features = false }
 
 [dev-dependencies]
 doc-comment = "^0.3"
-

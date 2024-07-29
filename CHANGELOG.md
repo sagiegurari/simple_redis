@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### v0.6.4 (2024-07-29)
+
+* Upgrade redis-rs to 0.26
+
 ### v0.6.3 (2024-03-15)
 
 * Upgrade redis-rs to 0.25

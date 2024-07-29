@@ -25,4 +25,6 @@ jobs:
       with:
         redis-version: '5.x'
     - name: Run CI
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: cargo make ci-flow

@@ -2,7 +2,7 @@
 
 ### v0.6.5 (2025-10-14)
 
-* Upgrade redis-rs to 0.32
+* Maintanence redis-rs to 0.32
 
 ### v0.6.4 (2024-07-29)
 

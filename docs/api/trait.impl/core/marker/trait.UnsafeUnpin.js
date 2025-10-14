@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["simple_redis",[["impl UnsafeUnpin for <a class=\"enum\" href=\"simple_redis/types/enum.RedisError.html\" title=\"enum simple_redis::types::RedisError\">RedisError</a>",1,["simple_redis::types::RedisError"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"simple_redis/client/struct.Client.html\" title=\"struct simple_redis::client::Client\">Client</a>",1,["simple_redis::client::Client"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"simple_redis/types/struct.Interrupts.html\" title=\"struct simple_redis::types::Interrupts\">Interrupts</a>",1,["simple_redis::types::Interrupts"]]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[593]}

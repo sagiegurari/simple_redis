@@ -1,3 +1,9 @@
-(function() {var implementors = {
-"simple_redis":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"simple_redis/types/enum.RedisError.html\" title=\"enum simple_redis::types::RedisError\">RedisError</a>"]]
-};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {
+    var implementors = Object.fromEntries([["simple_redis",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.90.0/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"simple_redis/types/enum.RedisError.html\" title=\"enum simple_redis::types::RedisError\">RedisError</a>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[296]}
